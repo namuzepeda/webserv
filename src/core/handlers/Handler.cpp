@@ -12,10 +12,15 @@
 
 #include "../../../includes/Handler.hpp"
 
-Handler::Handler(void) {
+Handler::Handler(const Config &config) {
+	this->childs = 0;
 	this->config = 0;
 }
 
-Handler::getConfig(void) {
+Config const &Handler::getConfig(void) const {
 	return (this->config);
+}
+
+std::set<Handler*> const	&Handler::getChilds() const {
+	return (this->childs);
 }

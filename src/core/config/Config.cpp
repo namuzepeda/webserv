@@ -13,14 +13,5 @@
 #include "../../../includes/Config.hpp"
 
 Config::Config(void) {
-	this->childs = 0;
-	this->parent = 0;
-}
-
-Config::hasChilds(void) {
-	return false;
-}
-
-Config::getChilds(void) {
-	return this->childs;
+	this->values = 0;
 }

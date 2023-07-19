@@ -14,20 +14,10 @@
 
 #include <iostream>
 
-enum ConfigType {
-	SERVER
-};
-
 class IConfig
 {
-	protected:
-
 	public:
 
 		virtual				~IConfig() {}
 
-		virtual bool 		hasChilds() = 0;
-		virtual	Config		**getChilds() = 0;
-
-		virtual	ConfigType	getType() = 0;
 };

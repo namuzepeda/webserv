@@ -13,14 +13,27 @@
 #pragma once
 
 #include <iostream>
+#include <set>
 #include "Config.hpp"
+
+enum ContextType {
+	SERVER
+};
+
 
 class IHandler
 {
 	public:
 
-		virtual					~IHandler() {}
+		virtual								~IHandler();
 
-		virtual void 			run(HttpRequest request) = 0;
-		virtual	Config const	&getConfig() const = 0;
+		virtual	ContextType const			getType() const 	= 0;
+
+		virtual	Config const				&getConfig() const 	= 0;
+
+		virtual bool 						hasChilds() 		= 0;
+		virtual std::set<Handler*> const	&getChilds() const	= 0;
+
+		virtual void	 					run() 				= 0;
+
 };

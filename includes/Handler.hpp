@@ -13,21 +13,26 @@
 #pragma once
 
 #include "IHandler.hpp"
+#include <set>
 
 class Handler: public IHandler
 {
 	protected:
 
-		Config			*config;
+		std::set<Handler*>		childs;
+		Handler					*config;
 
 	public:
 
 		Handler(Config const &config);
 		Handler(Handler const &copy);
 
-		Handler const	&operator=(Handler const &copy);
-		virtual			~Handler() {}
+		Handler const				&operator=(Handler const &copy);
+		virtual						~Handler() {}
 
-		Config const	&getConfig() const;
+		virtual bool 				hasChilds();
+		std::set<Handler*> const	&getChilds() const;
+
+		Config const				&getConfig() const;
 
 };

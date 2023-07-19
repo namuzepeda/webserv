@@ -23,8 +23,8 @@ class ServerHolder : public Config
 
 		ServerHolder const	&operator=(ServerHolder const &copy);
 
-		virtual			~ServerHolder() {}
+		virtual				~ServerHolder();
 
-		std::string		getServerName();
-		ConfigType		getType();
+		bool				hasServerName();
+		std::string			getServerName();
 };

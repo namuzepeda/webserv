@@ -16,11 +16,10 @@ ServerHolder::ServerHolder() {
 	std::cout << "New instance of ServerHolder" << std::endl;
 }
 
-ServerHolder::getServerName() {
-	std::string value = this->map->find("server_name");
-	return value->first;
+bool	ServerHolder::hasServerName(void) {
+	return (this->values.find("server_name") != this->values.end());
 }
 
-ServerHolder::getType() {
-	return SERVER;
+std::string ServerHolder::getServerName() {
+	return (this->values["server_name"]);
 }

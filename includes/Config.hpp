@@ -20,7 +20,6 @@ class Config: public IConfig
 	protected:
 
 		std::map<std::string, std::string>	values;
-		Config								**childs;
 
 	public:
 
@@ -29,8 +28,5 @@ class Config: public IConfig
 
 		Config const	&operator=(Config const &copy);
 		virtual			~Config() {}
-
-		bool 			hasChilds();
-		Config			**getChilds();
 
 };
