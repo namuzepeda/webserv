@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerHandler.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 21:03:32 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/07/18 21:03:32 by nmunoz           ###   ########.fr       */
+/*   Updated: 2023/07/19 16:22:03 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 
 class ServerHandler : public Handler
 {
-	protected:
-
 	public:
 
 		ServerHandler(Config const &config);
@@ -25,7 +23,7 @@ class ServerHandler : public Handler
 
 		ServerHandler const	&operator=(ServerHandler const &copy);
 
-		~ServerHandler() {}
+		~ServerHandler();
 
 		void			run();
 };

@@ -16,17 +16,15 @@
 
 class ServerHolder : public Config
 {
-	protected:
+	public:
 
 		ServerHolder(void);
 		ServerHolder(ServerHolder const &copy);
 
 		ServerHolder const	&operator=(ServerHolder const &copy);
 
-	public:
-
 		virtual			~ServerHolder() {}
 
-		bool 			hasChilds();
+		std::string		getServerName();
 		ConfigType		getType();
 };

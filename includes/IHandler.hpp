@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IHandler.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 21:03:32 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/07/18 21:03:32 by nmunoz           ###   ########.fr       */
+/*   Updated: 2023/07/19 16:24:06 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,10 @@
 
 class IHandler
 {
-	protected:
-
-		IHandler(void);
-		IHandler(IHandler const &copy);
-
-		IHandler const			&operator=(IHandler const &copy);
-
 	public:
 
 		virtual					~IHandler() {}
 
-		virtual void 			run() = 0;
+		virtual void 			run(HttpRequest request) = 0;
 		virtual	Config const	&getConfig() const = 0;
 };

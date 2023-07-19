@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IConfig.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 21:03:32 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/07/18 21:03:32 by nmunoz           ###   ########.fr       */
+/*   Updated: 2023/07/19 16:16:46 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,12 @@ class IConfig
 {
 	protected:
 
-		IConfig(void);
-		IConfig(IConfig const &copy);
-
-		IConfig const		&operator=(IConfig const &copy);
-
 	public:
 
 		virtual				~IConfig() {}
 
 		virtual bool 		hasChilds() = 0;
-		virtual	bool		getChilds() = 0;
+		virtual	Config		**getChilds() = 0;
 
 		virtual	ConfigType	getType() = 0;
 };

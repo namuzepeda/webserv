@@ -1,26 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ServerHolder.cpp                                   :+:      :+:    :+:   */
+/*   LocationHandler.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/18 21:28:42 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/07/19 16:16:10 by gamoreno         ###   ########.fr       */
+/*   Created: 2023/07/18 21:03:32 by nmunoz            #+#    #+#             */
+/*   Updated: 2023/07/19 16:22:03 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../../../includes/ServerHolder.hpp"
+#pragma once
 
-ServerHolder::ServerHolder() {
-	std::cout << "New instance of ServerHolder" << std::endl;
-}
+#include "Handler.hpp"
 
-ServerHolder::getServerName() {
-	std::string value = this->map->find("server_name");
-	return value->first;
-}
+class LocationHandler : public Handler
+{
+	public:
 
-ServerHolder::getType() {
-	return SERVER;
-}
+		LocationHandler(Config const &config);
+		LocationHandler(LocationHandler const &copy);
+
+		LocationHandler const	&operator=(LocationHandler const &copy);
+
+		~LocationHandler();
+
+		void			run(HttpRequest request);
+};

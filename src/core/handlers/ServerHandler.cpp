@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerHandler.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 22:26:01 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/07/18 22:26:01 by nmunoz           ###   ########.fr       */
+/*   Updated: 2023/07/19 16:06:35 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,4 +14,8 @@
 
 ServerHandler::ServerHandler(Config const &config) {
 	this->config = config;
+}
+
+ServerHandler::run() {
+	
 }

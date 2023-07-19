@@ -21,7 +21,6 @@ class Config: public IConfig
 
 		std::map<std::string, std::string>	values;
 		Config								**childs;
-		Config								*parent;
 
 	public:
 
@@ -33,7 +32,5 @@ class Config: public IConfig
 
 		bool 			hasChilds();
 		Config			**getChilds();
-
-		Config			*getParent();
 
 };

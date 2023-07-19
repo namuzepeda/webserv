@@ -18,7 +18,7 @@ class Server
 {
 	protected:
 
-	ServerHandler		*handler;
+		ServerHandler		*handler;
 
 	public:
 
