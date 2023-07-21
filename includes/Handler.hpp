@@ -35,4 +35,6 @@ class Handler: public IHandler
 
 		Config const				&getConfig() const;
 
+		virtual void	 			run() 				= 0;
+
 };

@@ -15,6 +15,7 @@
 #include <iostream>
 #include <set>
 #include "Config.hpp"
+#include <vector>
 
 enum ContextType {
 	SERVER
