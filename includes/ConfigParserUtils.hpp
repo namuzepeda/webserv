@@ -1,17 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ConfigParser.cpp                                   :+:      :+:    :+:   */
+/*   ConfigParser.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/20 20:16:06 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/07/20 20:16:06 by nmunoz           ###   ########.fr       */
+/*   Created: 2023/07/20 20:19:57 by nmunoz            #+#    #+#             */
+/*   Updated: 2023/07/20 20:19:57 by nmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/WebServ.hpp"
+#include "../../../includes/ConfigParser.hpp"
 
-static const std::vector<Token> &parse(std::string file) const {
+class ConfigParserUtils
+{
+	public:
 
-}
+		static bool IsBlockStart(char ch);
+		static bool IsBlockEnd(char ch);
+		static bool IsSemicolon(char ch);
+
+};
+
+
+

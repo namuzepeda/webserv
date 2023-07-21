@@ -16,6 +16,7 @@
 #include <set>
 #include "Config.hpp"
 #include <vector>
+#include "HttpRequest.hpp"
 
 enum ContextType {
 	SERVER
@@ -35,6 +36,6 @@ class IHandler
 		virtual bool 						hasChilds() 		= 0;
 		virtual std::set<Handler*> const	&getChilds() const	= 0;
 
-		virtual void	 					run() 				= 0;
+		virtual void	 					run(HttpRequest &request) = 0;
 
 };

@@ -14,6 +14,9 @@
 
 #include <vector>
 #include <string>
+#include <regex>
+#include <iostream>
+#include <fstream>
 
 enum class TokenType {
     Identifier,

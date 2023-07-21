@@ -11,8 +11,9 @@
 /* ************************************************************************** */
 
 #include "../../../includes/Server.hpp"
+#include "../../../includes/ServerUtils.hpp"
 
-Server::Server(ServerHandler &handler) {
+Server::Server(const ServerHandler &handler) {
 	this->handler = handler;
 }
 

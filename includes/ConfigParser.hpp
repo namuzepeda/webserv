@@ -10,5 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "WebServ.hpp"
 
+class ConfigParser {
 
+	public:
+
+		static const std::vector<Token> parse(std::string &fileName) const;
+
+};

@@ -13,7 +13,15 @@
 #pragma once
 
 #include "Server.hpp"
+#include <iostream>
 #include "HttpRequest.hpp"
 
-static bool doesRequestApply(Server &server, HttpRequest &request);
+
+class ServerUtils {
+
+	public:
+
+		static bool doesRequestApply(Server &server, HttpRequest &request);
+
+};
 
