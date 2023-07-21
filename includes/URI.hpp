@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Config.hpp                                        :+:      :+:    :+:   */
+/*   HttpRequest.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,27 +12,30 @@
 
 #pragma once
 
-#include "IConfig.hpp"
-#include <map>
+#include "Server.hpp"
 
-class Config: public IConfig
+class URI
 {
-	protected:
+	private:
 
-		std::map<std::string, std::string>	values;
+		std::string		host;
+		int				port;
+		std::string		path;
+		std::string		query;
+		std::string		fragment;
 
 	public:
 
-		Config(void);
-		Config(Config const &copy);
+		URI(std::string &host, int port, std::string path, std::string query, std::string fragment);
+		URI(URI const &copy);
 
-		Config const	&operator=(Config const &copy);
-		virtual			~Config() {}
+		URI const	&operator=(URI const &copy);
+		virtual			~URI() {}
 
-		bool	contains(std::string key);
-
-		std::string get(std::string key);
-		std::string	put(std::string key, std::string value);
-
+		std::string const	&getHost() const;
+		int					getPort();
+		std::string const	&getPath() const;
+		std::string const	&getQuery() const;
+		std::string const	&getFragment() const;
 
 };

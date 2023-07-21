@@ -16,9 +16,13 @@
 
 class Server
 {
-	protected:
+	private:
 
 		ServerHandler		*handler;
+
+		std::string			host;
+		std::vector<int>	ports;
+		std::string			rootFolder;
 
 	public:
 
@@ -28,6 +32,8 @@ class Server
 		Server const	&operator=(Server const &copy);
 		virtual			~Server() {}
 
-		ServerHandler const	&getHandler(void) const;
-
+		ServerHandler		const	&getHandler(void) const;
+		std::string			const	&getHost(void) const;
+		std::vector<int>	const	&getPorts(void);
+		std::string			const	&getRoot() const;
 };
