@@ -13,8 +13,8 @@
 #include "../../../includes/Handler.hpp"
 
 Handler::Handler(const Config &config) {
-	this->childs = 0;
-	this->config = 0;
+	this->childs = new std::set<Handler>;
+	this->config = config;
 }
 
 Config const &Handler::getConfig(void) const {

@@ -16,7 +16,7 @@
 #include "../../../../includes/ServerUtils.hpp"
 
 static bool containsPort(Server &server, int port) {
-	std::vector<int> ports = server.getPorts();
+	std::vector<int> &ports = server.getPorts();
 	for (std::vector<int>::iterator it = ports.begin(); it != ports.end(); ++it) {
 		if (*it == port)
 			return (true);
@@ -24,7 +24,7 @@ static bool containsPort(Server &server, int port) {
 	return (false);
 }
 
-static bool doesRequestApply(Server &server, HttpRequest &request) {
+bool ServerUtils::doesRequestApply(Server &server, HttpRequest &request) {
 	URI uri = request.getURI();
 
 	return (

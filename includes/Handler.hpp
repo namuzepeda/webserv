@@ -20,7 +20,7 @@ class Handler: public IHandler
 	protected:
 
 		std::set<Handler*>		childs;
-		Handler					*config;
+		Config					config;
 
 	public:
 
@@ -34,5 +34,7 @@ class Handler: public IHandler
 		std::set<Handler*> const	&getChilds() const;
 
 		Config const				&getConfig() const;
+
+		virtual void	 			run(HttpRequest &request) = 0;
 
 };

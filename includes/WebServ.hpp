@@ -13,3 +13,21 @@
 #pragma once
 
 #include <vector>
+#include <string>
+#include <regex>
+#include <iostream>
+#include <fstream>
+
+enum class TokenType {
+    Identifier,
+    Value,
+    BlockStart,
+    BlockEnd,
+    Semicolon,
+    Invalid
+};
+
+struct Token {
+    TokenType type;
+    std::string value;
+};
