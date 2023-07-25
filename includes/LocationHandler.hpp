@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef LOCATION_HANDLER_H
+#define LOCATION_HANDLER_H
 
 #include "Handler.hpp"
 
@@ -27,3 +28,5 @@ class LocationHandler : public Handler
 
 		void			run(HttpRequest request);
 };
+
+#endif

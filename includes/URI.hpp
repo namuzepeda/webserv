@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef URI_H
+#define URI_H
 
 #include "Server.hpp"
 
@@ -39,3 +40,6 @@ class URI
 		std::string const	&getFragment() const;
 
 };
+
+
+#endif

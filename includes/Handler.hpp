@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef HANDLER_H
+#define HANDLER_H
 
 #include "IHandler.hpp"
 #include <set>
@@ -31,10 +32,13 @@ class Handler: public IHandler
 		virtual						~Handler() {}
 
 		virtual bool 				hasChilds();
-		std::set<Handler*> const	&getChilds() const;
+		std::set<IHandler> 	const	&getChilds() const;
 
 		Config const				&getConfig() const;
 
-		virtual void	 			run(HttpRequest &request) = 0;
+		virtual	ContextType			getType()						= 0;
+		virtual void	 			run(const HttpRequest &request, const HttpResponse &response) = 0;
 
 };
+
+#endif

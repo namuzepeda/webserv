@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef SERVER_HOLDER_H
+#define SERVER_HOLDER_H
 
 #include "Config.hpp"
 
@@ -28,3 +29,5 @@ class ServerHolder : public Config
 		bool				hasServerName();
 		std::string			getServerName();
 };
+
+#endif

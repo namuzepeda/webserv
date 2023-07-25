@@ -10,15 +10,36 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef WEBSERV_H
+#define WEBSERV_H
 
 #include <vector>
 #include <string>
-#include <regex>
 #include <iostream>
 #include <fstream>
 
-enum class TokenType {
+enum RequestType {
+	GET,
+	POST,
+	DELETE
+};
+
+std::string IDENTIFIERS[] = {
+		"listen",
+		"server_name",
+		"host",
+		"root",
+		"error_page",
+		"location",
+		"allow_methods",
+		"autoindex",
+		"index",
+		"return",
+		"cgi_path",
+		"cgi_ext"
+};
+
+enum TokenType {
     Identifier,
     Value,
     BlockStart,
@@ -31,3 +52,6 @@ struct Token {
     TokenType type;
     std::string value;
 };
+
+
+#endif

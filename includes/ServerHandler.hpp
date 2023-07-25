@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef SERVER_HANDLER_H
+#define SERVER_HANDLER_H
 
 #include "Handler.hpp"
 
@@ -25,5 +26,7 @@ class ServerHandler : public Handler
 
 		~ServerHandler();
 
-		void			run();
+		void			run(const HttpRequest &request, const HttpResponse &response);
 };
+
+#endif

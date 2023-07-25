@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef SERVER_UTILS_H
+#define SERVER_UTILS_H
 
 #include "Server.hpp"
 #include <iostream>
@@ -24,4 +25,6 @@ class ServerUtils {
 		static bool doesRequestApply(Server &server, HttpRequest &request);
 
 };
+
+#endif
 

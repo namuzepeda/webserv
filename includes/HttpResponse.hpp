@@ -10,17 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef HTTP_RESPONSE_H
+#define HTTP_RESPONSE_H
 
 #include "URI.hpp"
+#include "WebServ.hpp"
 
-enum RequestType {
-	GET,
-	POST,
-	DELETE
-};
-
-class HttpRequest
+class HttpResponse
 {
 	private:
 
@@ -31,15 +27,18 @@ class HttpRequest
 
 	public:
 
-		HttpRequest(URI const &uri, std::string body, RequestType const &type);
-		HttpRequest(HttpRequest const &copy);
+		HttpResponse(URI const &uri, std::string body, RequestType const &type);
+		HttpResponse(HttpResponse const &copy);
 
-		HttpRequest const	&operator=(HttpRequest const &copy);
-		virtual				~HttpRequest() {}
+		HttpResponse const	&operator=(HttpResponse const &copy);
+		virtual				~HttpResponse() {}
 
 		URI 		const	&getURI(void) const;
-		Config		const	&headers(void) const;
+		Config		const	&getHeaders(void) const;
 		std::string	const	&getBody(void) const;
 		RequestType 		getType(void);
 
 };
+
+
+#endif

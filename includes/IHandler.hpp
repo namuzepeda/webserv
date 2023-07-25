@@ -10,13 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef IHANDLER_H
+#define IHANDLER_H
 
 #include <iostream>
 #include <set>
 #include "Config.hpp"
 #include <vector>
 #include "HttpRequest.hpp"
+#include "HttpResponse.hpp"
 
 enum ContextType {
 	SERVER
@@ -29,13 +31,16 @@ class IHandler
 
 		virtual								~IHandler();
 
-		virtual	ContextType const			getType() const 	= 0;
+		virtual bool 						hasChilds() 					= 0;
+		virtual std::set<IHandler>	const	&getChilds() const				= 0;
 
-		virtual	Config const				&getConfig() const 	= 0;
+		virtual	Config 				const	&getConfig() const 				= 0;
 
-		virtual bool 						hasChilds() 		= 0;
-		virtual std::set<Handler*> const	&getChilds() const	= 0;
+		virtual	ContextType					getType() 						= 0;
 
-		virtual void	 					run(HttpRequest &request) = 0;
+		virtual void	 					run(const HttpRequest &request, const HttpResponse &response) = 0;
 
 };
+
+
+#endif

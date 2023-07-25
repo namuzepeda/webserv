@@ -10,15 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef HTTP_REQUEST_H
+#define HTTP_REQUEST_H
 
 #include "URI.hpp"
-
-enum RequestType {
-	GET,
-	POST,
-	DELETE
-};
+#include "WebServ.hpp"
 
 class HttpRequest
 {
@@ -38,8 +34,10 @@ class HttpRequest
 		virtual				~HttpRequest() {}
 
 		URI 		const	&getURI(void) const;
-		Config		const	&headers(void) const;
+		Config		const	&getHeaders(void) const;
 		std::string	const	&getBody(void) const;
 		RequestType 		getType(void);
 
 };
+
+#endif

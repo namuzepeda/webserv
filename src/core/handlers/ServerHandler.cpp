@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/ServerHandler.hpp"
+#include "ServerHandler.hpp"
 
 ServerHandler::ServerHandler(Config const &config) {
 	this->config = config;

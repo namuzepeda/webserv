@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/LocationHandler.hpp"
+#include "LocationHandler.hpp"
 
 LocationHandler::LocationHandler(Config const &config) {
 	this->config = config;

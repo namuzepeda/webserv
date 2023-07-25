@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../../../includes/ServerHolder.hpp"
+#include "ServerHolder.hpp"
 
 ServerHolder::ServerHolder() {
 	std::cout << "New instance of ServerHolder" << std::endl;

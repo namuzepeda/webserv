@@ -1,26 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Handler.cpp                                        :+:      :+:    :+:   */
+/*   StringArrayUtils.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/18 22:32:46 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/07/18 22:32:46 by nmunoz           ###   ########.fr       */
+/*   Created: 2023/07/20 20:12:08 by nmunoz            #+#    #+#             */
+/*   Updated: 2023/07/20 20:12:08 by nmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Handler.hpp"
+#ifndef STRING_ARRAY_UTILS_H
+#define STRING_ARRAY_UTILS_H
 
-Handler::Handler(const Config &config) {
-	this->childs = new std::set<Handler>;
-	this->config = config;
-}
+#include <iostream>
 
-Config const &Handler::getConfig(void) const {
-	return (this->config);
-}
 
-std::set<Handler*> const	&Handler::getChilds() const {
-	return (this->childs);
-}
+class StringArrayUtils {
+
+	public:
+
+		static bool contains(std::string *values, const std::string &value);
+
+};
+
+
+#endif

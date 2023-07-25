@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../../includes/ConfigParser.hpp"
-#include "../../../includes/WebServ.hpp"
-#include "../../../../includes/ConfigParserUtils.hpp"
+#include "includes/ConfigParser.hpp"
+#include "includes/WebServ.hpp"
+#include "ConfigParserUtils.hpp"
 
 std::string SkipWhitespace(const std::string& line) {
 	size_t pos = line.find_first_not_of(" \t");
@@ -25,35 +25,38 @@ Token GetNextToken(std::string& line) {
 		return { TokenType::Invalid, "" };
 	}
 
-	if (ConfigParserUtils::IsBlockStart(line[0])) {
+	if (ConfigParserUtils::isBlockStart(line[0])) {
 		return { TokenType::BlockStart, std::string(1, line[0]) };
 	}
 
-	if (ConfigParserUtils::IsBlockEnd(line[0])) {
+	if (ConfigParserUtils::isBlockEnd(line[0])) {
 		return { TokenType::BlockEnd, std::string(1, line[0]) };
 	}
 
-	if (ConfigParserUtils::IsSemicolon(line[0])) {
+	if (ConfigParserUtils::isSemicolon(line[0])) {
 		return { TokenType::Semicolon, std::string(1, line[0]) };
 	}
 
-	if (std::regex_match(line, std::regex(R"(\d+)"))) {
-		std::smatch match;
-		std::regex_search(line, match, std::regex(R"(\d+)"));
-		std::string value = match[0];
-		line = line.substr(match.position(0) + value.length());
-		return { TokenType::Value, value };
+	size_t pos = line.find_first_of(" \t;");
+	if (pos == std::string::npos) {
+		pos = line.length();
 	}
 
-	if (std::regex_match(line, std::regex(R"([a-zA-Z_]\w*)"))) {
-		std::smatch match;
-		std::regex_search(line, match, std::regex(R"([a-zA-Z_]\w*)"));
-		std::string identifier = match[0];
-		line = line.substr(match.position(0) + identifier.length());
-		return { TokenType::Identifier, identifier };
+	std::string tokenValue = line.substr(0, pos);
+	line = line.substr(pos);
+	if (ConfigParserUtils::isIdentifier(tokenValue)) {
+		return {TokenType::Identifier, tokenValue};
+	}
+	else if (ConfigParserUtils::isValue(tokenValue)) {
+		return {TokenType::Value, tokenValue};
 	}
 
 	return { TokenType::Invalid, "" };
+}
+
+const std::vector<Config> &ConfigParser::getConfigurations(std::ifstream configFile) const {
+	std::vector<Config> configs;
+	return (configs);
 }
 
 const std::vector<Token> parse(std::string &fileName) const {

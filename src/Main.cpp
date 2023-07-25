@@ -1,7 +1,6 @@
-#include "../includes/WebServ.hpp"
+#include "WebServ.hpp"
 #include "../includes/Core.hpp"
-
-
+#include <fstream>
 
 int main(int argc, char **argv) {
 
@@ -10,7 +9,9 @@ int main(int argc, char **argv) {
 		return (1);
 	}
 
-	new Core(std::ifstream(argv[1]));
-	Core::deleteInstance();
+	std::string arg1(argv[1]);
+
+	new Core(arg1);
+	//Core::deleteInstance();
 	return (0);
 }

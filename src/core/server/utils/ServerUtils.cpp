@@ -10,10 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../../includes/HttpRequest.hpp"
-#include "../../../../includes/Server.hpp"
-#include "../../../../includes/WebServ.hpp"
-#include "../../../../includes/ServerUtils.hpp"
+#include "HttpRequest.hpp"
+#include "Server.hpp"
+#include "WebServ.hpp"
+#include "ServerUtils.hpp"
 
 static bool containsPort(Server &server, int port) {
 	std::vector<int> &ports = server.getPorts();

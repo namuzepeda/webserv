@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/Server.hpp"
-#include "../../../includes/ServerUtils.hpp"
+#include "Server.hpp"
+#include "ServerUtils.hpp"
 
 Server::Server(const ServerHandler &handler) {
 	this->handler = handler;

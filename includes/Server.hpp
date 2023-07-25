@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef SERVER_H
+#define SERVER_H
 
 #include "ServerHandler.hpp"
 
@@ -37,3 +38,6 @@ class Server
 		std::vector<int>	const	&getPorts(void);
 		std::string			const	&getRoot() const;
 };
+
+
+#endif
