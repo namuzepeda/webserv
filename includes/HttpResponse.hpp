@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Config.hpp                                        :+:      :+:    :+:   */
+/*   HttpRequest.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,27 +12,34 @@
 
 #pragma once
 
-#include <map>
-#include <iostream>
+#include "URI.hpp"
 
-class Config
+enum RequestType {
+	GET,
+	POST,
+	DELETE
+};
+
+class HttpRequest
 {
-	protected:
+	private:
 
-		std::map<std::string, std::string>	values;
+		URI			uri;
+		Config		headers;
+		std::string	body;
+		RequestType	type;
 
 	public:
 
-		Config(void);
-		Config(Config const &copy);
+		HttpRequest(URI const &uri, std::string body, RequestType const &type);
+		HttpRequest(HttpRequest const &copy);
 
-		Config const	&operator=(Config const &copy);
-		virtual			~Config() {}
+		HttpRequest const	&operator=(HttpRequest const &copy);
+		virtual				~HttpRequest() {}
 
-		bool	contains(std::string key);
-
-		std::string get(std::string key);
-		std::string	put(std::string key, std::string value);
-
+		URI 		const	&getURI(void) const;
+		Config		const	&headers(void) const;
+		std::string	const	&getBody(void) const;
+		RequestType 		getType(void);
 
 };

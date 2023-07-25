@@ -1,23 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IConfig.hpp                                        :+:      :+:    :+:   */
+/*   Server.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 21:03:32 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/07/19 16:16:46 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/07/18 21:03:32 by nmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <iostream>
+#include "Cluster.hpp"
 
-class IConfig
+class Core
 {
+	private:
+
+		static Core	instance;
+
+
+		std::vector<Server>	ports;
+
 	public:
 
-		virtual				~IConfig() {}
+		static Core	const	&getInstance(void) const;
+		static void			deleteInstance(void);
+
+
+		Core(std::ifstream configFile);
+		Core(Core const &copy);
+
+		Core const			&operator=(Server const &copy);
+		virtual				~Core();
+
+		std::vector<Server> const	&getServers(void) const;s
 
 };

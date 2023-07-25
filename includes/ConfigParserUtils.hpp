@@ -19,6 +19,8 @@ class ConfigParserUtils
 		static bool IsBlockStart(char ch);
 		static bool IsBlockEnd(char ch);
 		static bool IsSemicolon(char ch);
+		static bool IsIdentifier(char ch);
+		static bool IsValue(char ch);
 
 };
 

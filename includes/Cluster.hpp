@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Config.hpp                                        :+:      :+:    :+:   */
+/*   Server.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,27 +12,21 @@
 
 #pragma once
 
-#include <map>
-#include <iostream>
+#include "Server.hpp"
 
-class Config
+class Cluster
 {
-	protected:
+	private:
 
-		std::map<std::string, std::string>	values;
+
 
 	public:
 
-		Config(void);
-		Config(Config const &copy);
+		Cluster();
+		Cluster(Cluster const &copy);
 
-		Config const	&operator=(Config const &copy);
-		virtual			~Config() {}
+		Server const	&operator=(Server const &copy);
+		virtual			~Cluster() {}
 
-		bool	contains(std::string key);
-
-		std::string get(std::string key);
-		std::string	put(std::string key, std::string value);
-
-
+		std::vector<Server>	const	&getServers(void) const;
 };

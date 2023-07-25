@@ -11,3 +11,5 @@ bool ConfigParserUtils::IsBlockEnd(char ch) {
 bool ConfigParserUtils::IsSemicolon(char ch) {
 	return (ch == ';');
 }
+
+bool
