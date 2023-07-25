@@ -23,3 +23,7 @@ bool	ServerHolder::hasServerName(void) {
 std::string ServerHolder::getServerName() {
 	return (this->values["server_name"]);
 }
+
+ContextType	ServerHolder::getType(void) {
+	return (SERVER);
+}

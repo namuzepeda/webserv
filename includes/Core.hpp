@@ -19,9 +19,11 @@ class Core
 
 
 		Core(const std::ifstream &configFile);
-		~Core();
+		virtual ~Core();
 
 		std::vector<Server> const 	&getServers(void) const;
+
+		virtual	ContextType			getType()						= 0;
 
 		void						run();
 

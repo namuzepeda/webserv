@@ -17,11 +17,18 @@
 
 
 Core::Core(const std::ifstream &configFile) {
-
+	std::vector<Config> configs = ConfigParser::getConfigurations(configFile);
+	for(std::vector<Config>::iterator it = configs.begin(); it != configs.end(); it++) {
+		ServerHandler handler(*it);
+		Server server(handler);
+		this->servers.push_back(server);
+	}
 }
 
 void Core::run() {
-	ConfigParser parser(configFile);
+	for(std::vector<Server>::iterator it = this->servers.begin(); it != this->servers.end(); it++) {
+
+	}
 }
 
 Core::~Core() {

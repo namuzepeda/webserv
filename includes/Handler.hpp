@@ -26,17 +26,13 @@ class Handler: public IHandler
 	public:
 
 		Handler(Config const &config);
-		Handler(Handler const &copy);
-
-		Handler const				&operator=(Handler const &copy);
-		virtual						~Handler() {}
+		virtual						~Handler();
 
 		virtual bool 				hasChilds();
 		std::set<IHandler> 	const	&getChilds() const;
 
 		Config const				&getConfig() const;
 
-		virtual	ContextType			getType()						= 0;
 		virtual void	 			run(const HttpRequest &request, const HttpResponse &response) = 0;
 
 };

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ConfigParser.hpp                                    :+:      :+:    :+:   */
+/*   ConfigParser.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -9,6 +9,8 @@
 /*   Updated: 2023/07/20 20:19:57 by nmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+
 #ifndef CONFIG_PARSER_H
 #define CONFIG_PARSER_H
 
@@ -19,7 +21,7 @@ class ConfigParser {
 
 	public:
 
-		static const std::vector<Config> &getConfigurations(std::ifstream configFile) const;
+		static const std::vector<Config> &getConfigurations(const std::ifstream &configFile) const;
 
 };
 

@@ -18,6 +18,10 @@
 #include <iostream>
 #include <fstream>
 
+enum ContextType {
+	SERVER
+};
+
 enum RequestType {
 	GET,
 	POST,

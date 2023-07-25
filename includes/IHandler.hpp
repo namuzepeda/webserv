@@ -20,10 +20,6 @@
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
 
-enum ContextType {
-	SERVER
-};
-
 
 class IHandler
 {
@@ -36,7 +32,6 @@ class IHandler
 
 		virtual	Config 				const	&getConfig() const 				= 0;
 
-		virtual	ContextType					getType() 						= 0;
 
 		virtual void	 					run(const HttpRequest &request, const HttpResponse &response) = 0;
 

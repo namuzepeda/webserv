@@ -15,6 +15,7 @@
 
 #include <map>
 #include <iostream>
+#include "WebServ.hpp"
 
 class Config
 {
@@ -34,6 +35,8 @@ class Config
 
 		std::string get(std::string key);
 		std::string	put(std::string key, std::string value);
+
+		virtual	ContextType			getType()						= 0;
 
 
 };

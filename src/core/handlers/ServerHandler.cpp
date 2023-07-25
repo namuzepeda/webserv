@@ -16,6 +16,7 @@ ServerHandler::ServerHandler(Config const &config) {
 	this->config = config;
 }
 
-ServerHandler::run() {
+void ServerHandler::run(const HttpRequest &request, const HttpResponse &response) {
 	
+
 }
