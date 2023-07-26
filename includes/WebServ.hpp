@@ -57,5 +57,15 @@ struct Token {
     std::string value;
 };
 
+/******* INIT ERROR HANDLING **********/
+
+enum InitType {
+	BIND_ERROR,
+	SOCKET_ERROR,
+	LISTENING_ERROR,
+	SUCCESS
+};
+
+/*************************************/
 
 #endif

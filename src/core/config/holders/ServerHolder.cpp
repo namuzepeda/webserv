@@ -12,7 +12,7 @@
 
 #include "ServerHolder.hpp"
 
-ServerHolder::ServerHolder() {
+ServerHolder::ServerHolder(void): Config() {
 	std::cout << "New instance of ServerHolder" << std::endl;
 }
 

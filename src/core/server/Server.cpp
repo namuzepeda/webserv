@@ -12,48 +12,55 @@
 
 #include "Server.hpp"
 #include "ServerUtils.hpp"
+#include <unistd.h>
 
-Server::Server(const ServerHandler &handler) {
+short	Server::counter = 0;
+
+Server::Server(const ServerHandler &handler): serverSocket(0) {
 	this->handler = handler;
-
-
-
-
-
+	this->id = Server::counter++;
 }
 
-bool Server::init() {
-	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-	if (serverSocket == -1) {
-		std::cerr << "Error al crear el socket." << std::endl;
-		return 1;
+InitType Server::test(int times) {
+	return init(times);
+}
+
+InitType Server::init(int tryTimes) {
+	Config *config = this->getHandler().getConfig();
+
+	socketAddr.sin_family = AF_INET;
+	socketAddr.sin_port = htons(config->asInt("listen"));
+	inet_pton(AF_INET, config->get("host").c_str(), &socketAddr.sin_addr); //socketAddr.sin_addr.s_addr = INADDR_ANY; //0.0.0.0
+
+
+	InitType type = 0;
+	while(tryTimes--)
+	{
+		this->serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+		if (serverSocket == -1) {
+			type = InitType::SOCKET_ERROR;
+			continue ;
+		}
+
+		int flags = fcntl(serverSocket, F_GETFL, 0);
+		fcntl(this->serverSocket, F_SETFL, flags | O_NONBLOCK);
+
+		if (bind(serverSocket, (struct sockaddr *) &socketAddr, sizeof(socketAddr)) == -1) {
+			type = InitType::BIND_ERROR;
+			close(serverSocket);
+			continue ;
+		}
+
+		// Escuchar por conexiones entrantes
+		if (listen(serverSocket, 5) == -1) {
+			type = InitType::LISTENING_ERROR;
+			close(serverSocket);
+			continue ;
+		}
+
+		return (InitType::SUCCESS);
 	}
-
-	// Configurar el socket del servidor como no bloqueante
-	int flags = fcntl(serverSocket, F_GETFL, 0);
-	fcntl(serverSocket, F_SETFL, flags | O_NONBLOCK);
-
-	// Configurar la dirección del servidor
-	sockaddr_in serverAddr;
-	serverAddr.sin_family = AF_INET;
-	serverAddr.sin_addr.s_addr = INADDR_ANY;
-	serverAddr.sin_port = htons(8080); // Puerto 8080 para escuchar
-
-	// Enlazar el socket al puerto y la dirección
-	if (bind(serverSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) == -1) {
-		std::cerr << "Error en el enlace del socket." << std::endl;
-		close(serverSocket);
-		return 1;
-	}
-
-	// Escuchar por conexiones entrantes
-	if (listen(serverSocket, 5) == -1) {
-		std::cerr << "Error al intentar escuchar." << std::endl;
-		close(serverSocket);
-		return 1;
-	}
-
-	std::cout << "Servidor HTTP iniciado. Esperando conexiones..." << std::endl;
+	return (type);
 }
 
 

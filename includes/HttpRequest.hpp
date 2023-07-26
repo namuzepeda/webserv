@@ -21,7 +21,7 @@ class HttpRequest
 	private:
 
 		URI			uri;
-		Config		headers;
+		Config		*headers;
 		std::string	body;
 		RequestType	type;
 
@@ -34,7 +34,7 @@ class HttpRequest
 		virtual				~HttpRequest() {}
 
 		URI 		const	&getURI(void) const;
-		Config		const	&getHeaders(void) const;
+		Config				*getHeaders(void);
 		std::string	const	&getBody(void) const;
 		RequestType 		getType(void);
 

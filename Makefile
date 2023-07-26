@@ -49,7 +49,7 @@ SERVER_UTILS_DIR			=	core/server/utils/
 SERVER_UTILS				=	ServerUtils.cpp
 
 UTILS_DIR					=	core/utils/
-UTILS						=	FileUtils.cpp
+UTILS						=	FileUtils.cpp StringArrayUtils.cpp
 
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(CORE_DIR))
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(CONFIG_HOLD_DIR))
@@ -58,6 +58,7 @@ OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(PARSER_CONFIG_UTILS_DIR))
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(SERVER_UTILS_DIR))
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(UTILS_DIR))
 
+SOURCES		+=	Main.cpp
 SOURCES		+=	$(addprefix	$(CORE_DIR),$(CORE))
 SOURCES		+=	$(addprefix	$(CONFIG_DIR),$(CONFIG))
 SOURCES		+=	$(addprefix	$(CONFIG_HOLD_DIR),$(CONFIG_HOLD))
@@ -67,7 +68,6 @@ SOURCES		+=	$(addprefix	$(PARSER_CONFIG_UTILS_DIR),$(PARSER_CONFIG_UTILS))
 SOURCES		+=	$(addprefix	$(SERVER_DIR),$(SERVER))
 SOURCES		+=	$(addprefix	$(SERVER_UTILS_DIR),$(SERVER_UTILS))
 SOURCES		+=	$(addprefix	$(UTILS_DIR),$(UTILS))
-SOURCES		+=	Main.cpp
 				
 ### FILE MANAGEMENT ###
 SRCS		=	$(addprefix $(SRC_PATH),$(SOURCES))

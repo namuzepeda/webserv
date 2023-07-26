@@ -13,27 +13,31 @@
 #ifndef HANDLER_H
 #define HANDLER_H
 
-#include "IHandler.hpp"
 #include <set>
+#include <iostream>
+#include "Config.hpp"
+#include <vector>
+#include "HttpRequest.hpp"
+#include "HttpResponse.hpp"
 
-class Handler: public IHandler
+class Handler
 {
 	protected:
 
 		std::set<Handler*>		childs;
-		Config					config;
+		Config					*config;
 
 	public:
 
-		Handler(Config const &config);
-		virtual						~Handler();
+		Handler(Config *config);
+		virtual							~Handler();
 
-		virtual bool 				hasChilds();
-		std::set<IHandler> 	const	&getChilds() const;
+		bool 							hasChilds();
+		std::set<Handler *> 	const	&getChilds() const;
 
-		Config const				&getConfig() const;
+		Config							*getConfig();
 
-		virtual void	 			run(const HttpRequest &request, const HttpResponse &response) = 0;
+		virtual void	 				run(const HttpRequest &request, const HttpResponse &response) = 0;
 
 };
 

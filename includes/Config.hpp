@@ -31,10 +31,12 @@ class Config
 		Config const	&operator=(Config const &copy);
 		virtual			~Config() {}
 
-		bool	contains(std::string key);
-
 		std::string get(std::string key);
-		std::string	put(std::string key, std::string value);
+				std::string	put(std::string key, std::string value);
+
+		bool		contains(std::string key);
+
+		int			asInt(std::string key);
 
 		virtual	ContextType			getType()						= 0;
 

@@ -29,7 +29,7 @@ class ServerHolder : public Config
 		bool				hasServerName();
 		std::string			getServerName();
 
-		ContextType			getType();
+		virtual ContextType			getType();
 };
 
 #endif

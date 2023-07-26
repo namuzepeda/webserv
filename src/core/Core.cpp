@@ -1,5 +1,9 @@
 #include "Core.hpp"
 #include "ConfigParser.hpp"
+#include "WebServ.hpp"
+#include "../../includes/Server.hpp"
+#include "../../includes/ServerHandler.hpp"
+#include "ServerHolder.hpp"
 
 /************** STATIC ******************/
 
@@ -17,12 +21,8 @@
 
 
 Core::Core(const std::ifstream &configFile) {
-	std::vector<Config> configs = ConfigParser::getConfigurations(configFile);
-	for(std::vector<Config>::iterator it = configs.begin(); it != configs.end(); it++) {
-		ServerHandler handler(*it);
-		Server server(handler);
-		this->servers.push_back(server);
-	}
+	(void) configFile;
+	ServerHolder holderr(void);
 }
 
 void Core::run() {

@@ -19,14 +19,11 @@ class ServerHandler : public Handler
 {
 	public:
 
-		ServerHandler(Config const &config);
-		ServerHandler(ServerHandler const &copy);
+		ServerHandler(Config *config);
 
-		ServerHandler const	&operator=(ServerHandler const &copy);
+		virtual ~ServerHandler();
 
-		~ServerHandler();
-
-		void			run(const HttpRequest &request, const HttpResponse &response);
+		virtual void			run(const HttpRequest &request, const HttpResponse &response);
 };
 
 #endif

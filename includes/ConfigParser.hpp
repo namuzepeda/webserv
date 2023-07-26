@@ -21,7 +21,7 @@ class ConfigParser {
 
 	public:
 
-		static const std::vector<Config> &getConfigurations(const std::ifstream &configFile) const;
+		static const std::vector<Config *> &getConfigurations(const std::ifstream &configFile);
 
 };
 

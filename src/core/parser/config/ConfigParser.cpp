@@ -54,8 +54,8 @@ Token GetNextToken(std::string& line) {
 	return { TokenType::Invalid, "" };
 }
 
-const std::vector<Config> &ConfigParser::getConfigurations(const std::ifstream configFile) const {
-	std::vector<Config> configs;
+const std::vector<Config *> &ConfigParser::getConfigurations(const std::ifstream &configFile) {
+	std::vector<Config *> configs;
 	return (configs);
 }
 

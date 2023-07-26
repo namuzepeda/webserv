@@ -11,7 +11,12 @@
 /* ************************************************************************** */
 
 #include "Config.hpp"
+#include <string>
 
 Config::Config(void) {
 	std::string hola = "hola";
+}
+
+int	Config::asInt(std::string key) {
+	return atoi(this->get(key).c_str());
 }

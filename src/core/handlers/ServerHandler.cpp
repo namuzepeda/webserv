@@ -10,10 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ServerHandler.hpp"
+#include "../../../includes/ServerHandler.hpp"
 
-ServerHandler::ServerHandler(Config const &config) {
-	this->config = config;
+ServerHandler::ServerHandler(Config *config): Handler(config) {
+
+}
+
+ServerHandler::~ServerHandler() {
+
 }
 
 void ServerHandler::run(const HttpRequest &request, const HttpResponse &response) {

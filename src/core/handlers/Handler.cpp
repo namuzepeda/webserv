@@ -12,15 +12,14 @@
 
 #include "Handler.hpp"
 
-Handler::Handler(const Config &config) {
-	this->childs = new std::set<Handler>;
+Handler::Handler(Config *config) {
 	this->config = config;
 }
 
-Config const &Handler::getConfig(void) const {
+Config *Handler::getConfig(void) {
 	return (this->config);
 }
 
-std::set<Handler*> const	&Handler::getChilds() const {
+std::set<Handler *> const	&Handler::getChilds() const {
 	return (this->childs);
 }

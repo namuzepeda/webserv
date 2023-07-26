@@ -1,7 +1,7 @@
 #ifndef CORE_H
 #define CORE_H
 
-#include "Cluster.hpp"
+#include "Server.hpp"
 
 class Core
 {
@@ -22,8 +22,6 @@ class Core
 		virtual ~Core();
 
 		std::vector<Server> const 	&getServers(void) const;
-
-		virtual	ContextType			getType()						= 0;
 
 		void						run();
 

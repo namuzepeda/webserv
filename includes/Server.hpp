@@ -13,11 +13,17 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include <arpa/inet.h>
 #include "ServerHandler.hpp"
+#include <fcntl.h>
 
 class Server
 {
 	private:
+
+		static short		counter;
+
+		short				id;
 
 		ServerHandler		*handler;
 
@@ -25,19 +31,22 @@ class Server
 		std::vector<int>	ports;
 		std::string			rootFolder;
 
+		int					serverSocket;
+		sockaddr_in 		socketAddr;
+
 	public:
 
-		Server(ServerHandler const &handler);
-		Server(Server const &copy);
+		Server(const ServerHandler &handler);
 
-		Server const	&operator=(Server const &copy);
 		virtual			~Server() {}
 
 		ServerHandler		const	&getHandler(void) const;
 		std::string			const	&getHost(void) const;
 		std::vector<int>	const	&getPorts(void);
 		std::string			const	&getRoot() const;
-};
 
+		InitType 					init(int tryTimes);
+		InitType					test(int times);
+};
 
 #endif

@@ -8,10 +8,13 @@ int main(int argc, char **argv) {
 		std::cout << "Invalid args" << std::endl;
 		return (1);
 	}
+;
 
-	std::string arg1(argv[1]);
+	std::ifstream configFile;
 
-	new Core(arg1);
+	configFile.open(argv[1]);
+
+	new Core(configFile);
 	//Core::deleteInstance();
 	return (0);
 }
