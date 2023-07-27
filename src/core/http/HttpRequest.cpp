@@ -1,8 +1,5 @@
-/*
- * HttpRequest.cpp
- *
- *  Created on: Jul 25, 2023
- *      Author: nmunoz
- */
+#include "WebServ.hpp"
 
+HttpRequest::HttpRequest(const URI &uri, std::string body, RequestType type): URI(uri), body(body), type(type) {
 
+}
