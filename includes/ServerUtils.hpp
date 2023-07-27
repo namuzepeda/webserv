@@ -13,10 +13,7 @@
 #ifndef SERVER_UTILS_H
 #define SERVER_UTILS_H
 
-#include "Server.hpp"
-#include <iostream>
-#include "HttpRequest.hpp"
-
+#include "WebServ.hpp"
 
 class ServerUtils {
 

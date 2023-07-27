@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../includes/ServerHandler.hpp"
+#include "WebServ.hpp"
 
 ServerHandler::ServerHandler(Config *config): Handler(config) {
 
@@ -21,6 +21,6 @@ ServerHandler::~ServerHandler() {
 }
 
 void ServerHandler::run(const HttpRequest &request, const HttpResponse &response) {
-	
-
+	(void) request;
+	(void) response;
 }

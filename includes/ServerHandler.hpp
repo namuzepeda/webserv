@@ -13,7 +13,7 @@
 #ifndef SERVER_HANDLER_H
 #define SERVER_HANDLER_H
 
-#include "Handler.hpp"
+#include "WebServ.hpp"
 
 class ServerHandler : public Handler
 {
@@ -21,7 +21,7 @@ class ServerHandler : public Handler
 
 		ServerHandler(Config *config);
 
-		virtual ~ServerHandler();
+		virtual					~ServerHandler();
 
 		virtual void			run(const HttpRequest &request, const HttpResponse &response);
 };

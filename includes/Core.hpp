@@ -1,13 +1,13 @@
 #ifndef CORE_H
 #define CORE_H
 
-#include "Server.hpp"
+#include "WebServ.hpp"
 
 class Core
 {
 	private:
 
-		static Core	*instance;
+		//static Core	*instance;
 
 
 		std::vector<Server>	servers;

@@ -13,10 +13,9 @@
 #ifndef WEBSERV_H
 #define WEBSERV_H
 
-#include <vector>
-#include <string>
+#pragma once
+
 #include <iostream>
-#include <fstream>
 
 enum ContextType {
 	SERVER
@@ -28,20 +27,7 @@ enum RequestType {
 	DELETE
 };
 
-std::string IDENTIFIERS[] = {
-		"listen",
-		"server_name",
-		"host",
-		"root",
-		"error_page",
-		"location",
-		"allow_methods",
-		"autoindex",
-		"index",
-		"return",
-		"cgi_path",
-		"cgi_ext"
-};
+extern std::string IDENTIFIERS[];
 
 enum TokenType {
     Identifier,
@@ -55,6 +41,8 @@ enum TokenType {
 struct Token {
     TokenType type;
     std::string value;
+
+    Token(TokenType type, std::string value) : type(type), value(value) {}
 };
 
 /******* INIT ERROR HANDLING **********/
@@ -65,6 +53,41 @@ enum InitType {
 	LISTENING_ERROR,
 	SUCCESS
 };
+
+
+#include <vector>
+#include <string>
+#include <fstream>
+#include <map>
+#include <set>
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#include "Config.hpp"
+#include "ConfigParser.hpp"
+#include "ConfigParserUtils.hpp"
+
+#include "ServerHolder.hpp"
+
+#include "HttpRequest.hpp"
+#include "HttpResponse.hpp"
+#include "Handler.hpp"
+#include "ServerHandler.hpp"
+
+#include "Server.hpp"
+
+#include "StringArrayUtils.hpp"
+
+#include "URI.hpp"
+
+#include "ServerUtils.hpp"
+
+#include "Core.hpp"
+
+
+
 
 /*************************************/
 

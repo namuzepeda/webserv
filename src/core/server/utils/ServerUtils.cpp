@@ -10,25 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "HttpRequest.hpp"
-#include "Server.hpp"
 #include "WebServ.hpp"
-#include "ServerUtils.hpp"
 
-static bool containsPort(Server &server, int port) {
-	std::vector<int> &ports = server.getPorts();
+/*static bool containsPort(Server &server, int port) {
+	std::vector<int> ports = server.getPorts();
 	for (std::vector<int>::iterator it = ports.begin(); it != ports.end(); ++it) {
 		if (*it == port)
 			return (true);
 	}
 	return (false);
-}
+}*/
 
 bool ServerUtils::doesRequestApply(Server &server, HttpRequest &request) {
-	URI uri = request.getURI();
+	(void) server;
+	(void) request;
+	/*URI uri = request.getURI();
 
 	return (
 			server.getHost().compare(uri.getHost()) == 0 &&
 			containsPort(server, uri.getPort())
-	);
+	);*/
+	return false;
 }

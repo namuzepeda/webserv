@@ -1,7 +1,4 @@
-#include "ConfigParserUtils.hpp"
-#include "StringArrayUtils.hpp"
-#include <string>
-#include <iostream>
+#include "WebServ.hpp"
 
 bool ConfigParserUtils::isBlockStart(char ch) {
 	return (ch == '{');
@@ -16,8 +13,14 @@ bool ConfigParserUtils::isSemicolon(char ch) {
 }
 
 bool ConfigParserUtils::isIdentifier(const std::string &str) {
-	if (!str || !*str)
+	if (str.empty())
 		return false;
 
-	return (StringArrayUtils::contains(IDENTIFIERS, str));
+	return (StringArrayUtils::includes(IDENTIFIERS, str));
+}
+
+bool ConfigParserUtils::isValue(const std::string &str) {
+	if (str.empty())
+		return false;
+	return true;
 }

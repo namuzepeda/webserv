@@ -1,6 +1,19 @@
 #include "WebServ.hpp"
-#include "../includes/Core.hpp"
-#include <fstream>
+
+std::string IDENTIFIERS[] = {
+		"listen",
+		"server_name",
+		"host",
+		"root",
+		"error_page",
+		"location",
+		"allow_methods",
+		"autoindex",
+		"index",
+		"return",
+		"cgi_path",
+		"cgi_ext"
+};
 
 int main(int argc, char **argv) {
 

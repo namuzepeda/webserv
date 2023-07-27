@@ -13,14 +13,14 @@
 #ifndef STRING_ARRAY_UTILS_H
 #define STRING_ARRAY_UTILS_H
 
-#include <iostream>
+#include "WebServ.hpp"
 
 
 class StringArrayUtils {
 
 	public:
 
-		static bool contains(std::string *values, const std::string &value);
+		static bool includes(std::string values[], const std::string &value);
 
 };
 

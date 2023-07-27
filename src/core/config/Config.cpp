@@ -10,13 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Config.hpp"
-#include <string>
+#include "WebServ.hpp"
 
 Config::Config(void) {
-	std::string hola = "hola";
+
+}
+
+Config::~Config(void) {
+
 }
 
 int	Config::asInt(std::string key) {
 	return atoi(this->get(key).c_str());
+}
+
+std::string Config::get(std::string key) {
+	std::map<std::string, std::string>::iterator it = this->values.find(key);
+	if(it != this->values.end())
+		return (it->second);
+	return (0);
 }

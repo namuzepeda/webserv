@@ -13,12 +13,9 @@
 #ifndef HANDLER_H
 #define HANDLER_H
 
-#include <set>
-#include <iostream>
-#include "Config.hpp"
-#include <vector>
-#include "HttpRequest.hpp"
-#include "HttpResponse.hpp"
+#include "WebServ.hpp"
+
+//class ServerHandler;
 
 class Handler
 {
@@ -32,10 +29,10 @@ class Handler
 		Handler(Config *config);
 		virtual							~Handler();
 
-		bool 							hasChilds();
-		std::set<Handler *> 	const	&getChilds() const;
+		bool 							hasChilds(void);
+		std::set<Handler *> 	const	&getChilds(void) const;
 
-		Config							*getConfig();
+		Config							*getConfig(void);
 
 		virtual void	 				run(const HttpRequest &request, const HttpResponse &response) = 0;
 

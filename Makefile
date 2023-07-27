@@ -13,8 +13,8 @@
 ### COMPILATION ###
 NAME		=	webserv
 CC			=	c++
-FLAGS		=	-Wall -Wextra -Werror -std=c++98 -g3
-INCLUDES	=	-I $(HEADER) -I
+FLAGS		=	-Wall -Wextra -Werror -g3 -std=c++98 
+INCLUDES	=	-I $(HEADER)
 
 ###  PATHS ###
 SRC_PATH	=	src/
@@ -33,8 +33,8 @@ CONFIG_HOLD					=	ServerHolder.cpp
 
 HANDLER_DIR					=	core/handlers/
 HANDLER						=	Handler.cpp \
-								LocationHandler.cpp \
-								ServerHandler.cpp
+								ServerHandler.cpp \
+								
 
 PARSER_CONFIG_DIR			=	core/parser/config/
 PARSER_CONFIG				=	ConfigParser.cpp
@@ -58,16 +58,16 @@ OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(PARSER_CONFIG_UTILS_DIR))
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(SERVER_UTILS_DIR))
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(UTILS_DIR))
 
-SOURCES		+=	Main.cpp
-SOURCES		+=	$(addprefix	$(CORE_DIR),$(CORE))
 SOURCES		+=	$(addprefix	$(CONFIG_DIR),$(CONFIG))
 SOURCES		+=	$(addprefix	$(CONFIG_HOLD_DIR),$(CONFIG_HOLD))
 SOURCES		+=	$(addprefix	$(HANDLER_DIR),$(HANDLER))
 SOURCES		+=	$(addprefix	$(PARSER_CONFIG_DIR),$(PARSER_CONFIG))
 SOURCES		+=	$(addprefix	$(PARSER_CONFIG_UTILS_DIR),$(PARSER_CONFIG_UTILS))
 SOURCES		+=	$(addprefix	$(SERVER_DIR),$(SERVER))
-SOURCES		+=	$(addprefix	$(SERVER_UTILS_DIR),$(SERVER_UTILS))
 SOURCES		+=	$(addprefix	$(UTILS_DIR),$(UTILS))
+SOURCES		+=	$(addprefix	$(SERVER_UTILS_DIR),$(SERVER_UTILS))
+SOURCES		+=	$(addprefix	$(CORE_DIR),$(CORE))
+SOURCES		+=	Main.cpp
 				
 ### FILE MANAGEMENT ###
 SRCS		=	$(addprefix $(SRC_PATH),$(SOURCES))

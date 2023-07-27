@@ -10,14 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
-#include "ServerUtils.hpp"
-#include <unistd.h>
+#include "WebServ.hpp"
 
 short	Server::counter = 0;
 
-Server::Server(const ServerHandler &handler): serverSocket(0) {
-	this->handler = handler;
+Server::Server(ServerHandler *handler): handler(handler), serverSocket(0) {
 	this->id = Server::counter++;
 }
 
@@ -26,19 +23,19 @@ InitType Server::test(int times) {
 }
 
 InitType Server::init(int tryTimes) {
-	Config *config = this->getHandler().getConfig();
+	Config *config =  this->handler->getConfig();
 
 	socketAddr.sin_family = AF_INET;
 	socketAddr.sin_port = htons(config->asInt("listen"));
 	inet_pton(AF_INET, config->get("host").c_str(), &socketAddr.sin_addr); //socketAddr.sin_addr.s_addr = INADDR_ANY; //0.0.0.0
 
 
-	InitType type = 0;
+	InitType type = BIND_ERROR;
 	while(tryTimes--)
 	{
 		this->serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 		if (serverSocket == -1) {
-			type = InitType::SOCKET_ERROR;
+			type = SOCKET_ERROR;
 			continue ;
 		}
 
@@ -46,19 +43,19 @@ InitType Server::init(int tryTimes) {
 		fcntl(this->serverSocket, F_SETFL, flags | O_NONBLOCK);
 
 		if (bind(serverSocket, (struct sockaddr *) &socketAddr, sizeof(socketAddr)) == -1) {
-			type = InitType::BIND_ERROR;
+			type = BIND_ERROR;
 			close(serverSocket);
 			continue ;
 		}
 
 		// Escuchar por conexiones entrantes
 		if (listen(serverSocket, 5) == -1) {
-			type = InitType::LISTENING_ERROR;
+			type = LISTENING_ERROR;
 			close(serverSocket);
 			continue ;
 		}
 
-		return (InitType::SUCCESS);
+		return (SUCCESS);
 	}
 	return (type);
 }

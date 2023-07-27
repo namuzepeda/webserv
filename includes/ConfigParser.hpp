@@ -15,13 +15,12 @@
 #define CONFIG_PARSER_H
 
 #include "WebServ.hpp"
-#include "Config.hpp"
 
 class ConfigParser {
 
 	public:
 
-		static const std::vector<Config *> &getConfigurations(const std::ifstream &configFile);
+		static std::vector<Config *> getConfigurations(const std::ifstream &configFile);
 
 };
 

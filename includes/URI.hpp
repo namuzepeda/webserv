@@ -13,7 +13,7 @@
 #ifndef URI_H
 #define URI_H
 
-#include "Server.hpp"
+#include "WebServ.hpp"
 
 class URI
 {

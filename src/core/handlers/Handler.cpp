@@ -10,16 +10,31 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Handler.hpp"
+#include "WebServ.hpp"
 
-Handler::Handler(Config *config) {
-	this->config = config;
+Handler::Handler(Config *config): config(config) {
+
+}
+
+Handler::~Handler() {
+
 }
 
 Config *Handler::getConfig(void) {
 	return (this->config);
 }
 
-std::set<Handler *> const	&Handler::getChilds() const {
+std::set<Handler *> const	&Handler::getChilds(void) const {
 	return (this->childs);
 }
+
+bool	Handler::hasChilds(void) {
+	return (this->childs.size() > 0);
+}
+
+
+
+
+
+
+

@@ -13,8 +13,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <map>
-#include <iostream>
 #include "WebServ.hpp"
 
 class Config
@@ -29,7 +27,7 @@ class Config
 		Config(Config const &copy);
 
 		Config const	&operator=(Config const &copy);
-		virtual			~Config() {}
+		virtual			~Config();
 
 		std::string get(std::string key);
 				std::string	put(std::string key, std::string value);

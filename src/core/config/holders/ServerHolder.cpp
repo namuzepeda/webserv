@@ -10,10 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ServerHolder.hpp"
+#include "WebServ.hpp"
 
 ServerHolder::ServerHolder(void): Config() {
 	std::cout << "New instance of ServerHolder" << std::endl;
+}
+
+ServerHolder::~ServerHolder(void) {
+
 }
 
 bool	ServerHolder::hasServerName(void) {

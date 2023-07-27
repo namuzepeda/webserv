@@ -13,7 +13,7 @@
 #ifndef CONFIG_PARSER_UTILS_H
 #define CONFIG_PARSER_UTILS_H
 
-#include "../../../includes/ConfigParser.hpp"
+#include "WebServ.hpp"
 
 class ConfigParserUtils
 {

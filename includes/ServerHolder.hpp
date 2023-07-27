@@ -13,23 +13,20 @@
 #ifndef SERVER_HOLDER_H
 #define SERVER_HOLDER_H
 
-#include "Config.hpp"
+#include "WebServ.hpp"
 
 class ServerHolder : public Config
 {
 	public:
 
 		ServerHolder(void);
-		ServerHolder(ServerHolder const &copy);
 
-		ServerHolder const	&operator=(ServerHolder const &copy);
+		virtual					~ServerHolder();
 
-		virtual				~ServerHolder();
+		bool					hasServerName();
+		std::string				getServerName();
 
-		bool				hasServerName();
-		std::string			getServerName();
-
-		virtual ContextType			getType();
+		virtual ContextType		getType();
 };
 
 #endif

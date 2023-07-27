@@ -13,9 +13,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <arpa/inet.h>
-#include "ServerHandler.hpp"
-#include <fcntl.h>
+#include "WebServ.hpp"
 
 class Server
 {
@@ -36,11 +34,11 @@ class Server
 
 	public:
 
-		Server(const ServerHandler &handler);
+		Server(ServerHandler *handler);
 
 		virtual			~Server() {}
 
-		ServerHandler		const	&getHandler(void) const;
+		ServerHandler				*getHandler(void);
 		std::string			const	&getHost(void) const;
 		std::vector<int>	const	&getPorts(void);
 		std::string			const	&getRoot() const;
