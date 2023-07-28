@@ -14,8 +14,20 @@
 
 short	Server::counter = 0;
 
-Server::Server(ServerHandler *handler): handler(handler), serverSocket(0) {
+Server::Server(ServerHandler *handler): handler(handler), serverSocket(0), port(0) {
 	this->id = Server::counter++;
+}
+
+int Server::getPort(void) {
+	return (this->port);
+}
+
+std::string	const &Server::getHost(void) const{
+	return (this->host);
+}
+
+int	Server::getSocket(void) {
+	return (this->serverSocket);
 }
 
 InitType Server::test(int times) {
@@ -31,31 +43,39 @@ InitType Server::init(int tryTimes) {
 
 
 	InitType type = BIND_ERROR;
-	while(tryTimes--)
-	{
-		this->serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-		if (serverSocket == -1) {
-			type = SOCKET_ERROR;
-			continue ;
+	std::vector<Server> servers = Core::getInstance()->getServers();
+	for(std::vector<Server>::iterator it = servers.begin(); (*it).id != this->id; it++) {
+		Server server = *it;
+		if(this->host == server.host && this->port == server.port) {
+			this->serverSocket = server.serverSocket;
+			return (SUCCESS);
 		}
+		while(tryTimes--)
+		{
+			this->serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+			if (serverSocket == -1) {
+				type = SOCKET_ERROR;
+				continue ;
+			}
 
-		int flags = fcntl(serverSocket, F_GETFL, 0);
-		fcntl(this->serverSocket, F_SETFL, flags | O_NONBLOCK);
+			int flags = fcntl(serverSocket, F_GETFL, 0);
+			fcntl(this->serverSocket, F_SETFL, flags | O_NONBLOCK);
 
-		if (bind(serverSocket, (struct sockaddr *) &socketAddr, sizeof(socketAddr)) == -1) {
-			type = BIND_ERROR;
-			close(serverSocket);
-			continue ;
+			if (bind(serverSocket, (struct sockaddr *) &socketAddr, sizeof(socketAddr)) == -1) {
+				type = BIND_ERROR;
+				close(serverSocket);
+				continue ;
+			}
+
+			// Escuchar por conexiones entrantes
+			if (listen(serverSocket, 5) == -1) {
+				type = LISTENING_ERROR;
+				close(serverSocket);
+				continue ;
+			}
+
+			return (SUCCESS);
 		}
-
-		// Escuchar por conexiones entrantes
-		if (listen(serverSocket, 5) == -1) {
-			type = LISTENING_ERROR;
-			close(serverSocket);
-			continue ;
-		}
-
-		return (SUCCESS);
 	}
 	return (type);
 }

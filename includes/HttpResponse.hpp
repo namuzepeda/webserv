@@ -27,6 +27,8 @@ class HttpResponse
 
 	public:
 
+		HttpResponse(void);
+
 		HttpResponse(URI const &uri, std::string body, RequestType const &type);
 		HttpResponse(HttpResponse const &copy);
 
@@ -37,6 +39,8 @@ class HttpResponse
 		Config				*getHeaders(void);
 		std::string	const	&getBody(void) const;
 		RequestType 		getType(void);
+
+		std::string			toString(void);
 
 };
 

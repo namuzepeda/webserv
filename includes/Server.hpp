@@ -26,7 +26,7 @@ class Server
 		ServerHandler		*handler;
 
 		std::string			host;
-		std::vector<int>	ports;
+		int					port;
 		std::string			rootFolder;
 
 		int					serverSocket;
@@ -40,8 +40,9 @@ class Server
 
 		ServerHandler				*getHandler(void);
 		std::string			const	&getHost(void) const;
-		std::vector<int>	const	&getPorts(void);
+		int							getPort(void);
 		std::string			const	&getRoot() const;
+		int							getSocket();
 
 		InitType 					init(int tryTimes);
 		InitType					test(int times);

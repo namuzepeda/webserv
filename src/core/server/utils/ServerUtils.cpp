@@ -12,20 +12,20 @@
 
 #include "WebServ.hpp"
 
-static bool containsPort(Server &server, int port) {
-	std::vector<int> ports = server.getPorts();
-	for (std::vector<int>::iterator it = ports.begin(); it != ports.end(); ++it) {
+bool ServerUtils::containsPort(const Server &server, int port) {
+	const std::vector<int> ports = server.getPorts();
+	for (std::vector<int>::const_iterator it = ports.begin(); it != ports.end(); ++it) {
 		if (*it == port)
 			return (true);
 	}
 	return (false);
 }
 
-bool ServerUtils::doesRequestApply(Server &server, HttpRequest &request) {
+bool ServerUtils::doesRequestApply(const Server &server, const HttpRequest &request) {
 	URI uri = request.getURI();
 
 	return (
-			server.getHost() == uri.getHost() == 0 &&
+			server.getHost() == uri.getHost() &&
 			containsPort(server, uri.getPort())
 	);
 	return false;

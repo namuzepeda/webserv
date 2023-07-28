@@ -12,6 +12,8 @@
 
 #include "WebServ.hpp"
 
+int Config::DEFAULT_BUFFER_SIZE = 1000000;
+
 Config::Config(void) {
 
 }
@@ -29,4 +31,8 @@ std::string Config::get(std::string key) {
 	if(it != this->values.end())
 		return (it->second);
 	return (0);
+}
+
+int	Config::getMaxBodySize(void) {
+	return (contains("client_max_body_size") ? get("client_max_body_size") : Config::DEFAULT_BUFFER_SIZE);
 }

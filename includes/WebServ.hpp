@@ -15,8 +15,6 @@
 
 #pragma once
 
-#include <iostream>
-
 enum ContextType {
 	SERVER,
 	LOCATION
@@ -57,6 +55,7 @@ enum InitType {
 };
 
 
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <fstream>
@@ -66,6 +65,9 @@ enum InitType {
 #include <fcntl.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <poll.h>
+#include <iostream>
+#include <count>
 
 #include "Config.hpp"
 #include "ConfigParser.hpp"

@@ -7,7 +7,7 @@ class Core
 {
 	private:
 
-		//static Core	*instance;
+		static Core	*instance;
 
 
 		std::vector<Server>	servers;
@@ -15,7 +15,7 @@ class Core
 	public:
 
 
-		//static void			deleteInstance(void);
+		static Core			*getInstance(void);
 
 
 		Core(const std::ifstream &configFile);
@@ -23,7 +23,8 @@ class Core
 
 		std::vector<Server> const 	&getServers(void) const;
 
-		void						run();
+		HttpResponse				*getResponse(const HttpRequest &request);
+		void						run(void);
 
 };
 

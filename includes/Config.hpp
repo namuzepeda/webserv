@@ -17,10 +17,12 @@
 
 class Config
 {
+	private:
+		static int	DEFAULT_BUFFER_SIZE;
+
 	protected:
 
 		std::map<std::string, std::string>	values;
-		Handler								*handler;
 
 	public:
 
@@ -36,6 +38,9 @@ class Config
 		bool		contains(std::string key);
 
 		int			asInt(std::string key);
+
+		bool		hasMaxBodySize();
+		int			getMaxBodySize();
 
 		virtual	ContextType			getType()						= 0;
 

@@ -12,7 +12,7 @@
 
 #include "WebServ.hpp"
 
-LocationHandler::LocationHandler(Config *config): Handler(config) {
+LocationHandler::LocationHandler(Config *config, std::string path): Handler(config) {
 
 }
 
@@ -21,6 +21,9 @@ LocationHandler::~LocationHandler() {
 }
 
 void LocationHandler::run(const HttpRequest &request, const HttpResponse &response) {
-	(void) request;
-	(void) response;
+
+}
+
+std::string LocationHandler::getPath() {
+	return (this->path);
 }

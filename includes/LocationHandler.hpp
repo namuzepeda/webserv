@@ -17,13 +17,20 @@
 
 class LocationHandler : public Handler
 {
+
+	private:
+
+		std::string				path;
+
 	public:
 
-		LocationHandler(Config *config);
+		LocationHandler(Config *config, std::string path);
 
 		virtual					~LocationHandler();
 
 		virtual void			run(const HttpRequest &request, const HttpResponse &response);
+
+		std::string				getPath();
 };
 
 #endif

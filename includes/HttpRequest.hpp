@@ -27,6 +27,9 @@ class HttpRequest
 
 	public:
 
+		static	HttpRequest *build(const std::string &buffer);
+
+		HttpRequest();
 		HttpRequest(URI const &uri, std::string body, RequestType type);
 		virtual				~HttpRequest() {}
 
