@@ -19,11 +19,17 @@ class ConfigParserUtils
 {
 	public:
 
-		static bool isBlockStart(char ch);
-		static bool isBlockEnd(char ch);
-		static bool isSemicolon(char ch);
-		static bool isIdentifier(const std::string &str);
-		static bool isValue(const std::string &str);
+		static bool 		isBlockStart(Token *token);
+		static bool 		isBlockEnd(Token *token);
+		static bool 		isSemicolon(Token *token);
+		static bool			isContext(Token *token);
+		static bool 		isIdentifier(Token *token);
+		static bool 		isValue(Token *token);
+
+		static ContextType getContext(Token *token) ;
+
+		static Config 		*getHolder(ContextType type);
+		static Handler		*getHandler(Config *config);
 
 };
 

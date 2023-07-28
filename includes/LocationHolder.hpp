@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Config.hpp                                        :+:      :+:    :+:   */
+/*   ServerHolder.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,36 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef LOCATION_HOLDER_H
+#define LOCATION_HOLDER_H
 
 #include "WebServ.hpp"
 
-class Config
+class LocationHolder : public Config
 {
-	protected:
-
-		std::map<std::string, std::string>	values;
-		Handler								*handler;
-
 	public:
 
-		Config(void);
-		Config(Config const &copy);
+		LocationHolder(void);
 
-		Config const	&operator=(Config const &copy);
-		virtual			~Config();
+		virtual					~LocationHolder();
 
-		std::string get(std::string key);
-		std::string	put(std::string key, std::string value);
-
-		bool		contains(std::string key);
-
-		int			asInt(std::string key);
-
-		virtual	ContextType			getType()						= 0;
-
-
+		virtual ContextType		getType();
 };
 
 #endif

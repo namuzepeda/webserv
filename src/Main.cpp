@@ -6,7 +6,6 @@ std::string IDENTIFIERS[] = {
 		"host",
 		"root",
 		"error_page",
-		"location",
 		"allow_methods",
 		"autoindex",
 		"index",
@@ -15,13 +14,18 @@ std::string IDENTIFIERS[] = {
 		"cgi_ext"
 };
 
+std::string CONTEXTS[] = {
+		"server",
+		"location"
+};
+
 int main(int argc, char **argv) {
 
 	if(argc != 2) {
 		std::cout << "Invalid args" << std::endl;
 		return (1);
 	}
-;
+
 
 	std::ifstream configFile;
 

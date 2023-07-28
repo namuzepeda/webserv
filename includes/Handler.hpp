@@ -15,14 +15,12 @@
 
 #include "WebServ.hpp"
 
-//class ServerHandler;
-
 class Handler
 {
 	protected:
 
-		std::set<Handler*>		childs;
-		Config					*config;
+		std::vector<Handler *>		childs;
+		Config						*config;
 
 	public:
 
@@ -30,9 +28,11 @@ class Handler
 		virtual							~Handler();
 
 		bool 							hasChilds(void);
-		std::set<Handler *> 	const	&getChilds(void) const;
+		std::vector<Handler *> 	const	&getChilds(void) const;
+		void							addChild(Handler *handler);
 
 		Config							*getConfig(void);
+		void							setConfig(Config *config);
 
 		virtual void	 				run(const HttpRequest &request, const HttpResponse &response) = 0;
 

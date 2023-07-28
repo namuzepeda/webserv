@@ -52,26 +52,62 @@ Token *GetNextToken(std::string& line) {
 	return new Token( Invalid, "" );
 }
 
-std::vector<Config *> ConfigParser::getConfigurations(const std::ifstream &configFile) {
-	std::vector<Config *> configs;
-	(void) configFile;
-	return (configs);
-}
-
-const std::vector<Token *> parse(std::string &fileName) {
+const std::vector<Token *> parse(const std::ifstream &configFile) {
 	std::vector<Token *> tokens;
-
-	std::ifstream file;
 	std::string line;
 
-	file.open(fileName.c_str());
-
-	while (std::getline(file, line)) {
+	while (std::getline((std::ifstream) configFile, line)) {
 		tokens.push_back(GetNextToken(line));
 	}
 
 	return (tokens);
 }
+
+std::vector<Handler *> ConfigParser::getHandlers(const std::ifstream &configFile) {
+	std::vector<Handler *> handlers;
+	std::vector<Token *> tokens = parse(configFile);
+
+	std::vector<Handler *> tempHandlers;
+
+	for(std::vector<Token *>::iterator it = tokens.begin(); it != tokens.end(); it++) {
+
+		Handler *handler = tempHandlers.size() ? tempHandlers[tempHandlers.size() - 1] : NULL;
+
+		if(ConfigParserUtils::isBlockEnd(*it) && handler != NULL) {
+			tempHandlers.pop_back();
+			if(tempHandlers.size() > 0)
+				tempHandlers[tempHandlers.size() - 1]->addChild(handler);
+			else
+				handlers.push_back(handler);
+		} else if (ConfigParserUtils::isContext(*it)) {
+			ContextType contextType = ConfigParserUtils::getContext(*it);
+			it++;
+			if(ConfigParserUtils::isValue(*it))
+				it++;
+			if(!ConfigParserUtils::isBlockStart(*it))
+				throw std::runtime_error("Error on configuration file");
+			tempHandlers.push_back(
+					ConfigParserUtils::getHandler(
+							ConfigParserUtils::getHolder(contextType)
+					)
+			);
+		} else if(ConfigParserUtils::isIdentifier(*it) && handler != NULL) {
+			std::string identifier = (*it)->value;
+			it++;
+			if(!ConfigParserUtils::isValue(*it))
+				throw std::runtime_error("Error on configuration file");
+			std::string value = (*it)->value;
+			it++;
+			if(!ConfigParserUtils::isSemicolon(*it))
+				throw std::runtime_error("Error on configuration file");
+			handler->getConfig()->put(identifier, value);
+		} else {
+			throw std::runtime_error("Error on configuration file");
+		}
+	}
+	return (handlers);
+}
+
 
 
 

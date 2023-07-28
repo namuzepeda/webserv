@@ -1,45 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Config.hpp                                        :+:      :+:    :+:   */
+/*   LocationHandler.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 21:03:32 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/07/18 21:03:32 by nmunoz           ###   ########.fr       */
+/*   Updated: 2023/07/19 16:22:03 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef LOCATION_HANDLER_H
+#define LOCATION_HANDLER_H
 
 #include "WebServ.hpp"
 
-class Config
+class LocationHandler : public Handler
 {
-	protected:
-
-		std::map<std::string, std::string>	values;
-		Handler								*handler;
-
 	public:
 
-		Config(void);
-		Config(Config const &copy);
+		LocationHandler(Config *config);
 
-		Config const	&operator=(Config const &copy);
-		virtual			~Config();
+		virtual					~LocationHandler();
 
-		std::string get(std::string key);
-		std::string	put(std::string key, std::string value);
-
-		bool		contains(std::string key);
-
-		int			asInt(std::string key);
-
-		virtual	ContextType			getType()						= 0;
-
-
+		virtual void			run(const HttpRequest &request, const HttpResponse &response);
 };
 
 #endif

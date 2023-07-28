@@ -16,8 +16,14 @@
 
 
 Core::Core(const std::ifstream &configFile) {
-	(void) configFile;
-	ServerHolder holderr(void);
+	try {
+		std::vector<Handler *> handlers = ConfigParser::getHandlers(configFile);
+		for(std::vector<Handler *>::iterator it = handlers.begin(); it != handlers.end(); it++) {
+			this->servers.push_back(Server((ServerHandler *) *it));
+		}
+	} catch (const std::runtime_error& error) {
+		std::cerr << error.what() << std::endl;
+	}
 }
 
 void Core::run() {

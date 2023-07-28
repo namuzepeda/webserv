@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ConfigParser.hpp                                   :+:      :+:    :+:   */
+/*   LocationHolder.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/20 20:19:57 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/07/20 20:19:57 by nmunoz           ###   ########.fr       */
+/*   Created: 2023/07/18 21:28:42 by nmunoz            #+#    #+#             */
+/*   Updated: 2023/07/19 16:16:10 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-#ifndef CONFIG_PARSER_H
-#define CONFIG_PARSER_H
-
 #include "WebServ.hpp"
 
-class ConfigParser {
+LocationHolder::LocationHolder(void): Config() {
+	std::cout << "New instance of LocationHolder" << std::endl;
+}
 
-	public:
+LocationHolder::~LocationHolder(void) {
 
-		static std::vector<Handler *> getHandlers(const std::ifstream &configFile);
+}
 
-};
-
-
-#endif
+ContextType	LocationHolder::getType(void) {
+	return (SERVER);
+}

@@ -18,7 +18,8 @@
 #include <iostream>
 
 enum ContextType {
-	SERVER
+	SERVER,
+	LOCATION
 };
 
 enum RequestType {
@@ -28,6 +29,7 @@ enum RequestType {
 };
 
 extern std::string IDENTIFIERS[];
+extern std::string CONTEXTS[];
 
 enum TokenType {
     Identifier,
@@ -70,11 +72,13 @@ enum InitType {
 #include "ConfigParserUtils.hpp"
 
 #include "ServerHolder.hpp"
+#include "LocationHolder.hpp"
 
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
 #include "Handler.hpp"
 #include "ServerHandler.hpp"
+#include "LocationHandler.hpp"
 
 #include "Server.hpp"
 

@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ConfigParser.hpp                                   :+:      :+:    :+:   */
+/*   LocationHandler.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/20 20:19:57 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/07/20 20:19:57 by nmunoz           ###   ########.fr       */
+/*   Created: 2023/07/18 22:26:01 by nmunoz            #+#    #+#             */
+/*   Updated: 2023/07/19 16:06:35 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-#ifndef CONFIG_PARSER_H
-#define CONFIG_PARSER_H
-
 #include "WebServ.hpp"
 
-class ConfigParser {
+LocationHandler::LocationHandler(Config *config): Handler(config) {
 
-	public:
+}
 
-		static std::vector<Handler *> getHandlers(const std::ifstream &configFile);
+LocationHandler::~LocationHandler() {
 
-};
+}
 
-
-#endif
+void LocationHandler::run(const HttpRequest &request, const HttpResponse &response) {
+	(void) request;
+	(void) response;
+}

@@ -24,8 +24,16 @@ Config *Handler::getConfig(void) {
 	return (this->config);
 }
 
-std::set<Handler *> const	&Handler::getChilds(void) const {
+void Handler::setConfig(Config *config) {
+	this->config = config;
+}
+
+std::vector<Handler *> const	&Handler::getChilds(void) const {
 	return (this->childs);
+}
+
+void	Handler::addChild(Handler *handler) {
+	this->childs.push_back(handler);
 }
 
 bool	Handler::hasChilds(void) {
