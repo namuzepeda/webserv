@@ -37,7 +37,7 @@ class HttpRequest
 		std::string							const &getVersion() const;
 		std::map<std::string, std::string>	const &getHeaders() const;
 		std::string							const &getbody() const;
-		bool								ContainsHead(std::string key, std::map<std::string, std::string> reqHeaders);
+		bool								containsHead(std::string key, std::map<std::string, std::string> reqHeaders);
 };
 
 #endif
