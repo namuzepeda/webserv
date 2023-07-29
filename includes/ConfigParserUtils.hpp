@@ -22,17 +22,17 @@ class ConfigParserUtils
 		static std::string 	IDENTIFIERS[];
 		static std::string 	CONTEXTS[];
 
-		static bool 		isBlockStart(Token *token);
-		static bool 		isBlockEnd(Token *token);
-		static bool 		isSemicolon(Token *token);
-		static bool			isContext(Token *token);
-		static bool 		isIdentifier(Token *token);
-		static bool 		isValue(Token *token);
+		static bool 		isBlockStart(char c);
+		static bool 		isBlockEnd(char c);
+		static bool 		isSemicolon(char c);
+		static bool			isContext(const std::string &str);
+		static bool 		isIdentifier(const std::string &str);
+		static bool 		isValue(const std::string &str);
 
-		static ContextType getContext(Token *token) ;
+		static ContextType	getContext(Token *token) ;
 
 		static Config 		*getHolder(ContextType type);
-		static Handler		*getHandler(Config *config);
+		static Handler		*getHandler(Config *config, std::string path);
 
 };
 

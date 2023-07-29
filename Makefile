@@ -36,6 +36,9 @@ HANDLER						=	Handler.cpp \
 								ServerHandler.cpp \
 								LocationHandler.cpp \
 								
+HTTP_DIR					=	core/http/
+HTTP						=	HttpRequest.cpp \
+								HttpResponse.cpp
 
 PARSER_CONFIG_DIR			=	core/parser/config/
 PARSER_CONFIG				=	ConfigParser.cpp
@@ -52,6 +55,7 @@ SERVER_UTILS				=	ServerUtils.cpp
 UTILS_DIR					=	core/utils/
 UTILS						=	FileUtils.cpp StringArrayUtils.cpp
 
+OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(HTTP_DIR))
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(CORE_DIR))
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(CONFIG_HOLD_DIR))
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(HANDLER_DIR))
@@ -59,6 +63,7 @@ OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(PARSER_CONFIG_UTILS_DIR))
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(SERVER_UTILS_DIR))
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(UTILS_DIR))
 
+SOURCES		+=	$(addprefix	$(HTTP_DIR),$(HTTP))
 SOURCES		+=	$(addprefix	$(CONFIG_DIR),$(CONFIG))
 SOURCES		+=	$(addprefix	$(CONFIG_HOLD_DIR),$(CONFIG_HOLD))
 SOURCES		+=	$(addprefix	$(HANDLER_DIR),$(HANDLER))

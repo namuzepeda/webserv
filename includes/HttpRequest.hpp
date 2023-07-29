@@ -13,7 +13,6 @@
 #ifndef HTTP_REQUEST_H
 #define HTTP_REQUEST_H
 
-#include "URI.hpp"
 #include "WebServ.hpp"
 
 class HttpRequest

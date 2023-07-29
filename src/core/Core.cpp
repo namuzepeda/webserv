@@ -65,7 +65,8 @@ void	Core::run(void) {
 	while (true) {
 		pollEvents.clear();
 
-		for (int serverSocket : sockets) {
+		for (std::vector<int>::iterator it = sockets.begin(); it != sockets.end(); it++) {
+			int serverSocket = *it;
 			pollfd serverEvent;
 			serverEvent.fd = serverSocket;
 			serverEvent.events = POLLIN;
@@ -124,9 +125,9 @@ void	Core::run(void) {
 						 std::string responseString = response->toString();
 						 send(pollEvents[i].fd, responseString.c_str(), responseString.length(), 0);
 					 }
-					 if(!request->getHeaders()->contains("Keep-alive")) {
-						 clientSockets.erase(clientSockets.begin() + i);
-					 }
+					 //if(!request->getHeaders()->contains("Keep-alive")) {
+					//	 clientSockets.erase(clientSockets.begin() + i);
+					 //}
 				}
 			}
 		}
@@ -138,7 +139,8 @@ void	Core::run(void) {
 	}
 
 	// Cerrar los sockets del servidor
-	for (int serverSocket : sockets) {
+	for (std::vector<int>::iterator it = sockets.begin(); it != sockets.end(); it++) {
+		int serverSocket = *it;
 		close(serverSocket);
 	}
 }

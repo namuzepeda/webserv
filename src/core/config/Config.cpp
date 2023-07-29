@@ -12,8 +12,6 @@
 
 #include "WebServ.hpp"
 
-int Config::DEFAULT_BUFFER_SIZE = 1000000;
-
 Config::Config(void) {
 
 }

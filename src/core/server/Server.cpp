@@ -14,7 +14,7 @@
 
 short	Server::counter = 0;
 
-Server::Server(ServerHandler *handler): handler(handler), serverSocket(0), port(0) {
+Server::Server(ServerHandler *handler): handler(handler), port(0), serverSocket(0) {
 	this->id = Server::counter++;
 }
 

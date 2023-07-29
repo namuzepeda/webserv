@@ -30,12 +30,13 @@ enum RequestType {
 };
 
 enum TokenType {
-    Identifier,
-    Value,
-    BlockStart,
-    BlockEnd,
-    Semicolon,
-    Invalid
+    IDENTIFIER,
+    VALUE,
+    BLOCK_START,
+    BLOCK_END,
+    SEMICOLON,
+	CONTEXT,
+    INVALID
 };
 
 struct Token {
@@ -54,6 +55,7 @@ enum InitType {
 	SUCCESS
 };
 
+#include "URI.hpp"
 
 #include <algorithm>
 #include <vector>
@@ -84,8 +86,6 @@ enum InitType {
 #include "Server.hpp"
 
 #include "StringArrayUtils.hpp"
-
-#include "URI.hpp"
 
 #include "ServerUtils.hpp"
 

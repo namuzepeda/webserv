@@ -17,14 +17,14 @@
 
 class Config
 {
-	private:
-		static int	DEFAULT_BUFFER_SIZE;
 
 	protected:
 
 		std::map<std::string, std::string>	values;
 
 	public:
+
+		static const int	DEFAULT_BUFFER_SIZE = 1000000;
 
 		Config(void);
 		Config(Config const &copy);

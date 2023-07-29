@@ -21,49 +21,47 @@ std::string ConfigParserUtils::CONTEXTS[] = {
 };
 
 
-bool ConfigParserUtils::isBlockStart(Token *token) {
-	return (token->value[0] == '{');
+bool ConfigParserUtils::isBlockStart(char c) {
+	return (c == '{');
 }
 
-bool ConfigParserUtils::isBlockEnd(Token *token) {
-	return (token->value[0] == '}');
+bool ConfigParserUtils::isBlockEnd(char c) {
+	return (c == '}');
 }
 
-bool ConfigParserUtils::isSemicolon(Token *token) {
-	return (token->value[0] == ';');
+bool ConfigParserUtils::isSemicolon(char c) {
+	return (c == ';');
 }
 
-bool ConfigParserUtils::isIdentifier(Token *token) {
-	if (token->value.empty())
+bool ConfigParserUtils::isIdentifier(const std::string &str) {
+	if (str.empty())
 		return false;
 
-	return (StringArrayUtils::includes(IDENTIFIERS, token->value));
+	return (StringArrayUtils::includes(IDENTIFIERS, str));
 }
 
-bool ConfigParserUtils::isContext(Token *token) {
-	if (token->value.empty())
+bool ConfigParserUtils::isContext(const std::string &str) {
+	if (str.empty())
 			return false;
 
-	return (StringArrayUtils::includes(CONTEXTS, token->value));
+	return (StringArrayUtils::includes(CONTEXTS, str));
 }
 
-bool ConfigParserUtils::isValue(Token *token) {
-	if (token->value.empty())
+bool ConfigParserUtils::isValue(const std::string &str) {
+	if (str.empty())
 		return false;
-	return (!isBlockStart(token) && !isBlockEnd(token) && !isSemicolon(token) && !isIdentifier(token) && !isContext(token));
+	return (!isIdentifier(str) && !isContext(str));
 }
 
 ContextType ConfigParserUtils::getContext(Token *token) {
-	switch(token->value) {
-		case "server":
-			return (SERVER);
-		default:
-			return (LOCATION);
-	}
+	if(token->value == "server")
+		return (SERVER);
+	else
+		return (LOCATION);
 }
 
 Config *ConfigParserUtils::getHolder(ContextType type) {
-	switch(ContextType type) {
+	switch(type) {
 		case SERVER:
 			return (new ServerHolder());
 		default:
@@ -71,11 +69,11 @@ Config *ConfigParserUtils::getHolder(ContextType type) {
 	}
 }
 
-Handler	*ConfigParserUtils::getHandler(Config *config) {
+Handler	*ConfigParserUtils::getHandler(Config *config, std::string path) {
 	switch(config->getType()) {
 		case SERVER:
 			return (new ServerHandler(config));
 		default:
-			return (new LocationHandler(config));
+			return (new LocationHandler(config, path));
 	}
 }

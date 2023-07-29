@@ -20,19 +20,19 @@ std::string SkipWhitespace(const std::string& line) {
 Token *GetNextToken(std::string& line) {
 	line = SkipWhitespace(line);
 	if (line.empty()) {
-		return new Token(Invalid, "");
+		return new Token(INVALID, "");
 	}
 
 	if (ConfigParserUtils::isBlockStart(line[0])) {
-		return new Token(BlockStart, std::string(1, line[0]));
+		return new Token(BLOCK_START, std::string(1, line[0]));
 	}
 
 	if (ConfigParserUtils::isBlockEnd(line[0])) {
-		return new Token(BlockEnd, std::string(1, line[0]));
+		return new Token(BLOCK_END, std::string(1, line[0]));
 	}
 
 	if (ConfigParserUtils::isSemicolon(line[0])) {
-		return new Token(Semicolon, std::string(1, line[0]));
+		return new Token(SEMICOLON, std::string(1, line[0]));
 	}
 
 	size_t pos = line.find_first_of(" \t;");
@@ -43,20 +43,22 @@ Token *GetNextToken(std::string& line) {
 	std::string tokenValue = line.substr(0, pos);
 	line = line.substr(pos);
 	if (ConfigParserUtils::isIdentifier(tokenValue)) {
-		return new Token(Identifier, tokenValue);
+		return new Token(IDENTIFIER, tokenValue);
 	}
-	else if (ConfigParserUtils::isValue(tokenValue)) {
-		return new Token(Value, tokenValue);
+	else if(ConfigParserUtils::isContext(line)) {
+		return new Token(CONTEXT, tokenValue);
+	} else if (ConfigParserUtils::isValue(tokenValue)) {
+		return new Token(VALUE, tokenValue);
 	}
 
-	return new Token( Invalid, "" );
+	return new Token( INVALID, "" );
 }
 
 const std::vector<Token *> parse(const std::ifstream &configFile) {
 	std::vector<Token *> tokens;
 	std::string line;
 
-	while (std::getline((std::ifstream) configFile, line)) {
+	while (std::getline((std::ifstream &) configFile, line)) {
 		tokens.push_back(GetNextToken(line));
 	}
 
@@ -73,32 +75,38 @@ std::vector<Handler *> ConfigParser::getHandlers(const std::ifstream &configFile
 
 		Handler *handler = tempHandlers.size() ? tempHandlers[tempHandlers.size() - 1] : NULL;
 
-		if(ConfigParserUtils::isBlockEnd(*it) && handler != NULL) {
+
+		if((*it)->type == BLOCK_END && handler != NULL) {
 			tempHandlers.pop_back();
 			if(tempHandlers.size() > 0)
 				tempHandlers[tempHandlers.size() - 1]->addChild(handler);
 			else
 				handlers.push_back(handler);
-		} else if (ConfigParserUtils::isContext(*it)) {
+		} else if ((*it)->type == CONTEXT) {
 			ContextType contextType = ConfigParserUtils::getContext(*it);
+			std::string value = 0;
 			it++;
-			if(ConfigParserUtils::isValue(*it))
+			if((*it)->type == VALUE)
+			{
+				value = (*it)->value;
 				it++;
-			if(!ConfigParserUtils::isBlockStart(*it))
+			}
+
+			if((*it)->type != BLOCK_START)
 				throw std::runtime_error("Error on configuration file");
 			tempHandlers.push_back(
 					ConfigParserUtils::getHandler(
-							ConfigParserUtils::getHolder(contextType)
+							ConfigParserUtils::getHolder(contextType), value
 					)
 			);
-		} else if(ConfigParserUtils::isIdentifier(*it) && handler != NULL) {
+		} else if((*it)->type == IDENTIFIER && handler != NULL) {
 			std::string identifier = (*it)->value;
 			it++;
-			if(!ConfigParserUtils::isValue(*it))
+			if((*it)->type != VALUE)
 				throw std::runtime_error("Error on configuration file");
 			std::string value = (*it)->value;
 			it++;
-			if(!ConfigParserUtils::isSemicolon(*it))
+			if((*it)->type != SEMICOLON)
 				throw std::runtime_error("Error on configuration file");
 			handler->getConfig()->put(identifier, value);
 		} else {

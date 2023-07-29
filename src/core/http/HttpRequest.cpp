@@ -2,13 +2,14 @@
 
 HttpRequest *HttpRequest::build(const std::string &buffer) {
 	HttpRequest *request = new HttpRequest();
+	(void) buffer;
 	return request;
 }
 
-HttpRequest::HttpRequest(void): type(0) {
+HttpRequest::HttpRequest(void): URI(0) {
 
 }
 
-HttpRequest::HttpRequest(const URI &uri, std::string body, RequestType type): URI(uri), body(body), type(type) {
+HttpRequest::HttpRequest(const URI &uri, std::string body, RequestType type): uri(uri), body(body), type(type) {
 
 }
