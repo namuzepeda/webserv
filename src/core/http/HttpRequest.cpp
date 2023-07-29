@@ -3,17 +3,17 @@
 HttpRequest::HttpRequest(const char * buffer){
 	std::string	Request = buffer;
 	std::istringstream iss(Request);
-    std::string line;
+    std::string currLine;
 
 	// Extract the request line
     std::getline(iss, line);
 
     // red the headers and set the mapm
-    while (std::getline(iss, line) && !line.empty()) {
-        std::string::size_type separatorPos = line.find(": ");
+    while (std::getline(iss, currLine) && !currLine.empty()) {
+        std::string::size_type separatorPos = currLine.find(": ");
         if (separatorPos != std::string::npos) {
-            std::string headerName = line.substr(0, separatorPos);
-            std::string headerValue = line.substr(separatorPos + 2);
+            std::string headerName = currLine.substr(0, separatorPos);
+            std::string headerValue = currLine.substr(separatorPos + 2);
 
             // Assign header to map
             headers[headerName] = headerValue;
