@@ -20,9 +20,9 @@ class HttpRequest
 	private:
 
 		std::string							line;
-		std::string							Type;
+		std::string							type;
 		std::string							location;
-		std::string							Version;
+		std::string							version;
 		std::map<std::string, std::string>	headers;
 		std::string							body;
 
