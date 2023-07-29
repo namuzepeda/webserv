@@ -34,5 +34,5 @@ std::string Config::get(std::string key) {
 }
 
 int	Config::getMaxBodySize(void) {
-	return (contains("client_max_body_size") ? get("client_max_body_size") : Config::DEFAULT_BUFFER_SIZE);
+	return (contains("client_max_body_size") ? asInt("client_max_body_size") : Config::DEFAULT_BUFFER_SIZE);
 }

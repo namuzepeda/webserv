@@ -15,6 +15,9 @@
 
 #pragma once
 
+#include <iostream>
+#include <string>
+
 enum ContextType {
 	SERVER,
 	LOCATION
@@ -25,9 +28,6 @@ enum RequestType {
 	POST,
 	DELETE
 };
-
-extern std::string IDENTIFIERS[];
-extern std::string CONTEXTS[];
 
 enum TokenType {
     Identifier,
@@ -57,7 +57,6 @@ enum InitType {
 
 #include <algorithm>
 #include <vector>
-#include <string>
 #include <fstream>
 #include <map>
 #include <set>
@@ -66,19 +65,19 @@ enum InitType {
 #include <stdlib.h>
 #include <unistd.h>
 #include <poll.h>
-#include <iostream>
-#include <count>
+
+#include "HttpRequest.hpp"
+#include "HttpResponse.hpp"
 
 #include "Config.hpp"
+#include "Handler.hpp"
 #include "ConfigParser.hpp"
 #include "ConfigParserUtils.hpp"
 
 #include "ServerHolder.hpp"
 #include "LocationHolder.hpp"
 
-#include "HttpRequest.hpp"
-#include "HttpResponse.hpp"
-#include "Handler.hpp"
+
 #include "ServerHandler.hpp"
 #include "LocationHandler.hpp"
 
@@ -91,8 +90,6 @@ enum InitType {
 #include "ServerUtils.hpp"
 
 #include "Core.hpp"
-
-
 
 
 /*************************************/

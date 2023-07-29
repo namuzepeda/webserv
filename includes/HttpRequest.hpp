@@ -33,10 +33,10 @@ class HttpRequest
 		HttpRequest(URI const &uri, std::string body, RequestType type);
 		virtual				~HttpRequest() {}
 
-		URI 		const	&getURI(void) const;
-		Config				*getHeaders(void);
-		std::string	const	&getBody(void) const;
-		RequestType 		getType(void);
+		URI const										&getURI(void) const;
+		std::map<std::string, std::string>	const		&getHeaders(void);
+		std::string	const								&getBody(void) const;
+		RequestType 									getType(void);
 
 };
 

@@ -1,24 +1,5 @@
 #include "WebServ.hpp"
 
-std::string IDENTIFIERS[] = {
-		"listen",
-		"server_name",
-		"host",
-		"root",
-		"error_page",
-		"allow_methods",
-		"autoindex",
-		"index",
-		"return",
-		"cgi_path",
-		"cgi_ext"
-};
-
-std::string CONTEXTS[] = {
-		"server",
-		"location"
-};
-
 int main(int argc, char **argv) {
 
 	if(argc != 2) {

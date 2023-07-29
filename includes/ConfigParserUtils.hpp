@@ -19,6 +19,9 @@ class ConfigParserUtils
 {
 	public:
 
+		static std::string 	IDENTIFIERS[];
+		static std::string 	CONTEXTS[];
+
 		static bool 		isBlockStart(Token *token);
 		static bool 		isBlockEnd(Token *token);
 		static bool 		isSemicolon(Token *token);

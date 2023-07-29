@@ -34,6 +34,7 @@ CONFIG_HOLD					=	ServerHolder.cpp
 HANDLER_DIR					=	core/handlers/
 HANDLER						=	Handler.cpp \
 								ServerHandler.cpp \
+								LocationHandler.cpp \
 								
 
 PARSER_CONFIG_DIR			=	core/parser/config/

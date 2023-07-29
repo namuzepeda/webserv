@@ -1,5 +1,26 @@
 #include "WebServ.hpp"
 
+
+std::string ConfigParserUtils::IDENTIFIERS[] = {
+		"listen",
+		"server_name",
+		"host",
+		"root",
+		"error_page",
+		"allow_methods",
+		"autoindex",
+		"index",
+		"return",
+		"cgi_path",
+		"cgi_ext"
+};
+
+std::string ConfigParserUtils::CONTEXTS[] = {
+		"server",
+		"location"
+};
+
+
 bool ConfigParserUtils::isBlockStart(Token *token) {
 	return (token->value[0] == '{');
 }

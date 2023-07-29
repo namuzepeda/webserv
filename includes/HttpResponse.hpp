@@ -21,7 +21,7 @@ class HttpResponse
 	private:
 
 		URI			uri;
-		Config		*headers;
+		std::map<std::string, std::string> headers;
 		std::string	body;
 		RequestType	type;
 
@@ -35,12 +35,12 @@ class HttpResponse
 		HttpResponse const	&operator=(HttpResponse const &copy);
 		virtual				~HttpResponse() {}
 
-		URI 		const	&getURI(void) const;
-		Config				*getHeaders(void);
-		std::string	const	&getBody(void) const;
-		RequestType 		getType(void);
+		URI 		const							&getURI(void) const;
+		std::map<std::string, std::string> const	&getHeaders(void) const;
+		std::string	const							&getBody(void) const;
+		RequestType 								getType(void);
 
-		std::string			toString(void);
+		std::string									toString(void);
 
 };
 

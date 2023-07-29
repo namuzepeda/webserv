@@ -25,7 +25,7 @@ Core::Core(const std::ifstream &configFile) {
 			Server server = Server((ServerHandler *) *it);
 			InitType initType = server.init(3);
 			if(initType == SUCCESS)
-				this->servers.push_back(Server((ServerHandler *) *it));
+				this->servers.push_back(server);
 			else {
 				//Error
 			}
