@@ -19,24 +19,25 @@ class HttpRequest
 {
 	private:
 
-		URI			uri;
-		std::map<std::string, std::string> headers;
-		std::string	body;
-		RequestType	type;
+		std::string							line;
+		std::string							Type;
+		std::string							location;
+		std::string							Version;
+		std::map<std::string, std::string>	headers;
+		std::string							body;
 
 	public:
 
-		static	HttpRequest *build(const std::string &buffer);
+		HttpRequest(const char * buffer);
+		~HttpRequest();
 
-		HttpRequest();
-		HttpRequest(URI const &uri, std::string body, RequestType type);
-		virtual				~HttpRequest() {}
-
-		URI const										&getURI(void) const;
-		std::map<std::string, std::string>	const		&getHeaders(void);
-		std::string	const								&getBody(void) const;
-		RequestType 									getType(void);
-
+		std::string							const &getReqLine() const;
+		std::string							const &getType() const;
+		std::string							const &getLocation() const;
+		std::string							const &getVersion() const;
+		std::map<std::string, std::string>	const &getHeaders() const;
+		std::string							const &getbody() const;
+		bool								ContainsHead(std::string key, std::map<std::string, std::string> reqHeaders);
 };
 
 #endif
