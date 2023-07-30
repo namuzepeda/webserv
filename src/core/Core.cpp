@@ -119,8 +119,8 @@ void	Core::run(void) {
 				} else {
 					 // Procesar la solicitud del cliente
 					 buffer[bytesRead] = '\0'; // Asegurarnos de terminar el buffer como una cadena de caracteres
-					 HttpRequest *request = HttpRequest::build(buffer);
-					 HttpResponse *response = getResponse(*request);
+					 HttpRequest request(buffer);
+					 HttpResponse *response = getResponse(&request);
 					 if(response) {
 						 std::string responseString = response->toString();
 						 send(pollEvents[i].fd, responseString.c_str(), responseString.length(), 0);
