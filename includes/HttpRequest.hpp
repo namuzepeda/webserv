@@ -31,13 +31,16 @@ class HttpRequest
 		HttpRequest(const char * buffer);
 		~HttpRequest();
 
-		std::string							const &getReqLine() const;
-		std::string							const &getType() const;
-		std::string							const &getLocation() const;
-		std::string							const &getVersion() const;
-		std::map<std::string, std::string>	const &getHeaders() const;
-		std::string							const &getbody() const;
-		bool								containsHead(std::string key);
+		std::string	const &getReqLine() const;
+		std::string	const &getType() const;
+		std::string	const &getLocation() const;
+		std::string	const &getVersion() const;
+		std::string	const &getBody() const;
+		bool		headContains(const std::string& key);
+		std::string	const &getHeadValue(const std::string& key) const;
+		std::string	const &getHost() const;
+		std::string const &getPort() const;						
+
 };
 
 #endif
