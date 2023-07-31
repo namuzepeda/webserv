@@ -13,11 +13,11 @@
 #include "WebServ.hpp"
 
 bool ServerUtils::doesRequestApply(const Server &server, const HttpRequest &request) {
-	URI uri = request.getURI();
-
-	return (
-			server.getHost() == uri.getHost() &&
-			containsPort(server, uri.getPort())
-	);
+	/*return (
+			server.getHost() == request.getHost() &&
+			server.getPort() == request.getPort()
+	);*/
+	(void) server;
+	(void) request;
 	return false;
 }

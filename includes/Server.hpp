@@ -44,7 +44,7 @@ class Server
 		std::string			const	&getRoot() const;
 		int							getSocket();
 
-		InitType 					init(int tryTimes);
+		InitType 					init(const std::vector<Server> &servers, int tryTimes);
 		InitType					test(int times);
 };
 

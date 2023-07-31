@@ -24,11 +24,24 @@ int	Config::asInt(std::string key) {
 	return atoi(this->get(key).c_str());
 }
 
-std::string Config::get(std::string key) {
+std::string Config::get(const std::string &key) {
 	std::map<std::string, std::string>::iterator it = this->values.find(key);
 	if(it != this->values.end())
 		return (it->second);
 	return (0);
+}
+
+bool Config::contains(const std::string &key) {
+	std::map<std::string, std::string>::const_iterator it = this->values.find(key);
+
+	if (it == this->values.end()) {
+		return false;
+	}
+	return true;
+}
+
+void Config::put(std::string key, std::string value) {
+	this->values.insert(std::make_pair(key, value));
 }
 
 int	Config::getMaxBodySize(void) {

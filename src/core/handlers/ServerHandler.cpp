@@ -25,7 +25,7 @@ void ServerHandler::run(const HttpRequest &request, const HttpResponse &response
 		Handler *handler = *it;
 		if(handler->getConfig()->getType() == LOCATION) {
 			LocationHandler *locHandler = (LocationHandler *) handler;
-			if (request.getURI().getPath().find(locHandler->getPath()) != 0) //Handler path found in request path at position 0
+			if (request.getLocation().find(locHandler->getPath()) != 0) //Handler path found in request path at position 0
 				return ;
 			locHandler->run(request, response);
 		}

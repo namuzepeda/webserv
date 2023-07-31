@@ -55,8 +55,6 @@ enum InitType {
 	SUCCESS
 };
 
-#include "URI.hpp"
-
 #include <algorithm>
 #include <vector>
 #include <fstream>

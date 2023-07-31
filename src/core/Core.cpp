@@ -1,9 +1,5 @@
 #include "WebServ.hpp"
 
-Core	*Core::getInstance(void)	{
-	return instance;
-}
-
 /************** STATIC ******************/
 
 
@@ -18,12 +14,11 @@ Core	*Core::getInstance(void)	{
 
 
 Core::Core(const std::ifstream &configFile) {
-	instance = this;
 	try {
 		std::vector<Handler *> handlers = ConfigParser::getHandlers(configFile);
 		for(std::vector<Handler *>::iterator it = handlers.begin(); it != handlers.end(); it++) {
 			Server server = Server((ServerHandler *) *it);
-			InitType initType = server.init(3);
+			InitType initType = server.init(this->servers, 3);
 			if(initType == SUCCESS)
 				this->servers.push_back(server);
 			else {
@@ -120,14 +115,14 @@ void	Core::run(void) {
 					 // Procesar la solicitud del cliente
 					 buffer[bytesRead] = '\0'; // Asegurarnos de terminar el buffer como una cadena de caracteres
 					 HttpRequest request(buffer);
-					 HttpResponse *response = getResponse(&request);
+					 HttpResponse *response = getResponse(request);
 					 if(response) {
 						 std::string responseString = response->toString();
 						 send(pollEvents[i].fd, responseString.c_str(), responseString.length(), 0);
 					 }
-					 //if(!request->getHeaders()->contains("Keep-alive")) {
-					//	 clientSockets.erase(clientSockets.begin() + i);
-					 //}
+					 if(!request.headContains("Keep-alive")) {
+						 clientSockets.erase(clientSockets.begin() + i);
+					 }
 				}
 			}
 		}

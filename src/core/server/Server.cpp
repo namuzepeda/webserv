@@ -30,11 +30,7 @@ int	Server::getSocket(void) {
 	return (this->serverSocket);
 }
 
-InitType Server::test(int times) {
-	return init(times);
-}
-
-InitType Server::init(int tryTimes) {
+InitType Server::init(const std::vector<Server> &servers, int tryTimes) {
 	Config *config =  this->handler->getConfig();
 
 	socketAddr.sin_family = AF_INET;
@@ -43,8 +39,7 @@ InitType Server::init(int tryTimes) {
 
 
 	InitType type = BIND_ERROR;
-	std::vector<Server> servers = Core::getInstance()->getServers();
-	for(std::vector<Server>::iterator it = servers.begin(); (*it).id != this->id; it++) {
+	for(std::vector<Server>::const_iterator it = servers.begin(); (*it).id != this->id; it++) {
 		Server server = *it;
 		if(this->host == server.host && this->port == server.port) {
 			this->serverSocket = server.serverSocket;
@@ -78,6 +73,10 @@ InitType Server::init(int tryTimes) {
 		}
 	}
 	return (type);
+}
+
+ServerHandler *Server::getHandler(void) {
+	return (this->handler);
 }
 
 

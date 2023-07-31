@@ -29,7 +29,8 @@ CONFIG_DIR					=	core/config/
 CONFIG						=	Config.cpp
 
 CONFIG_HOLD_DIR				=	core/config/holders/
-CONFIG_HOLD					=	ServerHolder.cpp
+CONFIG_HOLD					=	ServerHolder.cpp \
+								LocationHolder.cpp
 
 HANDLER_DIR					=	core/handlers/
 HANDLER						=	Handler.cpp \

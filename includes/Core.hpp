@@ -7,9 +7,6 @@ class Core
 {
 	private:
 
-		static Core	*instance;
-
-
 		std::vector<Server>	servers;
 
 	public:
