@@ -12,12 +12,14 @@ std::string ConfigParserUtils::IDENTIFIERS[] = {
 		"index",
 		"return",
 		"cgi_path",
-		"cgi_ext"
+		"cgi_ext",
+		""
 };
 
 std::string ConfigParserUtils::CONTEXTS[] = {
 		"server",
-		"location"
+		"location",
+		""
 };
 
 

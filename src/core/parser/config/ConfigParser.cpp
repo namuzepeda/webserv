@@ -17,22 +17,30 @@ std::string SkipWhitespace(const std::string& line) {
 	return (pos != std::string::npos) ? line.substr(pos) : "";
 }
 
-Token *GetNextToken(std::string& line) {
+void addToken(std::vector<Token *> &tokens, Token *token) {
+	std::cout << "Adding " << token->type << " " << token->value << std::endl;
+	tokens.push_back(token);
+}
+
+void AddNextToken(std::vector<Token *> &tokens, std::string& line) {
 	line = SkipWhitespace(line);
 	if (line.empty()) {
-		return new Token(INVALID, "");
+		return ;
 	}
 
 	if (ConfigParserUtils::isBlockStart(line[0])) {
-		return new Token(BLOCK_START, std::string(1, line[0]));
+		addToken(tokens, new Token(BLOCK_START, std::string(1, line[0])) );
+		return ;
 	}
 
 	if (ConfigParserUtils::isBlockEnd(line[0])) {
-		return new Token(BLOCK_END, std::string(1, line[0]));
+		addToken(tokens, new Token(BLOCK_END, std::string(1, line[0])) );
+		return ;
 	}
 
 	if (ConfigParserUtils::isSemicolon(line[0])) {
-		return new Token(SEMICOLON, std::string(1, line[0]));
+		addToken(tokens, new Token(SEMICOLON, std::string(1, line[0])) );
+		return ;
 	}
 
 	size_t pos = line.find_first_of(" \t;");
@@ -40,18 +48,20 @@ Token *GetNextToken(std::string& line) {
 		pos = line.length();
 	}
 
+
+
 	std::string tokenValue = line.substr(0, pos);
 	line = line.substr(pos);
-	if (ConfigParserUtils::isIdentifier(tokenValue)) {
-		return new Token(IDENTIFIER, tokenValue);
-	}
-	else if(ConfigParserUtils::isContext(line)) {
-		return new Token(CONTEXT, tokenValue);
-	} else if (ConfigParserUtils::isValue(tokenValue)) {
-		return new Token(VALUE, tokenValue);
-	}
+	
+	if (ConfigParserUtils::isIdentifier(tokenValue))
+		addToken(tokens, new Token(IDENTIFIER, tokenValue) );
 
-	return new Token( INVALID, "" );
+	if(ConfigParserUtils::isContext(tokenValue))
+		addToken(tokens, new Token(CONTEXT, tokenValue));
+	
+	if (ConfigParserUtils::isValue(tokenValue))
+		addToken(tokens, new Token(VALUE, tokenValue) );
+	AddNextToken(tokens, line);
 }
 
 const std::vector<Token *> parse(const std::ifstream &configFile) {
@@ -59,7 +69,8 @@ const std::vector<Token *> parse(const std::ifstream &configFile) {
 	std::string line;
 
 	while (std::getline((std::ifstream &) configFile, line)) {
-		tokens.push_back(GetNextToken(line));
+		std::cout << "line1: " << line << std::endl;
+		AddNextToken(tokens, line);
 	}
 
 	return (tokens);
@@ -75,7 +86,7 @@ std::vector<Handler *> ConfigParser::getHandlers(const std::ifstream &configFile
 
 		Handler *handler = tempHandlers.size() ? tempHandlers[tempHandlers.size() - 1] : NULL;
 
-
+		std::cout << (*it)->value << " " << (*it)->type << std::endl;
 		if((*it)->type == BLOCK_END && handler != NULL) {
 			tempHandlers.pop_back();
 			if(tempHandlers.size() > 0)
@@ -84,16 +95,17 @@ std::vector<Handler *> ConfigParser::getHandlers(const std::ifstream &configFile
 				handlers.push_back(handler);
 		} else if ((*it)->type == CONTEXT) {
 			ContextType contextType = ConfigParserUtils::getContext(*it);
-			std::string value = 0;
+			std::string value;
 			it++;
+			std::cout << "check " << (*it)->value << std::endl;;
 			if((*it)->type == VALUE)
 			{
+				
 				value = (*it)->value;
 				it++;
 			}
-
 			if((*it)->type != BLOCK_START)
-				throw std::runtime_error("Error on configuration file");
+				throw std::runtime_error("Error on configuration file1");
 			tempHandlers.push_back(
 					ConfigParserUtils::getHandler(
 							ConfigParserUtils::getHolder(contextType), value
@@ -103,14 +115,15 @@ std::vector<Handler *> ConfigParser::getHandlers(const std::ifstream &configFile
 			std::string identifier = (*it)->value;
 			it++;
 			if((*it)->type != VALUE)
-				throw std::runtime_error("Error on configuration file");
+				throw std::runtime_error("Error on configuration file2");
 			std::string value = (*it)->value;
 			it++;
 			if((*it)->type != SEMICOLON)
-				throw std::runtime_error("Error on configuration file");
+				throw std::runtime_error("Error on configuration file3");
 			handler->getConfig()->put(identifier, value);
 		} else {
-			throw std::runtime_error("Error on configuration file");
+
+			throw std::runtime_error("Error on configuration file4");
 		}
 	}
 	return (handlers);
