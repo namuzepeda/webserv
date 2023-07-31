@@ -19,15 +19,17 @@ Core::Core(const std::ifstream &configFile) {
 		for(std::vector<Handler *>::iterator it = handlers.begin(); it != handlers.end(); it++) {
 			Server server = Server((ServerHandler *) *it);
 			InitType initType = server.init(this->servers, 3);
-			if(initType == SUCCESS)
+			if(initType == SUCCESS) {
 				this->servers.push_back(server);
-			else {
-				//Error
+				std::cerr << "SUCCCESS" << std::endl;
+			} else {
+				std::cerr << "ERROR " << initType << std::endl;
 			}
 		}
 	} catch (const std::runtime_error& error) {
 		std::cerr << error.what() << std::endl;
 	}
+	run();
 }
 
 HttpResponse *Core::getResponse(const HttpRequest &request) {
@@ -99,7 +101,7 @@ void	Core::run(void) {
 			}
 		}
 
-		for (size_t i = sockets.size(); i < pollEvents.size(); ++i) {
+		for (size_t i = 1; i < pollEvents.size(); ++i) {
 			if (pollEvents[i].revents & POLLIN || pollEvents[i].revents & POLLOUT) {
 				char buffer[Config::DEFAULT_BUFFER_SIZE] = {0};
 				int bytesRead = recv(pollEvents[i].fd, buffer, sizeof(buffer) + 1, 0);
@@ -110,18 +112,19 @@ void	Core::run(void) {
 					 std::cout << "Conexión cerrada con un cliente." << std::endl;
 
 					 // Eliminar el socket del cliente del vector de clientes
-					 clientSockets.erase(clientSockets.begin() + i);
+					 clientSockets.erase(clientSockets.begin() + i - 1);
 				} else {
 					 // Procesar la solicitud del cliente
 					 buffer[bytesRead] = '\0'; // Asegurarnos de terminar el buffer como una cadena de caracteres
 					 HttpRequest request(buffer);
+					 std::cout << request << std::endl;
 					 HttpResponse *response = getResponse(request);
 					 if(response) {
 						 std::string responseString = response->toString();
 						 send(pollEvents[i].fd, responseString.c_str(), responseString.length(), 0);
 					 }
 					 if(!request.headContains("Keep-alive")) {
-						 clientSockets.erase(clientSockets.begin() + i);
+						 clientSockets.erase(clientSockets.begin() + i - 1);
 					 }
 				}
 			}

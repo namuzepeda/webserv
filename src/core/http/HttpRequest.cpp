@@ -70,8 +70,12 @@ HttpRequest::HttpRequest(const char * buffer){
 	// Extract host and port from headers
 	setHostAndPort(headers, host, port);
 	
-    // set the body
-    body = iss.str().substr(iss.tellg());
+    std::stringstream requestBodyStream;
+	std::string bodyLine;
+	while (std::getline(iss, bodyLine)) {
+		requestBodyStream << bodyLine << '\n';
+	}
+	body = requestBodyStream.str();
 }
 
 

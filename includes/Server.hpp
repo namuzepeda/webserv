@@ -45,7 +45,6 @@ class Server
 		int							getSocket();
 
 		InitType 					init(const std::vector<Server> &servers, int tryTimes);
-		InitType					test(int times);
 };
 
 #endif
