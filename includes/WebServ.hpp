@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 17:35:06 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/07/30 23:10:55 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/09 23:18:33 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,15 @@ enum InitType {
 #include <stdlib.h>
 #include <unistd.h>
 #include <poll.h>
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+#include <unistd.h>
+#include <sys/wait.h>
 
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
+#include "CGIHandler.hpp"
 
 #include "Config.hpp"
 #include "Handler.hpp"
