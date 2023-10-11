@@ -27,6 +27,7 @@ class HttpRequest
 		std::string							host;
 		std::string							port;
 		std::string							body;
+		Config								config;
 
 	public:
 
@@ -42,7 +43,8 @@ class HttpRequest
 		bool		headContains(const std::string& key);
 		std::string	getHeadValue(const std::string& key);
 		std::string	const &getHost() const;
-		std::string const &getPort() const;						
+		std::string const &getPort() const;		
+		Config		const &getConfig() const;				
 
 };
 

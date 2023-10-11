@@ -23,6 +23,26 @@ LocationHandler::~LocationHandler() {
 void LocationHandler::run(const HttpRequest &request, const HttpResponse &response) {
 	(void) request;
 	(void) response;
+
+	//Setear las distintas configuraciones handler
+	if(this->getConfig("cgi_pass") != NULL)
+	{
+		request->getConfig().put("cgi_pass", this->getConfig("cgi_pass"));
+	}
+	if(this->getConfig("root") != NULL)
+	{
+		request->getConfig().put("root", this->getConfig("root"));
+	}
+	for(std::vector<Handler *>::iterator it = this->childs.begin(); it != this->childs.end(); it++) {
+		Handler *handler = *it;
+		if(handler->getConfig()->getType() == LOCATION) {
+			LocationHandler *locHandler = (LocationHandler *) handler;
+			if (request.getLocation().find(locHandler->getPath()) != 0) //Handler path found in request path at position 0
+				return ;
+			locHandler->run(request, response);
+		}
+		handler->run(request, response);
+	}
 }
 
 std::string LocationHandler::getPath() {
