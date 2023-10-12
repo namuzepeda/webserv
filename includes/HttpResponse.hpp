@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 21:03:32 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/10/09 22:13:56 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/12 18:09:37 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 class HttpResponse
 {
 	private:
-
+		HttpRequest							request;
 		std::string							statusLine;
 		std::map<std::string, std::string>	headers;
 		std::string							body;
@@ -26,21 +26,63 @@ class HttpResponse
 
 	public:
 
-		HttpResponse(void);
-
-		HttpResponse(std::string body, RequestType const &type);
+		HttpResponse(HttpRequest const &request);
 		HttpResponse(HttpResponse const &copy);
 
 		HttpResponse const	&operator=(HttpResponse const &copy);
 		virtual				~HttpResponse() {}
 
-		std::map<std::string, std::string> const	&getHeaders(void) const;
-		std::string	const							&getBody(void) const;
-		RequestType 								getType(void);
+		std::string		toString(void);
+	
+};
+/*
+class HttpResponse {
+public:
+    // Constructor que toma una HttpRequest y otros argumentos necesarios
+    HttpResponse(const HttpRequest& request,  otros argumentos ) : request_(request) {
+        // Inicializa la respuesta HTTP
+        status_code_ = 200;  // Código de estado de respuesta por defecto (OK).
+        // Otros valores iniciales y configuraciones de encabezados, cuerpo, etc.
+    }
 
-		std::string									toString(void);
+    // Método para generar la respuesta HTTP como una cadena
+    std::string toString() {
+        std::string response;
 
+        // 1. Genera la línea de estado (status line)
+        std::string status_line = "HTTP/1.1 " + std::to_string(status_code_) + " " + getReasonPhrase(status_code_);
+        response += status_line + "\r\n";
+
+        // 2. Agrega encabezados HTTP
+        // Debes configurar los encabezados necesarios basados en la solicitud y tus requerimientos.
+        // Por ejemplo, puedes agregar un encabezado "Content-Type", "Content-Length", "Server", etc.
+        // Utiliza la información de la solicitud y otros datos según sea necesario.
+
+        // 3. Agrega una línea en blanco para separar encabezados y cuerpo
+        response += "\r\n";
+
+        // 4. Agrega el cuerpo de la respuesta si es necesario
+        // El cuerpo puede ser HTML, texto, JSON, o cualquier otro contenido que desees enviar.
+
+        return response;
+    }
+
+private:
+    HttpRequest request_;
+    int status_code_;  // Código de estado de la respuesta
+
+    // Método para obtener la frase de estado (reason phrase) a partir del código de estado
+    std::string getReasonPhrase(int status_code) {
+        // Debes implementar una función que devuelva la frase de estado correspondiente al código.
+        // Puedes definir un mapeo o una lista de códigos de estado y sus frases asociadas.
+        // Por ejemplo, "200" se asocia a "OK".
+        // "404" se asocia a "Not Found".
+        // "500" se asocia a "Internal Server Error", y así sucesivamente.
+        // Implementa este método según tus necesidades.
+        return "";  // Reemplaza con la frase de estado correspondiente
+    }
 };
 
+*/
 
 #endif
