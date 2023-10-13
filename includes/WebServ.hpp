@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 17:35:06 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/10/09 23:18:33 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/13 17:55:05 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 
 #include <iostream>
 #include <string>
+
+#define limitRequestBody	7340032 //7 megabytes
 
 enum ContextType {
 	SERVER,

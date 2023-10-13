@@ -33,11 +33,11 @@ Core::Core(const std::ifstream &configFile) {
 }
 
 HttpResponse *Core::getResponse(const HttpRequest &request) {
-	HttpResponse *response = new HttpResponse();
+	HttpResponse *response = new HttpResponse(request);
 	for(std::vector<Server>::iterator it = this->servers.begin(); it != this->servers.end(); it++) {
 		Server server = *it;
 		if(ServerUtils::doesRequestApply(server, request)) {
-			server.getHandler()->run(request, *response);
+			server.getHandler()->run(request);
 		}
 		return (response);
 	}

@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 21:03:32 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/10/12 18:09:37 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/13 17:46:01 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ class HttpResponse
 {
 	private:
 		HttpRequest							request;
+        int                                 statusCode;
 		std::string							statusLine;
 		std::map<std::string, std::string>	headers;
 		std::string							body;
@@ -26,7 +27,7 @@ class HttpResponse
 
 	public:
 
-		HttpResponse(HttpRequest const &request);
+		HttpResponse(HttpRequest const &requ);
 		HttpResponse(HttpResponse const &copy);
 
 		HttpResponse const	&operator=(HttpResponse const &copy);

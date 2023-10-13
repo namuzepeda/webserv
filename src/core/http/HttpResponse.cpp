@@ -1,7 +1,9 @@
 #include "WebServ.hpp"
 
-HttpResponse::HttpResponse(void): type(GET) {
-
+HttpResponse::HttpResponse(HttpRequest const &requ)
+: request(requ), statusCode(200)
+{
+	if (request.body.size() > limitRequestBody)
 }
 
 std::string HttpResponse::toString(void) {
