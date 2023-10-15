@@ -26,22 +26,27 @@ Core::Core(const std::ifstream &configFile) {
 				std::cerr << "ERROR " << initType << std::endl;
 			}
 		}
-	} catch (const std::runtime_error& error) {
+	} catch (const std::runtime_error &error) {
 		std::cerr << error.what() << std::endl;
 	}
 	run();
 }
 
-HttpResponse *Core::getResponse(const HttpRequest &request) {
-	HttpResponse *response = new HttpResponse();
+std::string Core::getResponse(const HttpRequest &request) {
+	HttpResponse response == NULL;
 	for(std::vector<Server>::iterator it = this->servers.begin(); it != this->servers.end(); it++) {
 		Server server = *it;
 		if(ServerUtils::doesRequestApply(server, request)) {
-			server.getHandler()->run(request, *response);
+			server.getHandler()->run(request);
+			response = HttpResponse(request);
+			return (response);
 		}
-		return (response);
 	}
-	return (NULL);
+	if(response == NULL) {
+		response = HttpRequest();
+		response.statusCode = 400; //Bad request
+	}
+	return (response.toString());
 }
 
 void	Core::run(void) {

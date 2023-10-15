@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   LocationHandler.cpp                                  :+:      :+:    :+:   */
+/*   LocationHandler.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -20,7 +20,7 @@ LocationHandler::~LocationHandler() {
 
 }
 
-void LocationHandler::run(const HttpRequest &request, const HttpResponse &response) {
+void LocationHandler::run(const HttpRequest &request) {
 	(void) request;
 	(void) response;
 }

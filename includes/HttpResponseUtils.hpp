@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ServerHandler.hpp                                  :+:      :+:    :+:   */
+/*   HttpResponseUtils.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/18 21:03:32 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/07/19 16:22:03 by gamoreno         ###   ########.fr       */
+/*   Created: 2023/07/20 20:12:08 by nmunoz            #+#    #+#             */
+/*   Updated: 2023/07/20 20:12:08 by nmunoz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_HANDLER_H
-#define SERVER_HANDLER_H
+#ifndef HTTP_RESPONSE_UTILS_H
+#define HTTP_RESPONSE_UTILS_H
 
 #include "WebServ.hpp"
 
-class ServerHandler : public Handler
-{
-	public:
 
-		ServerHandler(Config *config);
+class HttpResponseUtils {
 
-		virtual					~ServerHandler();
+	
 
-		virtual void			run(const HttpRequest &request);
 };
+
 
 #endif

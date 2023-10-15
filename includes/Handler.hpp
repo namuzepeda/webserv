@@ -34,7 +34,7 @@ class Handler
 		Config							*getConfig(void);
 		void							setConfig(Config *config);
 
-		virtual void	 				run(const HttpRequest &request, const HttpResponse &response) = 0;
+		virtual void	 				run(const HttpRequest &request) = 0;
 
 };
 
