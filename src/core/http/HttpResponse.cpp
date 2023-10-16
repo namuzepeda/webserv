@@ -75,43 +75,11 @@ std::string HttpResponse::toString(void) {
 }
 
 void	HttpResponse::buildResponse(void) {
+	
 	if (statusCode != 200) {
 		//inicializar otros valores de forma estandar 
 		finalResponse = ErrorMessage(statusCode); //por cuadrar bien
 	}
 	else
 		finalResponse = toString();
-}
-
-std::string HttpResponse::GetStatusMessage(int statusCode) {
-    std::string message;
-    
-    switch (statusCode) {
-        case 200:
-            message = "OK";
-            break;
-        case 201:
-            message = "Created";
-            break;
-        case 400:
-            message = "Bad Request";
-            break;
-        case 404:
-            message = "Not Found";
-            break;
-        case 413:
-            message = "Request Entity Too Large";
-            break;
-		case 500:
-			message = "Internal Server Error";
-			break;
-		case 505:
-			message = "Version Not Supported";
-			break;
-        default:
-            message = "Unknown Status";
-            break;
-    }
-
-    return message;
 }

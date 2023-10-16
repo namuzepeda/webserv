@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 17:35:06 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/10/13 17:55:05 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/16 19:16:02 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,12 @@ enum InitType {
 	SUCCESS
 };
 
+enum HttpStatusCode {
+	OK = 200,
+	NotFound = 404,
+	BadRequest = 400,
+	InternalServerError = 500
+};
 #include <algorithm>
 #include <vector>
 #include <fstream>
@@ -76,6 +82,7 @@ enum InitType {
 
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
+#include "HttpResponseUtils.hpp"
 #include "CGIHandler.hpp"
 
 #include "Config.hpp"

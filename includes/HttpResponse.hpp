@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 21:03:32 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/10/16 18:25:43 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/16 19:18:55 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ class HttpResponse
 		int				CheckRequestLine(const std::string& requestLine);
 		bool			IsUriValid(const std::string& uri);
 		std::string		toString(void);
-		std::string		GetStatusMessage(int statusCode);
 		void			buildResponse(void);
 
 	public:
