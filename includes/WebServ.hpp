@@ -55,6 +55,13 @@ enum InitType {
 	SUCCESS
 };
 
+enum HttpStatusCode {
+    OK = 200,
+    NotFound = 404,
+    BadRequest = 400,
+    InternalServerError = 500
+};
+
 #include <algorithm>
 #include <vector>
 #include <fstream>

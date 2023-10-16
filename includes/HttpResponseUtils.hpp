@@ -18,7 +18,11 @@
 
 class HttpResponseUtils {
 
+	private:
+		static std::map<HttpStatusCode, std::string> codes;
 	
+	public:
+		std::string getStatus(HttpStatusCode code);
 
 };
 
