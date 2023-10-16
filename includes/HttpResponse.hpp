@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 21:03:32 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/10/16 19:18:55 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/16 20:53:54 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@ class HttpResponse
 {
 	private:
 		HttpRequest							request;
-		int									statusCode;
+		HttpStatusCode						statusCode;
 		std::string							statusLine;
 		std::map<std::string, std::string>	headers;
 		std::string							body;
 		std::string							finalResponse;
 		
-		int				CheckRequestLine(const std::string& requestLine);
-		bool			IsUriValid(const std::string& uri);
+		HttpStatusCode	CheckRequestLine(const std::string& requestLine);
+		HttpStatusCode	IsUriValid(const std::string& uri);
 		std::string		toString(void);
-		void			buildResponse(void);
+		bool			goodQueryArgs(const std::string& query);
 
 	public:
 

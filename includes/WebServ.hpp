@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 17:35:06 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/10/16 19:16:02 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/16 20:33:42 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@
 #include <string>
 
 #define limitRequestBody	7340032 //7 megabytes
+#define limitUriSize		4096 //characters
+//longitud maxima de encabezados en bytes
+//longitud maxima de campos en formularios en caracteres
+//tamano maximo de carga util megabites
+//tamano maximo dearchivos que puedan descargarse megabtes
 
 enum ContextType {
 	SERVER,
@@ -59,10 +64,16 @@ enum InitType {
 
 enum HttpStatusCode {
 	OK = 200,
-	NotFound = 404,
+	Created = 201,
 	BadRequest = 400,
+	NotFound = 404,
+	MethodNotAllowed = 405,
+	RequestEntityTooLarge = 413,
+	RequestUriTooLong = 414,
+	VersionNotSupported = 505,
 	InternalServerError = 500
 };
+
 #include <algorithm>
 #include <vector>
 #include <fstream>

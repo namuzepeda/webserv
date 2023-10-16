@@ -6,7 +6,9 @@ void    HttpResponseUtils::initStatusMap(void) {
         statusMap[201] = "Created";
         statusMap[404] = "Not Found";
         statusMap[400] = "Bad Request";
+        statusMap[405] = "Method Not Allowed";
         statusMap[413] = "Request Entity Too Large";
+        statusMap[414] = "Request-URI Too Long";
         statusMap[505] = "Version Not Supported";
         statusMap[500] = "Internal Server Error";
     }
