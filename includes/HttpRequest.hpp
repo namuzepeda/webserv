@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 21:03:32 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/10/09 23:30:57 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/16 18:57:40 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ class HttpRequest
 		std::string							type;
 		std::string							location;
 		std::string							version;
+		std::string							parameters;
 		std::map<std::string, std::string>	headers;
 		std::string							host;
 		std::string							port;
@@ -37,6 +38,7 @@ class HttpRequest
 		std::string	const &getReqLine() const;
 		std::string	const &getType() const;
 		std::string	const &getLocation() const;
+		std::string	const &getParameters() const;
 		std::string	const &getVersion() const;
 		std::string	const &getBody() const;
 		std::map<std::string, std::string> const &getHeaders() const;

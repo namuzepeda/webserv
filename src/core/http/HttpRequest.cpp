@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 23:10:09 by gamoreno          #+#    #+#             */
-/*   Updated: 2023/07/31 01:34:05 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/16 18:58:31 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,10 @@ std::string const &HttpRequest::getType() const{
 
 std::string	const &HttpRequest::getLocation() const{
 	return (this->location);
+}
+
+std::string	const &HttpRequest::getParameters() const{
+	return (this->parameters);
 }
 
 std::string	const &HttpRequest::getVersion() const{
