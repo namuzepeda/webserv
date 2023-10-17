@@ -17,11 +17,11 @@ Core::Core(const std::ifstream &configFile) {
 	try {
 		std::vector<Handler *> handlers = ConfigParser::getHandlers(configFile);
 		for(std::vector<Handler *>::iterator it = handlers.begin(); it != handlers.end(); it++) {
-			Server server = Server((ServerHandler *) *it);
-			InitType initType = server.init(this->servers, 3);
+			Server *server = new Server((ServerHandler *) *it);
+			InitType initType = server->init(this->servers, 3);
 			if(initType == SUCCESS) {
 				this->servers.push_back(server);
-				std::cerr << "SUCCCESS" << std::endl;
+				std::cerr << "SUCCESS" << std::endl;
 			} else {
 				std::cerr << "ERROR " << initType << std::endl;
 			}
@@ -32,39 +32,46 @@ Core::Core(const std::ifstream &configFile) {
 	run();
 }
 
+Core::~Core() {
+	for (std::vector<Server *>::iterator it = this->servers.begin(); it != this->servers.end(); ++it) {
+		Server *server = *it;
+		delete server;
+	}
+	this->servers.clear();
+}
+
 std::string Core::getResponse(const HttpRequest &request) {
-	HttpResponse response == NULL;
-	for(std::vector<Server>::iterator it = this->servers.begin(); it != this->servers.end(); it++) {
-		Server server = *it;
-		if(ServerUtils::doesRequestApply(server, request)) {
-			server.getHandler()->run(request);
-			response = HttpResponse(request);
-			return (response);
+	for(std::vector<Server *>::iterator it = this->servers.begin(); it != this->servers.end(); it++) {
+		Server *server = *it;
+		if(ServerUtils::doesRequestApply(*server, request)) {
+			server->getHandler()->run(request);
+			//HttpResponse response(request);
+			//return (response.toString());
+			return ("");
 		}
 	}
-	if(response == NULL) {
-		response = HttpRequest();
-		response.statusCode = 400; //Bad request
-	}
-	return (response.toString());
+	//response = HttpRequest();
+	//response.statusCode = 400; //Bad request
+	//return (response.toString());
+	return ("");
 }
 
 void	Core::run(void) {
 
 	std::vector<int> sockets;
 
-	for(std::vector<Server>::iterator it = this->servers.begin(); it != this->servers.end(); it++)
+	for(std::vector<Server *>::iterator it = this->servers.begin(); it != this->servers.end(); it++)
 	{
-		std::vector<int>::iterator findIt = std::find(sockets.begin(), sockets.end(), (*it).getSocket());
+		std::vector<int>::iterator findIt = std::find(sockets.begin(), sockets.end(), (*it)->getSocket());
 		if(findIt == sockets.end()) { //No contiene socket
-			sockets.push_back((*it).getSocket());
+			sockets.push_back((*it)->getSocket());
 		}
 	}
 
 	std::vector<int> clientSockets;
 	std::vector<pollfd> pollEvents;
 
-	while (true) {
+	while (!Core::stopped) {
 		pollEvents.clear();
 
 		for (std::vector<int>::iterator it = sockets.begin(); it != sockets.end(); it++) {
@@ -84,7 +91,8 @@ void	Core::run(void) {
 
 		int ready = poll(&pollEvents[0], pollEvents.size(), -1);
 		if (ready == -1) {
-			std::cerr << "Error en la función poll()." << std::endl;
+			if(!Core::stopped)
+				std::cerr << "Error en la función poll()." << std::endl;
 			break;
 		}
 
@@ -121,16 +129,20 @@ void	Core::run(void) {
 				} else {
 					 // Procesar la solicitud del cliente
 					 buffer[bytesRead] = '\0'; // Asegurarnos de terminar el buffer como una cadena de caracteres
-					 HttpRequest request(buffer);
-					 std::cout << request << std::endl;
-					 HttpResponse *response = getResponse(request);
+					 //HttpRequest request(buffer);
+					 //std::cout << request << std::endl;
+					 
+					 std::string responseString = HttpResponseUtils::testResponse(OK, HttpResponseUtils::errorBody(OK));
+					 std::cout << "returning response " << std::endl << responseString.c_str() << std::endl;
+					 send(pollEvents[i].fd, responseString.c_str(), responseString.length(), 0);
+					 /*HttpResponse *response = getResponse(request);
 					 if(response) {
 						 std::string responseString = response->toString();
 						 send(pollEvents[i].fd, responseString.c_str(), responseString.length(), 0);
 					 }
 					 if(!request.headContains("Keep-alive")) {
 						 clientSockets.erase(clientSockets.begin() + i - 1);
-					 }
+					 }*/
 				}
 			}
 		}
@@ -148,12 +160,7 @@ void	Core::run(void) {
 	}
 }
 
-Core::~Core() {
-
-}
-
-
-std::vector<Server> const &Core::getServers(void) const {
+std::vector<Server *> const &Core::getServers(void) const {
 	return (this->servers);
 }
 

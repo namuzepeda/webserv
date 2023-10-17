@@ -22,7 +22,6 @@ LocationHandler::~LocationHandler() {
 
 void LocationHandler::run(const HttpRequest &request) {
 	(void) request;
-	(void) response;
 }
 
 std::string LocationHandler::getPath() {

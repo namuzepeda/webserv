@@ -21,10 +21,12 @@ ServerHandler::~ServerHandler() {
 }
 
 void ServerHandler::run(const HttpRequest &request) {
+	//request.setRoot(this->path);
 	for(std::vector<Handler *>::iterator it = this->childs.begin(); it != this->childs.end(); it++) {
 		Handler *handler = *it;
 		LocationHandler *locHandler = (LocationHandler *) handler;
 		if (request.getLocation().find(locHandler->getPath()) == 0) //Handler path found in request path at position 0
-			locHandler->run(request, response);
+			locHandler->run(request); //solo request
 	}
+	
 }

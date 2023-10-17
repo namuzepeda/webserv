@@ -7,20 +7,22 @@ class Core
 {
 	private:
 
-		std::vector<Server>	servers;
+		std::vector<Server *>	servers;
 
 	public:
 
 
-		static Core			*getInstance(void);
+		static bool					stopped;
+
+		static Core					*getInstance(void);
 
 
 		Core(const std::ifstream &configFile);
-		virtual ~Core();
+		virtual 					~Core();
 
-		std::vector<Server> const 	&getServers(void) const;
+		std::vector<Server *> const &getServers(void) const;
 
-		HttpResponse				*getResponse(const HttpRequest &request);
+		std::string					getResponse(const HttpRequest &request);
 		void						run(void);
 
 };

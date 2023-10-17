@@ -115,7 +115,7 @@ std::map<std::string, std::string> const &HttpRequest::getHeaders() const{
 	return (this->headers);	
 }
 
-bool		HttpRequest::headContains(const std::string& key){
+bool	HttpRequest::headContains(const std::string& key){
 	std::map<std::string, std::string>::iterator it = headers.find(key);
 	if (it != headers.end())
 		return (true);
@@ -129,6 +129,10 @@ std::string	HttpRequest::getHeadValue(const std::string& key){
 	if (it != headers.end())
 		ret = it->second;
 	return (ret);
+}
+
+Config	*HttpRequest::getConfig(void) {
+	return (this->config);
 }
 
 std::ostream &operator<<(std::ostream &o, HttpRequest const &i)

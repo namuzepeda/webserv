@@ -57,11 +57,12 @@ enum InitType {
 
 enum HttpStatusCode {
     OK = 200,
-    NotFound = 404,
     BadRequest = 400,
+    NotFound = 404,
     InternalServerError = 500
 };
 
+#include <signal.h>
 #include <algorithm>
 #include <vector>
 #include <fstream>
@@ -74,10 +75,12 @@ enum HttpStatusCode {
 #include <unistd.h>
 #include <poll.h>
 
+#include "Config.hpp"
+
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
+#include "HttpResponseUtils.hpp"
 
-#include "Config.hpp"
 #include "Handler.hpp"
 #include "ConfigParser.hpp"
 #include "ConfigParserUtils.hpp"
