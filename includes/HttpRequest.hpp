@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 21:03:32 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/10/16 18:57:40 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/17 16:21:19by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,22 @@ class HttpRequest
 {
 	private:
 
+		HttpStatusCode						statusCode;
 		std::string							line;
-		std::string							type;
+		RequestType							type;
 		std::string							location;
+		std::string							query;
 		std::string							version;
-		std::string							parameters;
 		std::map<std::string, std::string>	headers;
 		std::string							host;
 		std::string							port;
 		std::string							body;
 		Config								config;
+
+	void			setLineParts(std::string& line, RequestType& type, std::string& location, std::string& version);
+	void			initVarErrorCase(void);
+	bool			goodQueryArgs(const std::string& query);
+	void			IsUriValid(const std::string& uri);
 
 	public:
 

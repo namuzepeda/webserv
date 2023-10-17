@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 17:35:06 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/10/16 20:33:42 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/17 17:02:23 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ enum ContextType {
 enum RequestType {
 	GET,
 	POST,
-	DELETE
+	DELETE,
+	NONE
 };
 
 enum TokenType {
