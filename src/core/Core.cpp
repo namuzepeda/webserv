@@ -74,6 +74,7 @@ void	Core::run(void) {
 	while (!Core::stopped) {
 		pollEvents.clear();
 
+		//Esto se encarga del multiplexing
 		for (std::vector<int>::iterator it = sockets.begin(); it != sockets.end(); it++) {
 			int serverSocket = *it;
 			pollfd serverEvent;
@@ -125,7 +126,7 @@ void	Core::run(void) {
 					 std::cout << "Conexión cerrada con un cliente." << std::endl;
 
 					 // Eliminar el socket del cliente del vector de clientes
-					 clientSockets.erase(clientSockets.begin() + i - 1);
+					 clientSockets.erase(clientSockets.begin() + i);
 				} else {
 					 // Procesar la solicitud del cliente
 					 buffer[bytesRead] = '\0'; // Asegurarnos de terminar el buffer como una cadena de caracteres
