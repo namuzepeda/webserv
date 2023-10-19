@@ -124,8 +124,8 @@ void	Core::run(void) {
 					if (bytesRead <= 0) {
 						//std::cerr << "2" << std::endl;
 						// El cliente ha cerrado la conexión o ha ocurrido un error
-						clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
-						close(pollEvents[i].fd);
+						//clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
+						//close(pollEvents[i].fd);
 						//std::cout << "Conexión cerrada con un cliente." << std::endl;
 
 						// Eliminar el socket del cliente del vector de clientes
@@ -136,8 +136,8 @@ void	Core::run(void) {
 						buffer[bytesRead] = '\0'; // Asegurarnos de terminar el buffer como una cadena de caracteres
 						HttpRequest request(buffer);
 						//std::cout << request << std::endl;
-						
-						std::string responseString = HttpResponseUtils::testResponse(OK, HttpResponseUtils::errorBody(OK));
+						std::cout << "STATUS CODE " << request.getStatusCode() << std::endl;
+						std::string responseString = HttpResponseUtils::testResponse(request.getStatusCode(), HttpResponseUtils::errorBody(request.getStatusCode()));
 						//std::cerr << "Returning response " << std::endl << responseString << std::endl;
 						//std::cout << "returning response " << std::endl << responseString.c_str() << std::endl;
 						send(pollEvents[i].fd, responseString.c_str(), responseString.length(), 0);

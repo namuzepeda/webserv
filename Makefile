@@ -35,14 +35,14 @@ CONFIG_HOLD					=	ServerHolder.cpp \
 HANDLER_DIR					=	core/handlers/
 HANDLER						=	Handler.cpp \
 								ServerHandler.cpp \
-								LocationHandler.cpp \
+								LocationHandler.cpp
 								
 HTTP_DIR					=	core/http/
 HTTP						=	HttpRequest.cpp \
 								HttpResponse.cpp
 
-CGI_HANDLER_DIR				=	core/http/CGIHandler
-CGI_HANDLER					=	CGIHandler.cpp \
+CGI_HANDLER_DIR				=	core/http/CGIHandler/
+CGI_HANDLER					=	CGIHandler.cpp
 
 HTTP_UTILS_DIR				=	core/http/utils/
 HTTP_UTILS					=	HttpResponseUtils.cpp

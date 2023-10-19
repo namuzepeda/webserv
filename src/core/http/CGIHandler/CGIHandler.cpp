@@ -16,14 +16,14 @@
 ** ------------------------------- CONSTRUCTOR --------------------------------
 */
 
-CGIHandler::CGIHandler(const &std::string ressource, const &std::string parameters)
+CGIHandler::CGIHandler(const std::string &resource, const std::string &parameters)
 :_resource(resource), _parameters(parameters)
 {}
 
 CGIHandler::CGIHandler( const CGIHandler & src )
 {
-    _resource = src.resource;
-    _parameters = src.parameters;
+    _resource = src._resource;
+    _parameters = src._parameters;
 }
 
 
@@ -44,7 +44,7 @@ CGIHandler &				CGIHandler::operator=( CGIHandler const & rhs )
 	if (this != &rhs)
 	{
 		_resource = rhs._resource;
-		_parameters = rhs._parameter;
+		_parameters = rhs._parameters;
 	}
 	return *this;
 }
@@ -76,9 +76,9 @@ std::string		CGIHandler::executeScript()
         close(pipe_fd[1]);
 
         char* script_path = (char*)_resource.c_str();
-        char* script_argv[] = {script_path, nullptr};
+        char* script_argv[] = {script_path, NULL};
 
-        execve(script_path, script_argv, nullptr);
+        execve(script_path, script_argv, NULL);
 
         exit(1);
     } else if (pid > 0) {

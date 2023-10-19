@@ -25,7 +25,7 @@ class CGIHandler
 			resource = "/my_script.cgi";
 			parameters = "param1=value1&param2=value2"
 		*/
-		CGIHandler(const &std::string resource, const &std::string parameters);
+		CGIHandler(const std::string &resource, const std::string &parameters);
 		CGIHandler( CGIHandler const & src );
 		~CGIHandler();
 
@@ -33,8 +33,8 @@ class CGIHandler
 		std::string			executeScript();
 
 	private:
-		const std::string _resource;
-		const std::string _parameters;
+		std::string _resource;
+		std::string _parameters;
 };
 
 // std::ostream &			operator<<( std::ostream & o, CGIHandler const & i );

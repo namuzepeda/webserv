@@ -65,7 +65,7 @@ enum InitType {
 };
 
 enum HttpStatusCode {
-	OK = 200,
+	Ok = 200,
 	Created = 201,
 	BadRequest = 400,
 	NotFound = 404,

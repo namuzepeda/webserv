@@ -21,14 +21,14 @@ LocationHandler::~LocationHandler() {
 }
 
 void LocationHandler::run(const HttpRequest &request) {
-	if(this->getConfig("cgi_pass") != NULL)
+	/*if(this->getConfig("cgi_pass") != NULL)
 	{
 		request->getConfig().put("cgi_pass", this->getConfig("cgi_pass"));
 	}
 	if(this->getConfig("root") != NULL)
 	{
 		request->getConfig().put("root", this->getConfig("root"));
-	}
+	}*/
 	for(std::vector<Handler *>::iterator it = this->childs.begin(); it != this->childs.end(); it++) {
 		Handler *handler = *it;
 		if(handler->getConfig()->getType() == LOCATION) {

@@ -31,7 +31,7 @@ class HttpRequest
 		std::string							body;
 		Config								*config;
 
-	void		setLineParts(std::string& line, RequestType& type, std::string& location, std::string& version);
+	void		setLineParts(std::string& line, RequestType& type);
 	void		initVarErrorCase(void);
 	bool		goodQueryArgs(const std::string& query);
 	std::string	decodeURI(const std::string& encodedURL);
@@ -56,6 +56,7 @@ class HttpRequest
 		std::string	const &getQuery() const;
 		std::string	const &getVersion() const;
 		std::string	const &getBody() const;
+		HttpStatusCode		getStatusCode();
 		std::map<std::string, std::string> const &getHeaders() const;
 		bool		headContains(const std::string& key);
 		std::string	getHeadValue(const std::string& key);

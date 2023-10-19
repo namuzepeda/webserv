@@ -1,9 +1,10 @@
 #include "WebServ.hpp"
 
 HttpResponse::HttpResponse(HttpRequest const &requ)
-: request(requ), statusCode(OK)
+: request(requ), statusCode(Ok)
 {
-	HttpStatusCode	auxStatus;
+	
+	//HttpStatusCode	auxStatus;
 	//por pasar en el momento correcto a la request
 	// if (this->request.getBody().size() > limitRequestBody) {
 	// 	statusCode = RequestEntityTooLarge;
@@ -21,13 +22,13 @@ HttpResponse::HttpResponse(HttpRequest const &requ)
 
 }
 
-HttpResponse::HttpResponse(HttpResponse const &copy){
+/*HttpResponse::HttpResponse(HttpResponse const &copy){
 	//pendiente
 }
 
 HttpResponse 	&HttpResponse::operator=(HttpResponse const &copy) {
 	//pendiente
-}
+}*/
 
 HttpResponse::~HttpResponse() {
 	//pendiente

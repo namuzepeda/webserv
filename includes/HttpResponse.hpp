@@ -36,7 +36,7 @@ class HttpResponse
 		HttpResponse(HttpResponse const &copy);
 
 		HttpResponse 	&operator=(HttpResponse const &copy);
-		virtual				~HttpResponse() {}
+		~HttpResponse();
 		//get final response
 	
 };

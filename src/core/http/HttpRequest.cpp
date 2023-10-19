@@ -13,7 +13,7 @@
 #include "WebServ.hpp"
 
 
-HttpRequest::HttpRequest(const char * buffer) : statusCode(OK){
+HttpRequest::HttpRequest(const char * buffer) : statusCode(Ok){
 	std::string	Request = buffer;
 	std::istringstream iss(Request);
 	std::string currLine;
@@ -22,7 +22,7 @@ HttpRequest::HttpRequest(const char * buffer) : statusCode(OK){
 		std::getline(iss, line);
 		
 		//set request line
-		setLineParts(line, type, location, version);
+		setLineParts(line, type);
 
 		//set headers
 		while (std::getline(iss, currLine) && !currLine.empty()) {
@@ -59,9 +59,14 @@ HttpRequest::HttpRequest(const char * buffer) : statusCode(OK){
 	}
 }
 
+HttpRequest::~HttpRequest(void) {
+
+}
+
 HttpRequest::HttpRequest(HttpRequest const &src)
 {
 	this->statusCode = src.statusCode;
+	this->body = src.body;
 	this->line = src.line;
 	this->type = src.type;
 	this->location = src.location;
@@ -70,7 +75,7 @@ HttpRequest::HttpRequest(HttpRequest const &src)
 	this->headers = src.headers;
 	this->host = src.host;
 	this->port = src.port;
-	this->body = src.config;
+	this->config = src.config;
 }
 
 HttpRequest &HttpRequest::operator=(HttpRequest const &rhs)
@@ -86,7 +91,8 @@ HttpRequest &HttpRequest::operator=(HttpRequest const &rhs)
 		this->headers = rhs.headers;
 		this->host = rhs.host;
 		this->port = rhs.port;
-		this->body = rhs.config;
+		this->body = rhs.body;
+		this->config = rhs.config;
 	}
 	return *this;
 }
@@ -139,7 +145,7 @@ void	HttpRequest::initVarErrorCase(void) {
 	this->type = NONE;
 }
 
-void	HttpRequest::setLineParts(std::string& line, RequestType& type, std::string& location, std::string& version){
+void	HttpRequest::setLineParts(std::string& line, RequestType& type){
 	std::string::size_type	pos = line.find(' ');
 	std::string::size_type	auxpos = pos + 1;
 
@@ -154,12 +160,12 @@ void	HttpRequest::setLineParts(std::string& line, RequestType& type, std::string
 			type = DELETE;
 		else {
 			this->statusCode = MethodNotAllowed;
-			throw std::runtime_error("Something wrong in request");
+			throw std::runtime_error("Something wrong in request 1");
 		}
 	}
 	else {
 		this->statusCode = BadRequest;
-		throw std::runtime_error("Something wrong in request");
+		throw std::runtime_error("Something wrong in request 2");
 	}
 
 	//handle URI
@@ -171,21 +177,21 @@ void	HttpRequest::setLineParts(std::string& line, RequestType& type, std::string
 	}
 	else {
 		this->statusCode = BadRequest;
-		throw std::runtime_error("Something wrong in request");
+		throw std::runtime_error("Something wrong in request 3");
 	}
 
 	//Handle version
 	auxpos = pos + 1;
 	if (auxpos != std::string::npos) {
-		version = line.substr(auxpos);
-		if (version != "HTTP/1.1") {
+		this->version = line.substr(auxpos);
+		if (this->version != "HTTP/1.1") {
 			this->statusCode = VersionNotSupported;
-			throw std::runtime_error("Something wrong in request");
+			throw std::runtime_error("Something wrong in request 4");
 		}
 	}
 	else {
 		this->statusCode = BadRequest;
-		throw std::runtime_error("Something wrong in request");
+		throw std::runtime_error("Something wrong in request 5");
 	}
 	return ;
 }
@@ -211,6 +217,7 @@ void HttpRequest::IsUriValid(const std::string& uri) {
 	if (queryStart == std::string::npos) {
 		this->location = uri;
 		this->query = "";
+		std::cout << "URI " << uri << std::endl;
 	}
 	else {
 		this->location = uri.substr(0, queryStart);
@@ -218,17 +225,17 @@ void HttpRequest::IsUriValid(const std::string& uri) {
 	}
 	if (uri.length() > limitUriSize) {
 		this->statusCode = RequestUriTooLong;
-		throw std::runtime_error("Something wrong in request");
+		throw std::runtime_error("Something wrong in request 6");
 	}
 	if (uri.find(' ') != std::string::npos) {
 		this->statusCode = BadRequest;
-		throw std::runtime_error("Something wrong in request");
+		throw std::runtime_error("Something wrong in request 7");
 	}
 	for (std::string::size_type i = 0; i < location.length(); i++) {
 		char c = location[i];
 		if (!(isalnum(c) || c == '/' || c == '-' || c == '_' || c == '.')) {
 			this->statusCode = BadRequest;
-			throw std::runtime_error("Something wrong in request");
+			throw std::runtime_error("Something wrong in request 8");
 		}
 	}
 	for (std::string::size_type i = 0; i < query.length(); i++) {
@@ -236,12 +243,12 @@ void HttpRequest::IsUriValid(const std::string& uri) {
 		if (!(isalnum(c) || c == '/' || c == '-' || c == '_' || c == '.'
 		|| c == '&' || c == '=')) {
 			this->statusCode = BadRequest;
-			throw std::runtime_error("Something wrong in request");
+			throw std::runtime_error("Something wrong in request 9");
 		}
 	}
 	if (!HttpRequest::goodQueryArgs(query)) {
 		this->statusCode = BadRequest;
-		throw std::runtime_error("Something wrong in request");
+		throw std::runtime_error("Something wrong in request 10");
 	}
 }
 
@@ -286,7 +293,7 @@ void HttpRequest::setHostAndPort(std::map<std::string, std::string>& headers, st
 	std::map<std::string, std::string>::iterator it = headers.find("Host");
 	if (it == headers.end()) {
 		this->statusCode = BadRequest;
-		throw std::runtime_error("Something wrong in request");
+		throw std::runtime_error("Something wrong in request 11");
 	}
 	std::string contentHostLine = it->second;
 	std::string::size_type pos = contentHostLine.find(':');
@@ -331,6 +338,10 @@ std::string	const &HttpRequest::getHost() const{
 
 std::string const &HttpRequest::getPort() const{
 	return (this->port);	
+}
+
+HttpStatusCode		HttpRequest::getStatusCode() {
+	return (this->statusCode);
 }
 
 std::map<std::string, std::string> const &HttpRequest::getHeaders() const{
