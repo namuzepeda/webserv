@@ -36,6 +36,9 @@ int	Server::getSocket(void) {
 }
 
 InitType Server::init(const std::vector<Server *> &servers, int tryTimes) {
+
+	int use = 1;
+
 	Config *config =  this->handler->getConfig();
 
 	socketAddr.sin_family = AF_INET;
@@ -63,7 +66,12 @@ InitType Server::init(const std::vector<Server *> &servers, int tryTimes) {
 
 		int flags = fcntl(serverSocket, F_GETFL, 0);
 		fcntl(this->serverSocket, F_SETFL, flags | O_NONBLOCK);
-
+		if (setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, &use, sizeof(use)))
+		{
+			type = BIND_ERROR;
+			close(serverSocket);
+			continue ;
+		}
 		if (bind(serverSocket, (struct sockaddr *) &socketAddr, sizeof(socketAddr)) == -1) {
 			type = BIND_ERROR;
 			close(serverSocket);
