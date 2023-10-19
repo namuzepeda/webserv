@@ -13,8 +13,13 @@ std::string HttpResponseUtils::testResponse(HttpStatusCode statusCode, std::stri
 void    HttpResponseUtils::initStatusMap(void) {
     if(HttpResponseUtils::statusMap.empty()) {
         HttpResponseUtils::statusMap.insert(std::make_pair(OK, "OK"));
-        HttpResponseUtils::statusMap.insert(std::make_pair(BadRequest, "Bad Request"));
+        HttpResponseUtils::statusMap.insert(std::make_pair(Created, "Created"));
         HttpResponseUtils::statusMap.insert(std::make_pair(NotFound, "Not Found"));
+        HttpResponseUtils::statusMap.insert(std::make_pair(BadRequest, "Bad Request"));
+        HttpResponseUtils::statusMap.insert(std::make_pair(MethodNotAllowed, "Method Not Allowed"));
+        HttpResponseUtils::statusMap.insert(std::make_pair(RequestEntityTooLarge, "Request Entity Too Large"));
+        HttpResponseUtils::statusMap.insert(std::make_pair(RequestURITooLong, "Request-URI Too Long"));
+        HttpResponseUtils::statusMap.insert(std::make_pair(VersionNotSupported, "Version Not Supported"));
         HttpResponseUtils::statusMap.insert(std::make_pair(InternalServerError, "Internal Server Error"));
     }
 }
@@ -28,7 +33,6 @@ std::string HttpResponseUtils::getStatus(HttpStatusCode responseCode) {
 }
 
 std::string HttpResponseUtils::errorBody(HttpStatusCode responseCode) {
-
     std::ostringstream error;
 
     std::ostringstream response;

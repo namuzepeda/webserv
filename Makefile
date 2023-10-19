@@ -6,7 +6,7 @@
 #    By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/21 16:55:18 by gamoreno          #+#    #+#              #
-#    Updated: 2023/07/25 16:41:55 by gamoreno         ###   ########.fr        #
+#    Updated: 2023/10/09 23:21:21 by gamoreno         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,9 @@ HTTP_DIR					=	core/http/
 HTTP						=	HttpRequest.cpp \
 								HttpResponse.cpp
 
+CGI_HANDLER_DIR				=	core/http/CGIHandler
+CGI_HANDLER					=	CGIHandler.cpp \
+
 HTTP_UTILS_DIR				=	core/http/utils/
 HTTP_UTILS					=	HttpResponseUtils.cpp
 
@@ -67,6 +70,7 @@ OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(HANDLER_DIR))
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(PARSER_CONFIG_UTILS_DIR))
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(SERVER_UTILS_DIR))
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(UTILS_DIR))
+OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(CGI_HANDLER_DIR))
 
 SOURCES		+=	$(addprefix	$(HTTP_DIR),$(HTTP))
 SOURCES		+=	$(addprefix	$(HTTP_UTILS_DIR),$(HTTP_UTILS))
@@ -78,6 +82,7 @@ SOURCES		+=	$(addprefix	$(PARSER_CONFIG_UTILS_DIR),$(PARSER_CONFIG_UTILS))
 SOURCES		+=	$(addprefix	$(SERVER_DIR),$(SERVER))
 SOURCES		+=	$(addprefix	$(UTILS_DIR),$(UTILS))
 SOURCES		+=	$(addprefix	$(SERVER_UTILS_DIR),$(SERVER_UTILS))
+SOURCES		+=	$(addprefix	$(CGI_HANDLER_DIR),$(CGI_HANDLER))
 SOURCES		+=	$(addprefix	$(CORE_DIR),$(CORE))
 SOURCES		+=	Main.cpp
 				

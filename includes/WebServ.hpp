@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 17:35:06 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/07/30 23:10:55 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/18 23:48:43 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,14 @@
 #include <iostream>
 #include <string>
 
+#define limitRequestBody	7340032 //7 megabytes
+#define limitUriSize		4096 //characters
+#define limitHeaderSize		5000 // 5 kilobytes
+//longitud maxima de encabezados en bytes
+//longitud maxima de campos en formularios en caracteres
+//tamano maximo de carga util megabites
+//tamano maximo dearchivos que puedan descargarse megabtes
+
 enum ContextType {
 	SERVER,
 	LOCATION
@@ -26,7 +34,8 @@ enum ContextType {
 enum RequestType {
 	GET,
 	POST,
-	DELETE
+	DELETE,
+	NONE
 };
 
 enum TokenType {
@@ -56,10 +65,15 @@ enum InitType {
 };
 
 enum HttpStatusCode {
-    OK = 200,
-    BadRequest = 400,
-    NotFound = 404,
-    InternalServerError = 500
+	OK = 200,
+	Created = 201,
+	BadRequest = 400,
+	NotFound = 404,
+	MethodNotAllowed = 405,
+	RequestEntityTooLarge = 413,
+	RequestUriTooLong = 414,
+	VersionNotSupported = 505,
+	InternalServerError = 500
 };
 
 #include <signal.h>
@@ -74,12 +88,18 @@ enum HttpStatusCode {
 #include <stdlib.h>
 #include <unistd.h>
 #include <poll.h>
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+#include <unistd.h>
+#include <sys/wait.h>
 
 #include "Config.hpp"
 
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
 #include "HttpResponseUtils.hpp"
+#include "CGIHandler.hpp"
 
 #include "Handler.hpp"
 #include "ConfigParser.hpp"

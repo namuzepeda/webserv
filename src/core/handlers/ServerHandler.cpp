@@ -28,5 +28,4 @@ void ServerHandler::run(const HttpRequest &request) {
 		if (request.getLocation().find(locHandler->getPath()) == 0) //Handler path found in request path at position 0
 			locHandler->run(request); //solo request
 	}
-	
 }
