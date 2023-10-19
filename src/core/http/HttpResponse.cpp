@@ -5,11 +5,11 @@ HttpResponse::HttpResponse(HttpRequest const &requ)
 {
 	HttpStatusCode	auxStatus;
 	//por pasar en el momento correcto a la request
-	if (this->request.getBody().size() > limitRequestBody) {
-		statusCode = RequestEntityTooLarge;
-		this->finalResponse = HttpResponse::toString();
-		return;
-	}
+	// if (this->request.getBody().size() > limitRequestBody) {
+	// 	statusCode = RequestEntityTooLarge;
+	// 	this->finalResponse = HttpResponse::toString();
+	// 	return;
+	// }
 	// auxStatus = CheckRequestLine(this->request.getReqLine());
 	// if (auxStatus != statusCode) {
 	// 	statusCode = auxStatus;

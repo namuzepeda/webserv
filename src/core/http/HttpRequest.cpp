@@ -6,16 +6,13 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 23:10:09 by gamoreno          #+#    #+#             */
-/*   Updated: 2023/10/17 18:02:22 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/19 02:44:11 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "WebServ.hpp"
 
 
-//copy constructor
-//destructor
-//asignement
 HttpRequest::HttpRequest(const char * buffer) : statusCode(OK){
 	std::string	Request = buffer;
 	std::istringstream iss(Request);
@@ -23,14 +20,23 @@ HttpRequest::HttpRequest(const char * buffer) : statusCode(OK){
 	
 	try {
 		std::getline(iss, line);
+		
+		//set request line
 		setLineParts(line, type, location, version);
 
+		//set headers
 		while (std::getline(iss, currLine) && !currLine.empty()) {
+			if (currLine.size() >= limitHeaderSize || InvalidHeaderChar(currLine)) {
+				this->statusCode = BadRequest;
+				throw std::runtime_error("Something wrong in request");
+			}
 			std::string::size_type separatorPos = currLine.find(": ");
 			if (separatorPos != std::string::npos) {
 				std::string headerName = currLine.substr(0, separatorPos);
 				std::string headerValue = currLine.substr(separatorPos + 2);
-			headers[headerName] = headerValue;
+				if (noRepOfHeader(headers, headerName)) {
+					headers[headerName] = headerValue;
+				}
 			}
 		}
 
@@ -42,11 +48,84 @@ HttpRequest::HttpRequest(const char * buffer) : statusCode(OK){
 			requestBodyStream << bodyLine << '\n';
 		}
 		body = requestBodyStream.str();
+		if (body.size() > limitRequestBody) {
+			this->statusCode = RequestEntityTooLarge;
+			throw std::runtime_error("Something wrong in request");
+		}
 	}
 	catch (const std::exception &e) {
 		initVarErrorCase();
 		std::cerr << e.what() << std::endl;
 	}
+}
+
+HttpRequest::HttpRequest(HttpRequest const &src)
+{
+	this->statusCode = src.statusCode;
+	this->line = src.line;
+	this->type = src.type;
+	this->location = src.location;
+	this->query = src.query;
+	this->version = src.version;
+	this->headers = src.headers;
+	this->host = src.host;
+	this->port = src.port;
+	this->body = src.config;
+}
+
+HttpRequest &HttpRequest::operator=(HttpRequest const &rhs)
+{
+	if ( this != &rhs )
+	{
+		this->statusCode = rhs.statusCode;
+		this->line = rhs.line;
+		this->type = rhs.type;
+		this->location = rhs.location;
+		this->query = rhs.query;
+		this->version = rhs.version;
+		this->headers = rhs.headers;
+		this->host = rhs.host;
+		this->port = rhs.port;
+		this->body = rhs.config;
+	}
+	return *this;
+}
+
+bool HttpRequest::noRepOfHeader(const std::map<std::string, std::string>& headers, const std::string& headerName) {
+	for (std::map<std::string, std::string>::const_iterator iterator = headers.begin(); iterator != headers.end(); ++iterator) {
+		if (compareNoCase(iterator->first, headerName) == 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool HttpRequest::compareNoCase(const std::string& str1, const std::string& str2) {
+	if (str1.size() != str2.size()) {
+		return false;
+	}
+
+	for (std::string::size_type i = 0; i < str1.size(); ++i) {
+		if (std::tolower(str1[i]) != std::tolower(str2[i])) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool HttpRequest::InvalidHeaderChar(const std::string& headerLine) {
+	const char* invalidChars = "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F"
+								"\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F";
+
+	for (std::string::size_type i = 0; i < headerLine.length(); i++) {
+		char c = headerLine[i];
+		if (strchr(invalidChars, c) != NULL) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void	HttpRequest::initVarErrorCase(void) {
@@ -87,6 +166,7 @@ void	HttpRequest::setLineParts(std::string& line, RequestType& type, std::string
 	pos = line.find(' ', auxpos);
 	if (pos != std::string::npos) {
 		std::string URI = line.substr(auxpos, pos);
+		URI = decodeURI(URI);
 		IsUriValid(URI);
 	}
 	else {
@@ -108,6 +188,21 @@ void	HttpRequest::setLineParts(std::string& line, RequestType& type, std::string
 		throw std::runtime_error("Something wrong in request");
 	}
 	return ;
+}
+
+std::string HttpRequest::decodeURI(const std::string& encodedURI) {
+	std::string decodedURI;
+	for (std::size_t i = 0; i < encodedURI.length(); ++i) {
+		if (encodedURI[i] == '%' && i + 2 < encodedURI.length()) {
+			std::string hex = encodedURI.substr(i + 1, 2);
+			char decodedChar = static_cast<char>(std::strtol(hex.c_str(), NULL, 16));
+			decodedURI += decodedChar;
+			i += 2;
+		} else {
+			decodedURI += encodedURI[i];
+		}
+	}
+	return decodedURI;
 }
 
 void HttpRequest::IsUriValid(const std::string& uri) {
@@ -151,12 +246,48 @@ void HttpRequest::IsUriValid(const std::string& uri) {
 }
 
 bool	HttpRequest::goodQueryArgs(const std::string& query) {
-	//Checkar que todos los valores tengan parametro 
+	bool	searchingForEq = true;
+	bool	endAfterAmp = false;
+
+	for (std::string::size_type i = 0; i < query.length(); i++) {
+		char	c = query[i];
+
+		//check existence of first word
+		if (i == 0 && c == '=') 
+			return false;
+
+		if (searchingForEq) {
+			if (c == '&')
+				return false;
+			else if(c == '=') {
+				endAfterAmp = false;
+				searchingForEq = false;
+				if ((i == query.length() - 1) || (i < query.length() - 1 && query[i + 1] == '&'))
+					return false;
+			}
+		}
+		else if (!searchingForEq) {
+			if (c == '=')
+				return false;
+			else if (c == '&') {
+				endAfterAmp = true;
+				searchingForEq = false;
+				if ((i == query.length() - 1) || (i < query.length() - 1 && query[i + 1] == '='))
+					return false;
+			}
+		}
+	}
+	if (endAfterAmp)
+		return false;
 	return true;
 }
 
-void setHostAndPort(std::map<std::string, std::string>& headers, std::string host, std::string port){
+void HttpRequest::setHostAndPort(std::map<std::string, std::string>& headers, std::string host, std::string port){
 	std::map<std::string, std::string>::iterator it = headers.find("Host");
+	if (it == headers.end()) {
+		this->statusCode = BadRequest;
+		throw std::runtime_error("Something wrong in request");
+	}
 	std::string contentHostLine = it->second;
 	std::string::size_type pos = contentHostLine.find(':');
 
@@ -170,15 +301,11 @@ void setHostAndPort(std::map<std::string, std::string>& headers, std::string hos
 	}
 }
 
-HttpRequest::~HttpRequest() {
-
-}
-
 std::string	const &HttpRequest::getReqLine() const{
 	return (this->line);
 }
 
-std::string const &HttpRequest::getType() const{
+RequestType const &HttpRequest::getType() const{
 	return (this->type);
 }
 
@@ -186,8 +313,8 @@ std::string	const &HttpRequest::getLocation() const{
 	return (this->location);
 }
 
-std::string	const &HttpRequest::getParameters() const{
-	return (this->parameters);
+std::string	const &HttpRequest::getQuery() const{
+	return (this->query);
 }
 
 std::string	const &HttpRequest::getVersion() const{

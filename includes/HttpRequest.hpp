@@ -31,20 +31,27 @@ class HttpRequest
 		std::string							body;
 		Config								config;
 
-	void			setLineParts(std::string& line, RequestType& type, std::string& location, std::string& version);
-	void			initVarErrorCase(void);
-	bool			goodQueryArgs(const std::string& query);
-	void			IsUriValid(const std::string& uri);
+	void		setLineParts(std::string& line, RequestType& type, std::string& location, std::string& version);
+	void		initVarErrorCase(void);
+	bool		goodQueryArgs(const std::string& query);
+	std::string	decodeURI(const std::string& encodedURL);
+	void		IsUriValid(const std::string& uri);
+	bool		InvalidHeaderChar(const std::string& headerLine);
+	bool		noRepOfHeader(const std::map<std::string, std::string>& headers, const std::string& headerName);
+	bool		compareNoCase(const std::string& str1, const std::string& str2);
+	void		setHostAndPort(std::map<std::string, std::string>& headers, std::string host, std::string port);
 
 	public:
 
-		HttpRequest(const char * buffer);
+		HttpRequest(const char *buffer);
+		HttpRequest(HttpRequest const &src);
 		~HttpRequest();
+		HttpRequest &operator=(HttpRequest const &rhs);
 
 		std::string	const &getReqLine() const;
-		std::string	const &getType() const;
+		RequestType	const &getType() const;
 		std::string	const &getLocation() const;
-		std::string	const &getParameters() const;
+		std::string	const &getQuery() const;
 		std::string	const &getVersion() const;
 		std::string	const &getBody() const;
 		std::map<std::string, std::string> const &getHeaders() const;
