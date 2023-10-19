@@ -19,7 +19,7 @@ class HttpRequest
 {
 	private:
 
-		HttpStatusCode						statusCode;
+		HttpStatusCode					statusCode;
 		std::string							line;
 		RequestType							type;
 		std::string							location;
@@ -29,7 +29,7 @@ class HttpRequest
 		std::string							host;
 		std::string							port;
 		std::string							body;
-		Config								config;
+		Config								*config;
 
 	void		setLineParts(std::string& line, RequestType& type, std::string& location, std::string& version);
 	void		initVarErrorCase(void);
@@ -40,6 +40,8 @@ class HttpRequest
 	bool		noRepOfHeader(const std::map<std::string, std::string>& headers, const std::string& headerName);
 	bool		compareNoCase(const std::string& str1, const std::string& str2);
 	void		setHostAndPort(std::map<std::string, std::string>& headers, std::string host, std::string port);
+
+
 
 	public:
 
@@ -58,8 +60,8 @@ class HttpRequest
 		bool		headContains(const std::string& key);
 		std::string	getHeadValue(const std::string& key);
 		std::string	const &getHost() const;
-		std::string const &getPort() const;		
-		Config		const &getConfig() const;				
+		std::string const &getPort() const;
+		Config			  *getConfig();				
 
 };
 

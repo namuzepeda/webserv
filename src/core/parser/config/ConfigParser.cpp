@@ -84,15 +84,19 @@ std::vector<Handler *> ConfigParser::getHandlers(const std::ifstream &configFile
 
 	for(std::vector<Token *>::iterator it = tokens.begin(); it != tokens.end(); it++) {
 
-		Handler *handler = tempHandlers.size() ? tempHandlers[tempHandlers.size() - 1] : NULL;
+		Handler *handler = tempHandlers.size() > 0 ? tempHandlers[tempHandlers.size() - 1] : NULL;
 
 		std::cout << (*it)->value << " " << (*it)->type << std::endl;
 		if((*it)->type == BLOCK_END && handler != NULL) {
 			tempHandlers.pop_back();
-			if(tempHandlers.size() > 0)
+			if(tempHandlers.size() > 0) {
 				tempHandlers[tempHandlers.size() - 1]->addChild(handler);
-			else
+				std::cout << "Adding to tempHandlers" << std::endl;
+			}
+			else {
 				handlers.push_back(handler);
+				std::cout << "Adding to handlers" << std::endl;
+			}
 		} else if ((*it)->type == CONTEXT) {
 			ContextType contextType = ConfigParserUtils::getContext(*it);
 			std::string value;
@@ -100,7 +104,6 @@ std::vector<Handler *> ConfigParser::getHandlers(const std::ifstream &configFile
 			std::cout << "check " << (*it)->value << std::endl;;
 			if((*it)->type == VALUE)
 			{
-				
 				value = (*it)->value;
 				it++;
 			}
@@ -122,10 +125,15 @@ std::vector<Handler *> ConfigParser::getHandlers(const std::ifstream &configFile
 				throw std::runtime_error("Error on configuration file3");
 			handler->getConfig()->put(identifier, value);
 		} else {
-
 			throw std::runtime_error("Error on configuration file4");
 		}
 	}
+	for(std::vector<Token *>::iterator it = tokens.begin(); it != tokens.end(); it++) {
+		Token *token = *it;
+		delete token;
+	}
+	tempHandlers.clear();
+	tokens.clear();
 	return (handlers);
 }
 

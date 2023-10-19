@@ -20,21 +20,12 @@ ServerHandler::~ServerHandler() {
 
 }
 
-void ServerHandler::run(const HttpRequest &request, const HttpResponse &response) {
-	request.setRoot(this->path);
+void ServerHandler::run(const HttpRequest &request) {
+	//request.setRoot(this->path);
 	for(std::vector<Handler *>::iterator it = this->childs.begin(); it != this->childs.end(); it++) {
 		Handler *handler = *it;
-		if(handler->getConfig()->getType() == LOCATION) {
-			LocationHandler *locHandler = (LocationHandler *) handler;
-			if (request.getLocation().find(locHandler->getPath()) != 0) //Handler path found in request path at position 0
-				return ;
-			locHandler->run(request, response);
-		}
-		handler->run(request, response);
-	}
-	if(request->getConfig().get("root") == NULL) {
-		response->statusLine = "404";
-	} else {
-		//Verificar que el archivo existe, si es que el path de request no contiene un archivo, verificar los index
+		LocationHandler *locHandler = (LocationHandler *) handler;
+		if (request.getLocation().find(locHandler->getPath()) == 0) //Handler path found in request path at position 0
+			locHandler->run(request); //solo request
 	}
 }

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   LocationHandler.cpp                                  :+:      :+:    :+:   */
+/*   LocationHandler.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -20,11 +20,7 @@ LocationHandler::~LocationHandler() {
 
 }
 
-void LocationHandler::run(const HttpRequest &request, const HttpResponse &response) {
-	(void) request;
-	(void) response;
-
-	//Setear las distintas configuraciones handler
+void LocationHandler::run(const HttpRequest &request) {
 	if(this->getConfig("cgi_pass") != NULL)
 	{
 		request->getConfig().put("cgi_pass", this->getConfig("cgi_pass"));
@@ -37,11 +33,9 @@ void LocationHandler::run(const HttpRequest &request, const HttpResponse &respon
 		Handler *handler = *it;
 		if(handler->getConfig()->getType() == LOCATION) {
 			LocationHandler *locHandler = (LocationHandler *) handler;
-			if (request.getLocation().find(locHandler->getPath()) != 0) //Handler path found in request path at position 0
-				return ;
-			locHandler->run(request, response);
+			if (request.getLocation().find(locHandler->getPath()) == 0) //Handler path found in request path at position 0
+				locHandler->run(request);
 		}
-		handler->run(request, response);
 	}
 }
 

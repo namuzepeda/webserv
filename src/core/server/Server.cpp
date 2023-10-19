@@ -18,6 +18,11 @@ Server::Server(ServerHandler *handler): handler(handler), port(0), serverSocket(
 	this->id = Server::counter++;
 }
 
+Server::~Server(void) {
+	std::cout << "Deleting serverhandler" << std::endl;
+	delete this->handler;
+}
+
 int Server::getPort(void) {
 	return (this->port);
 }
@@ -30,7 +35,10 @@ int	Server::getSocket(void) {
 	return (this->serverSocket);
 }
 
-InitType Server::init(const std::vector<Server> &servers, int tryTimes) {
+InitType Server::init(const std::vector<Server *> &servers, int tryTimes) {
+
+	int use = 1;
+
 	Config *config =  this->handler->getConfig();
 
 	socketAddr.sin_family = AF_INET;
@@ -41,10 +49,10 @@ InitType Server::init(const std::vector<Server> &servers, int tryTimes) {
 		socketAddr.sin_addr.s_addr = INADDR_ANY;
 	
 	InitType type = BIND_ERROR;
-	for(std::vector<Server>::const_iterator it = servers.begin(); it != servers.end() && (*it).id != this->id; it++) {
-		Server server = *it;
-		if(this->host == server.host && this->port == server.port) {
-			this->serverSocket = server.serverSocket;
+	for(std::vector<Server *>::const_iterator it = servers.begin(); it != servers.end() && (*it)->id != this->id; it++) {
+		Server *server = *it;
+		if(this->host == server->host && this->port == server->port) {
+			this->serverSocket = server->serverSocket;
 			return (SUCCESS);
 		}
 	}
@@ -58,7 +66,12 @@ InitType Server::init(const std::vector<Server> &servers, int tryTimes) {
 
 		int flags = fcntl(serverSocket, F_GETFL, 0);
 		fcntl(this->serverSocket, F_SETFL, flags | O_NONBLOCK);
-
+		if (setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, &use, sizeof(use)))
+		{
+			type = BIND_ERROR;
+			close(serverSocket);
+			continue ;
+		}
 		if (bind(serverSocket, (struct sockaddr *) &socketAddr, sizeof(socketAddr)) == -1) {
 			type = BIND_ERROR;
 			close(serverSocket);

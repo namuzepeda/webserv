@@ -18,12 +18,17 @@
 
 class HttpResponseUtils {
 
-	//pendiente de ser canonica
-	private:
-		static std::map<HttpStatusCode, std::string> codes;
+  private:
+
+		static std::map<HttpStatusCode, std::string> statusMap;
+
 	
 	public:
-		std::string getStatus(HttpStatusCode code);
+
+		static void		initStatusMap(void);
+		static std::string getStatus(HttpStatusCode code);
+		static std::string testResponse(HttpStatusCode statusCode, std::string body);
+		static std::string errorBody(HttpStatusCode responseCode);
 
 };
 

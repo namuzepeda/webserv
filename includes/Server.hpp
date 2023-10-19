@@ -36,7 +36,7 @@ class Server
 
 		Server(ServerHandler *handler);
 
-		virtual			~Server() {}
+		~Server();
 
 		ServerHandler				*getHandler(void);
 		std::string			const	&getHost(void) const;
@@ -44,7 +44,7 @@ class Server
 		std::string			const	&getRoot() const;
 		int							getSocket();
 
-		InitType 					init(const std::vector<Server> &servers, int tryTimes);
+		InitType 					init(const std::vector<Server *> &servers, int tryTimes);
 };
 
 #endif

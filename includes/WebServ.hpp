@@ -76,6 +76,7 @@ enum HttpStatusCode {
 	InternalServerError = 500
 };
 
+#include <signal.h>
 #include <algorithm>
 #include <vector>
 #include <fstream>
@@ -93,12 +94,13 @@ enum HttpStatusCode {
 #include <unistd.h>
 #include <sys/wait.h>
 
+#include "Config.hpp"
+
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
 #include "HttpResponseUtils.hpp"
 #include "CGIHandler.hpp"
 
-#include "Config.hpp"
 #include "Handler.hpp"
 #include "ConfigParser.hpp"
 #include "ConfigParserUtils.hpp"

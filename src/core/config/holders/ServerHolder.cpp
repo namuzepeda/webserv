@@ -17,7 +17,7 @@ ServerHolder::ServerHolder(void): Config() {
 }
 
 ServerHolder::~ServerHolder(void) {
-
+	
 }
 
 bool	ServerHolder::hasServerName(void) {

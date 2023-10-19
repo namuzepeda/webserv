@@ -99,6 +99,7 @@ HttpResponse::~HttpResponse() {
 // }
 
 std::string HttpResponse::toString(void) {
+
 	std::ostringstream	data;
 	HttpResponseUtils	errorHandler;
 

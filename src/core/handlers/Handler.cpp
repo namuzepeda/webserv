@@ -17,7 +17,12 @@ Handler::Handler(Config *config): config(config) {
 }
 
 Handler::~Handler() {
-
+	for(std::vector<Handler *>::iterator it = this->childs.begin(); it != this->childs.end(); it++) {
+		Handler *handler = *it;
+		delete handler;
+	}
+	this->childs.clear();
+	delete this->config;
 }
 
 Config *Handler::getConfig(void) {

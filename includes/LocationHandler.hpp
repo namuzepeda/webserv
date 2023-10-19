@@ -28,7 +28,7 @@ class LocationHandler : public Handler
 
 		virtual					~LocationHandler();
 
-		virtual void			run(const HttpRequest &request, const HttpResponse &response);
+		virtual void			run(const HttpRequest &request);
 
 		std::string				getPath();
 };
