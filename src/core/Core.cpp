@@ -14,8 +14,9 @@
 
 
 Core::Core(const std::ifstream &configFile) {
+	std::vector<Token *> tokens = ConfigParser::parse(configFile);
 	try {
-		std::vector<Handler *> handlers = ConfigParser::getHandlers(configFile);
+		std::vector<Handler *> handlers = ConfigParser::getHandlers(tokens);
 		for(std::vector<Handler *>::iterator it = handlers.begin(); it != handlers.end(); it++) {
 			Server *server = new Server((ServerHandler *) *it);
 			InitType initType = server->init(this->servers, 3);
@@ -23,13 +24,20 @@ Core::Core(const std::ifstream &configFile) {
 				this->servers.push_back(server);
 				std::cerr << "SUCCESS" << std::endl;
 			} else {
+				delete server;
 				std::cerr << "ERROR " << initType << std::endl;
 			}
 		}
+		handlers.clear();
+		run();
 	} catch (const std::runtime_error &error) {
-		std::cerr << error.what() << std::endl;
+		std::cerr << "Error: " << error.what() << std::endl;
 	}
-	run();
+	for(std::vector<Token *>::iterator it = tokens.begin(); it != tokens.end(); it++) {
+		Token *token = *it;
+		delete token;
+	}
+	tokens.clear();
 }
 
 Core::~Core() {

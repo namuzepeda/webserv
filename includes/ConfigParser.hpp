@@ -20,7 +20,8 @@ class ConfigParser {
 
 	public:
 
-		static std::vector<Handler *> getHandlers(const std::ifstream &configFile);
+		static const std::vector<Token *> parse(const std::ifstream &configFile);
+		static std::vector<Handler *> getHandlers(std::vector<Token *> &tokens);
 
 };
 

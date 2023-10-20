@@ -25,6 +25,7 @@ class ConfigParserUtils
 		static bool 		isBlockStart(char c);
 		static bool 		isBlockEnd(char c);
 		static bool 		isSemicolon(char c);
+		static bool 		isComment(char c);
 		static bool			isContext(const std::string &str);
 		static bool 		isIdentifier(const std::string &str);
 		static bool 		isValue(const std::string &str);

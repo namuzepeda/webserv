@@ -35,6 +35,10 @@ bool ConfigParserUtils::isSemicolon(char c) {
 	return (c == ';');
 }
 
+bool ConfigParserUtils::isComment(char c) {
+	return (c == '#');
+}
+
 bool ConfigParserUtils::isIdentifier(const std::string &str) {
 	if (str.empty())
 		return false;

@@ -14,8 +14,10 @@
 
 short	Server::counter = 0;
 
-Server::Server(ServerHandler *handler): handler(handler), port(0), serverSocket(0) {
+Server::Server(ServerHandler *handler): handler(handler), serverSocket(0) {
 	this->id = Server::counter++;
+	this->host = this->handler->getConfig()->get("host");
+	this->port = this->handler->getConfig()->asInt("listen");
 }
 
 Server::~Server(void) {
@@ -39,20 +41,20 @@ InitType Server::init(const std::vector<Server *> &servers, int tryTimes) {
 
 	int use = 1;
 
-	Config *config =  this->handler->getConfig();
-
 	socketAddr.sin_family = AF_INET;
-	socketAddr.sin_port = htons(config->asInt("listen"));
-	if(config->contains("host"))
-		inet_pton(AF_INET, config->get("host").c_str(), &socketAddr.sin_addr); // //0.0.0.0
+	socketAddr.sin_port = htons(this->port);
+	if(!this->host.empty())
+		inet_pton(AF_INET, this->host.c_str(), &socketAddr.sin_addr); // //0.0.0.0
 	else
 		socketAddr.sin_addr.s_addr = INADDR_ANY;
 	
 	InitType type = BIND_ERROR;
+	std::cout << "HOST " << this->host << " PORT " << this->port << std::endl;
 	for(std::vector<Server *>::const_iterator it = servers.begin(); it != servers.end() && (*it)->id != this->id; it++) {
 		Server *server = *it;
 		if(this->host == server->host && this->port == server->port) {
 			this->serverSocket = server->serverSocket;
+			std::cout << "SAME PORT AND HOST" << std::endl;
 			return (SUCCESS);
 		}
 	}
