@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 23:10:09 by gamoreno          #+#    #+#             */
-/*   Updated: 2023/10/19 02:44:11 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/20 17:14:29 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ HttpRequest::HttpRequest(const char * buffer) : statusCode(Ok){
 	
 	try {
 		std::getline(iss, line);
-		
+
+		std::cout << "first line: \"" << line << "\"" << std::endl;
+
+
 		//set request line
 		setLineParts(line, type);
 
@@ -147,7 +150,7 @@ void	HttpRequest::initVarErrorCase(void) {
 
 void	HttpRequest::setLineParts(std::string& line, RequestType& type){
 	std::string::size_type	pos = line.find(' ');
-	std::string::size_type	auxpos = pos + 1;
+	std::string::size_type	auxpos = pos;
 
 	//Extract method
 	if (pos != std::string::npos) {
@@ -168,10 +171,30 @@ void	HttpRequest::setLineParts(std::string& line, RequestType& type){
 		throw std::runtime_error("Something wrong in request 2");
 	}
 
+	//FOR DEBBUG
+	// if (type == GET)
+	// 	std::cout << "method Get" << std::endl;
+	// else if (type == POST)
+	// 	std::cout << "method Post" << std::endl;
+	// else if (type == DELETE)
+	// 	std::cout << "method Del" << std::endl;
+	// else
+	// 	std::cout << "method wtf" << std::endl;
+	
 	//handle URI
 	pos = line.find(' ', auxpos);
+
+	//FOR DEBBUG
+	std::cout << pos << std::endl;
+	
 	if (pos != std::string::npos) {
 		std::string URI = line.substr(auxpos, pos);
+		auxpos = pos;
+
+		//FOR DEBBUG
+		std::cout << "uri: \"" << URI << "\"" << std::endl;
+
+		
 		URI = decodeURI(URI);
 		IsUriValid(URI);
 	}
@@ -217,7 +240,7 @@ void HttpRequest::IsUriValid(const std::string& uri) {
 	if (queryStart == std::string::npos) {
 		this->location = uri;
 		this->query = "";
-		std::cout << "URI " << uri << std::endl;
+		// std::cout << "URI " << uri << std::endl;
 	}
 	else {
 		this->location = uri.substr(0, queryStart);
