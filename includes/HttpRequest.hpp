@@ -34,12 +34,14 @@ class HttpRequest
 	void		setLineParts(std::string& line, RequestType& type);
 	void		initVarErrorCase(void);
 	bool		goodQueryArgs(const std::string& query);
+	bool		isValidHexDigit(char c);
 	std::string	decodeURI(const std::string& encodedURL);
 	void		IsUriValid(const std::string& uri);
 	bool		InvalidHeaderChar(const std::string& headerLine);
 	bool		noRepOfHeader(const std::map<std::string, std::string>& headers, const std::string& headerName);
 	bool		compareNoCase(const std::string& str1, const std::string& str2);
-	void		setHostAndPort(std::map<std::string, std::string>& headers, std::string host, std::string port);
+	void		setHostAndPort(std::map<std::string, std::string>& headers);
+	void		cleanSpaces(std::string& line);
 
 
 
@@ -69,3 +71,9 @@ class HttpRequest
 std::ostream &operator<<(std::ostream &o, HttpRequest const &i);
 
 #endif
+POST /api/data HTTP/1.1
+Host: example.com
+Content-Type: application/json
+Content-Length: 39
+
+{"key1": "value1", "key2": "value2"}

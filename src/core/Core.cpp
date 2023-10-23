@@ -113,8 +113,8 @@ void	Core::run(void) {
 					} else {
 						//std::cout << "Conexión establecida con un cliente." << std::endl;
 
-						int flags = fcntl(clientSocket, F_GETFL, 0);
-						fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
+						// int flags = fcntl(clientSocket, F_GETFL, 0);
+						// fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
 						clientSockets.push_back(clientSocket);
 					}
 				}
@@ -122,12 +122,19 @@ void	Core::run(void) {
 			//std::cerr << "Clients size: " << clientSockets.size() << std::endl;
 			//std::cerr << "Poll size: " << pollEvents.size() << std::endl;
 			//std::cerr << "0" << std::endl;
+		static int nbr_recv= 0;
 			for (size_t i = sockets.size(); i < pollEvents.size(); ++i) {
 				//std::cerr << "01" << std::endl;
 				if ((pollEvents[i].revents & POLLIN) || (pollEvents[i].revents & POLLOUT)) {
 					//std::cerr << "02" << std::endl;
+					
+					
+					// char buffer[Config::DEFAULT_BUFFER_SIZE] = {0};
+					
 					char buffer[Config::DEFAULT_BUFFER_SIZE] = {0};
-					int bytesRead = recv(pollEvents[i].fd, buffer, sizeof(buffer) + 1, 0);
+					
+					int bytesRead = recv(pollEvents[i].fd, &buffer, sizeof(buffer) + 1, 0);
+
 					//std::cerr << "1" << std::endl;
 					if (bytesRead <= 0) {
 						//std::cerr << "2" << std::endl;
@@ -139,12 +146,14 @@ void	Core::run(void) {
 						// Eliminar el socket del cliente del vector de clientes
 						
 					} else {
+						std::cout << "Recv nbr [ " << nbr_recv << "]" << std::endl;
+						nbr_recv++;
 						//std::cerr << "3" << std::endl;
 						// Procesar la solicitud del cliente
 						buffer[bytesRead] = '\0'; // Asegurarnos de terminar el buffer como una cadena de caracteres
 						HttpRequest request(buffer);
 						//std::cout << request << std::endl;
-						std::cout << "STATUS CODE " << request.getStatusCode() << std::endl;
+						std::cout << request << std::endl;
 						std::string responseString = HttpResponseUtils::testResponse(request.getStatusCode(), HttpResponseUtils::errorBody(request.getStatusCode()));
 						//std::cerr << "Returning response " << std::endl << responseString << std::endl;
 						//std::cout << "returning response " << std::endl << responseString.c_str() << std::endl;

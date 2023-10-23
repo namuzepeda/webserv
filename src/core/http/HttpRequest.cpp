@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 23:10:09 by gamoreno          #+#    #+#             */
-/*   Updated: 2023/10/20 17:14:29 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/23 13:08:55y gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,32 +18,45 @@ HttpRequest::HttpRequest(const char * buffer) : statusCode(Ok){
 	std::istringstream iss(Request);
 	std::string currLine;
 	
+	//FOR DEBBUG
+	std::cout << "-------------------\n\nbuffer: \n\n" << buffer << "--------------------" << std::endl;
+
 	try {
-		std::getline(iss, line);
-
-		std::cout << "first line: \"" << line << "\"" << std::endl;
-
+		std::getline(iss, currLine);
 
 		//set request line
-		setLineParts(line, type);
+		setLineParts(currLine, type);
 
 		//set headers
 		while (std::getline(iss, currLine) && !currLine.empty()) {
+
+			//FOR DEBBUG
+			// std::cout << "header currline: " << currLine << std::endl;
+			
+			
 			if (currLine.size() >= limitHeaderSize || InvalidHeaderChar(currLine)) {
 				this->statusCode = BadRequest;
-				throw std::runtime_error("Something wrong in request");
+				throw std::runtime_error("Something wrong in request headers");
 			}
 			std::string::size_type separatorPos = currLine.find(": ");
 			if (separatorPos != std::string::npos) {
 				std::string headerName = currLine.substr(0, separatorPos);
-				std::string headerValue = currLine.substr(separatorPos + 2);
+				// std::cout << "headername: " << headerName << std::endl;
+				std::string currValue = currLine.substr(separatorPos + 2);
+				cleanSpaces(currValue);
+				std::string headerValue = currValue;
+				// std::cout << "headervalue: " << headerValue << std::endl;
 				if (noRepOfHeader(headers, headerName)) {
 					headers[headerName] = headerValue;
+
+					//FOR DEBBUG
+					// std::map<std::string, std::string>::iterator it = headers.begin();
+					// std::cout << "En headers: " << it->first << " | " << it->second << std::endl;
 				}
 			}
 		}
 
-		setHostAndPort(headers, host, port);
+		setHostAndPort(headers);
 	
 		std::stringstream requestBodyStream;
 		std::string bodyLine;
@@ -53,7 +66,7 @@ HttpRequest::HttpRequest(const char * buffer) : statusCode(Ok){
 		body = requestBodyStream.str();
 		if (body.size() > limitRequestBody) {
 			this->statusCode = RequestEntityTooLarge;
-			throw std::runtime_error("Something wrong in request");
+			throw std::runtime_error("Something wrong in request body");
 		}
 	}
 	catch (const std::exception &e) {
@@ -111,16 +124,16 @@ bool HttpRequest::noRepOfHeader(const std::map<std::string, std::string>& header
 
 bool HttpRequest::compareNoCase(const std::string& str1, const std::string& str2) {
 	if (str1.size() != str2.size()) {
-		return false;
+		return true;
 	}
 
 	for (std::string::size_type i = 0; i < str1.size(); ++i) {
 		if (std::tolower(str1[i]) != std::tolower(str2[i])) {
-			return false;
+			return true;
 		}
 	}
 
-	return true;
+	return false;
 }
 
 bool HttpRequest::InvalidHeaderChar(const std::string& headerLine) {
@@ -150,8 +163,9 @@ void	HttpRequest::initVarErrorCase(void) {
 
 void	HttpRequest::setLineParts(std::string& line, RequestType& type){
 	std::string::size_type	pos = line.find(' ');
-	std::string::size_type	auxpos = pos;
+	std::string::size_type	auxpos = pos + 1;
 
+	cleanSpaces(line);
 	//Extract method
 	if (pos != std::string::npos) {
 		std::string aux = line.substr(0, pos);
@@ -163,44 +177,38 @@ void	HttpRequest::setLineParts(std::string& line, RequestType& type){
 			type = DELETE;
 		else {
 			this->statusCode = MethodNotAllowed;
-			throw std::runtime_error("Something wrong in request 1");
+			throw std::runtime_error("Something wrong in request: not allowed method");
 		}
 	}
 	else {
 		this->statusCode = BadRequest;
-		throw std::runtime_error("Something wrong in request 2");
+		throw std::runtime_error("Something wrong in request not method found");
 	}
-
-	//FOR DEBBUG
-	// if (type == GET)
-	// 	std::cout << "method Get" << std::endl;
-	// else if (type == POST)
-	// 	std::cout << "method Post" << std::endl;
-	// else if (type == DELETE)
-	// 	std::cout << "method Del" << std::endl;
-	// else
-	// 	std::cout << "method wtf" << std::endl;
 	
 	//handle URI
 	pos = line.find(' ', auxpos);
 
-	//FOR DEBBUG
-	std::cout << pos << std::endl;
-	
 	if (pos != std::string::npos) {
-		std::string URI = line.substr(auxpos, pos);
-		auxpos = pos;
+		std::string URI = line.substr(auxpos, pos - auxpos);
+		if (URI.length() > limitUriSize) {
+			this->statusCode = RequestUriTooLong;
+			throw std::runtime_error("Something wrong in request URI to long");
+		}
+		for (std::string::size_type i = 0; i < URI.length(); i++) {
+			char c = URI[i];
 
-		//FOR DEBBUG
-		std::cout << "uri: \"" << URI << "\"" << std::endl;
-
-		
+			if (!(isalnum(c) || c == '/' || c == '-' || c == '_' || c == '.'
+			|| c == '&' || c == '=' || c == '%' || c == '?' || c == '+')) {
+				this->statusCode = BadRequest;
+				throw std::runtime_error("Something wrong in request (invalid characters)");
+			}
+		}
 		URI = decodeURI(URI);
 		IsUriValid(URI);
 	}
 	else {
 		this->statusCode = BadRequest;
-		throw std::runtime_error("Something wrong in request 3");
+		throw std::runtime_error("Something wrong in request invalid URI");
 	}
 
 	//Handle version
@@ -209,14 +217,23 @@ void	HttpRequest::setLineParts(std::string& line, RequestType& type){
 		this->version = line.substr(auxpos);
 		if (this->version != "HTTP/1.1") {
 			this->statusCode = VersionNotSupported;
-			throw std::runtime_error("Something wrong in request 4");
+			throw std::runtime_error("Something wrong in request version not supported");
 		}
 	}
 	else {
 		this->statusCode = BadRequest;
-		throw std::runtime_error("Something wrong in request 5");
+		throw std::runtime_error("Something wrong in request: no version found");
 	}
-	return ;
+}
+
+void HttpRequest::cleanSpaces(std::string& line) {
+	while (!line.empty() && (line[line.length() - 1] == '\r' || line[line.length() - 1] == '\n')) {
+		line.erase(line.length() - 1);
+	}
+}
+
+bool HttpRequest::isValidHexDigit(char c) {
+	return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F');
 }
 
 std::string HttpRequest::decodeURI(const std::string& encodedURI) {
@@ -224,9 +241,15 @@ std::string HttpRequest::decodeURI(const std::string& encodedURI) {
 	for (std::size_t i = 0; i < encodedURI.length(); ++i) {
 		if (encodedURI[i] == '%' && i + 2 < encodedURI.length()) {
 			std::string hex = encodedURI.substr(i + 1, 2);
-			char decodedChar = static_cast<char>(std::strtol(hex.c_str(), NULL, 16));
-			decodedURI += decodedChar;
-			i += 2;
+			if (isValidHexDigit(hex[0]) && isValidHexDigit(hex[1])) {
+				char decodedChar = static_cast<char>(std::strtol(hex.c_str(), NULL, 16));
+				decodedURI += decodedChar;
+				i += 2;
+			}
+			else {
+				this->statusCode = BadRequest;
+				throw std::runtime_error("Something wrong in request invalid hexadecimal code character");
+			}
 		} else {
 			decodedURI += encodedURI[i];
 		}
@@ -240,38 +263,22 @@ void HttpRequest::IsUriValid(const std::string& uri) {
 	if (queryStart == std::string::npos) {
 		this->location = uri;
 		this->query = "";
-		// std::cout << "URI " << uri << std::endl;
 	}
 	else {
 		this->location = uri.substr(0, queryStart);
 		this->query = uri.substr(queryStart + 1);
-	}
-	if (uri.length() > limitUriSize) {
-		this->statusCode = RequestUriTooLong;
-		throw std::runtime_error("Something wrong in request 6");
-	}
-	if (uri.find(' ') != std::string::npos) {
-		this->statusCode = BadRequest;
-		throw std::runtime_error("Something wrong in request 7");
-	}
-	for (std::string::size_type i = 0; i < location.length(); i++) {
-		char c = location[i];
-		if (!(isalnum(c) || c == '/' || c == '-' || c == '_' || c == '.')) {
+		if (this->location.find('+') != std::string::npos) {
 			this->statusCode = BadRequest;
-			throw std::runtime_error("Something wrong in request 8");
+			throw std::runtime_error("Something wrong in request: character '+' in location");
 		}
-	}
-	for (std::string::size_type i = 0; i < query.length(); i++) {
-		char c = query[i];
-		if (!(isalnum(c) || c == '/' || c == '-' || c == '_' || c == '.'
-		|| c == '&' || c == '=')) {
+		if (this->query.find('?') != std::string::npos) {
 			this->statusCode = BadRequest;
-			throw std::runtime_error("Something wrong in request 9");
+			throw std::runtime_error("Something wrong in request: double '?'");
 		}
 	}
 	if (!HttpRequest::goodQueryArgs(query)) {
 		this->statusCode = BadRequest;
-		throw std::runtime_error("Something wrong in request 10");
+		throw std::runtime_error("Something wrong in request: wrong query");
 	}
 }
 
@@ -301,7 +308,7 @@ bool	HttpRequest::goodQueryArgs(const std::string& query) {
 				return false;
 			else if (c == '&') {
 				endAfterAmp = true;
-				searchingForEq = false;
+				searchingForEq = true;
 				if ((i == query.length() - 1) || (i < query.length() - 1 && query[i + 1] == '='))
 					return false;
 			}
@@ -312,22 +319,23 @@ bool	HttpRequest::goodQueryArgs(const std::string& query) {
 	return true;
 }
 
-void HttpRequest::setHostAndPort(std::map<std::string, std::string>& headers, std::string host, std::string port){
+void HttpRequest::setHostAndPort(std::map<std::string, std::string>& headers){
 	std::map<std::string, std::string>::iterator it = headers.find("Host");
 	if (it == headers.end()) {
 		this->statusCode = BadRequest;
-		throw std::runtime_error("Something wrong in request 11");
+		throw std::runtime_error("Something wrong in request variable Host not found");
 	}
 	std::string contentHostLine = it->second;
+
 	std::string::size_type pos = contentHostLine.find(':');
 
 	if (pos == std::string::npos){
-		host = contentHostLine;
-		port = "8080";
+		this->host = contentHostLine;
+		this->port = "8080";
 	}
 	else{
-		host = contentHostLine.substr(0, pos);
-		port = contentHostLine.substr(pos + 1);
+		this->host = contentHostLine.substr(0, pos);
+		this->port = contentHostLine.substr(pos + 1);
 	}
 }
 
@@ -395,19 +403,25 @@ std::ostream &operator<<(std::ostream &o, HttpRequest const &i)
 {
 	std::map<std::string, std::string>	currHeaders = i.getHeaders();
 	
-	o << "HttpRequest: \n\n" \
-	<< "type: " << i.getType() << "\n" \
-	<< "location: " << i.getLocation() << "\n" \
+	o << "HttpRequest: \n\n";
+	if (i.getType() == GET)
+		std::cout << "type: GET" << "\n";
+	if (i.getType() == POST)
+		std::cout << "type: GET" << "\n";
+	if (i.getType() == DELETE)
+		std::cout << "type: GET" << "\n";
+	std::cout << "location: " << i.getLocation() << "\n" \
 	<< "version: " << i.getVersion() << "\n" \
 	<< "Headers:\n" << std::endl;
 	for (std::map<std::string, std::string>::iterator it = currHeaders.begin(); \
 	it != currHeaders.end(); it++){
-		o << it->first << ':' << it->second << std::endl;
+
+		o << it->first << " |U| " << it->second << std::endl;
 	}
 	
 	o << "Body: " << i.getBody() << "\n\n" \
 	<< "Host: " << i.getHost() << "\n" \
-	<< "Port:" << i.getPort() << std::endl;
+	<< "Port: " << i.getPort() << std::endl;
 	
 	return o;
 }
