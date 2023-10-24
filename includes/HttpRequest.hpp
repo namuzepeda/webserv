@@ -71,9 +71,3 @@ class HttpRequest
 std::ostream &operator<<(std::ostream &o, HttpRequest const &i);
 
 #endif
-POST /api/data HTTP/1.1
-Host: example.com
-Content-Type: application/json
-Content-Length: 39
-
-{"key1": "value1", "key2": "value2"}
