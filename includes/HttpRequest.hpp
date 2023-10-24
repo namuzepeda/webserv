@@ -19,7 +19,7 @@ class HttpRequest
 {
 	private:
 
-		HttpStatusCode					statusCode;
+		HttpStatusCode						statusCode;
 		std::string							line;
 		RequestType							type;
 		std::string							location;

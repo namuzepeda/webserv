@@ -19,7 +19,7 @@ HttpRequest::HttpRequest(const char * buffer) : statusCode(Ok){
 	std::string currLine;
 	
 	//FOR DEBBUG
-	std::cout << "-------------------\n\nbuffer: \n\n" << buffer << "--------------------" << std::endl;
+	std::cout << "\n-------------------\n\nbuffer: \n\n" << buffer << "--------------------" << std::endl;
 
 	try {
 		std::getline(iss, currLine);
@@ -60,9 +60,16 @@ HttpRequest::HttpRequest(const char * buffer) : statusCode(Ok){
 	
 		std::stringstream requestBodyStream;
 		std::string bodyLine;
-		while (std::getline(iss, bodyLine)) {
+		std::cout << "HOLA" << std::endl;
+		while (std::getline(new std::string(iss), bodyLine)) {
+			//FOR DEBBUG
+			std::cout << "bodyline : ^" << bodyLine << '^' << std::endl;
+
+
 			requestBodyStream << bodyLine << '\n';
 		}
+		std::cout << "adios" << std::endl;
+		
 		body = requestBodyStream.str();
 		if (body.size() > limitRequestBody) {
 			this->statusCode = RequestEntityTooLarge;

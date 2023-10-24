@@ -139,8 +139,8 @@ void	Core::run(void) {
 					if (bytesRead <= 0) {
 						//std::cerr << "2" << std::endl;
 						// El cliente ha cerrado la conexión o ha ocurrido un error
-						//clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
-						//close(pollEvents[i].fd);
+						clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
+						close(pollEvents[i].fd);
 						//std::cout << "Conexión cerrada con un cliente." << std::endl;
 
 						// Eliminar el socket del cliente del vector de clientes
