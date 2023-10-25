@@ -68,6 +68,7 @@ enum HttpStatusCode {
 	Ok = 200,
 	Created = 201,
 	BadRequest = 400,
+	Forbidden = 403,
 	NotFound = 404,
 	MethodNotAllowed = 405,
 	RequestEntityTooLarge = 413,
@@ -88,7 +89,7 @@ enum HttpStatusCode {
 #include <stdlib.h>
 #include <unistd.h>
 #include <poll.h>
-#include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <cstring>
 #include <unistd.h>
@@ -99,6 +100,7 @@ enum HttpStatusCode {
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
 #include "HttpResponseUtils.hpp"
+#include "FileUtils.hpp"
 #include "CGIHandler.hpp"
 
 #include "Handler.hpp"

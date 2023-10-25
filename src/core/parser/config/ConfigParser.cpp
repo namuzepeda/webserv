@@ -113,7 +113,7 @@ std::vector<Handler *> ConfigParser::getHandlers(std::vector<Token *> &tokens) {
 					throw std::runtime_error((*it)->value);
 				tempHandlers.push_back(
 						ConfigParserUtils::getHandler(
-								ConfigParserUtils::getHolder(contextType), value
+								new Config(), value, contextType
 						)
 				);
 			} else if((*it)->type == IDENTIFIER && handler != NULL) {

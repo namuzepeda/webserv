@@ -27,7 +27,7 @@ class HttpResponse
 		
 		HttpStatusCode	CheckRequestLine(const std::string& requestLine);
 		// HttpStatusCode	IsUriValid(const std::string& uri);
-		std::string		toString(void);
+		
 		bool			goodQueryArgs(const std::string& query);
 
 	public:
@@ -37,6 +37,9 @@ class HttpResponse
 
 		HttpResponse 	&operator=(HttpResponse const &copy);
 		~HttpResponse();
+
+
+        std::string		toString(void);
 		//get final response
 	
 };

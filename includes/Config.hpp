@@ -30,7 +30,7 @@ class Config
 		Config(Config const &copy);
 
 		Config const	&operator=(Config const &copy);
-		virtual			~Config();
+		~Config();
 
 		std::string get(const std::string &key);
 		void		put(std::string key, std::string value);
@@ -41,8 +41,6 @@ class Config
 
 		bool		hasMaxBodySize();
 		int			getMaxBodySize();
-
-		virtual	ContextType			getType()						= 0;
 
 
 };

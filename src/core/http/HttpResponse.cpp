@@ -3,22 +3,43 @@
 HttpResponse::HttpResponse(HttpRequest const &requ)
 : request(requ), statusCode(Ok)
 {
-	
-	//HttpStatusCode	auxStatus;
-	//por pasar en el momento correcto a la request
-	// if (this->request.getBody().size() > limitRequestBody) {
-	// 	statusCode = RequestEntityTooLarge;
-	// 	this->finalResponse = HttpResponse::toString();
-	// 	return;
-	// }
-	// auxStatus = CheckRequestLine(this->request.getReqLine());
-	// if (auxStatus != statusCode) {
-	// 	statusCode = auxStatus;
-	// 	this->finalResponse = HttpResponse::toString();
-	// 	return;
-	// }
+	std::string fileName = this->request.getConfig()->get("root");
+	std::string location = this->request.getLocation();
 
-	//if get push delete
+	if(location != "/")
+		fileName += location;
+	else if(this->request.getConfig()->contains("index")) {
+		
+	} else {
+		fileName += "/index.html";
+	}
+		
+
+	std::cout << "File to read: " << fileName << std::endl;
+
+	if(!FileUtils::fileExists(fileName)) {
+		this->statusCode = NotFound;
+		return ;
+	}
+
+	if(!FileUtils::canRead(fileName)) {
+		this->statusCode = Forbidden;
+		return ;
+	}
+
+	std::ifstream file;
+	file.open(fileName.c_str());
+	if(!file.is_open()) {
+		this->statusCode = InternalServerError;
+		return ;
+	}
+
+	std::string fileLine;
+	while (std::getline(file, fileLine)) {
+		this->body += fileLine + '\n';
+	}
+    
+	std::cout << this->body << std::endl;
 
 }
 
@@ -101,10 +122,15 @@ HttpResponse::~HttpResponse() {
 
 std::string HttpResponse::toString(void) {
 
-	std::ostringstream	data;
-	HttpResponseUtils	errorHandler;
+	std::stringstream responseStream;
+    responseStream << "HTTP/1.1 " << statusCode << " " << HttpResponseUtils::getStatus(this->statusCode) << "\r\n";
+    responseStream << "Content-Type: text/html\r\n";
+    responseStream << "\r\n"; // Fin de las cabeceras, línea en blanco
 
-    data << this->request.getVersion() << this->statusCode << errorHandler.getStatus (this->statusCode) <<"\r\n";
+	if(this->statusCode == 200)
+		responseStream << this->body;
+	else
+		responseStream << HttpResponseUtils::errorBody(this->statusCode);
 /*
     std::map<std::string, std::string>::iterator it;
 
@@ -115,5 +141,5 @@ std::string HttpResponse::toString(void) {
     }
 
     data << "\r\n" << this->body;*/ //crear funcion que settee el buen body si es OK o si es error y los headers
-    return data.str();
+    return responseStream.str();
 }

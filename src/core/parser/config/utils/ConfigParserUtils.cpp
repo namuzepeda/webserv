@@ -66,17 +66,8 @@ ContextType ConfigParserUtils::getContext(Token *token) {
 		return (LOCATION);
 }
 
-Config *ConfigParserUtils::getHolder(ContextType type) {
+Handler	*ConfigParserUtils::getHandler(Config *config, std::string path, ContextType type) {
 	switch(type) {
-		case SERVER:
-			return (new ServerHolder());
-		default:
-			return (new LocationHolder());
-	}
-}
-
-Handler	*ConfigParserUtils::getHandler(Config *config, std::string path) {
-	switch(config->getType()) {
 		case SERVER:
 			return (new ServerHandler(config));
 		default:

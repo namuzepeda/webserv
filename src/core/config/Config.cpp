@@ -17,7 +17,7 @@ Config::Config(void) {
 }
 
 Config::~Config(void) {
-
+	this->values.clear();
 }
 
 int	Config::asInt(std::string key) {

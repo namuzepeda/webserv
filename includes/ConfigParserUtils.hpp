@@ -32,8 +32,7 @@ class ConfigParserUtils
 
 		static ContextType	getContext(Token *token) ;
 
-		static Config 		*getHolder(ContextType type);
-		static Handler		*getHandler(Config *config, std::string path);
+		static Handler		*getHandler(Config *config, std::string path, ContextType type);
 
 };
 

@@ -21,7 +21,8 @@ ServerHandler::~ServerHandler() {
 }
 
 void ServerHandler::run(const HttpRequest &request) {
-	//request.setRoot(this->path);
+	Config *config = request.getConfig();
+	config->put("root", this->config->get("root"));
 	for(std::vector<Handler *>::iterator it = this->childs.begin(); it != this->childs.end(); it++) {
 		Handler *handler = *it;
 		LocationHandler *locHandler = (LocationHandler *) handler;
