@@ -21,20 +21,24 @@ LocationHandler::~LocationHandler() {
 }
 
 void LocationHandler::run(const HttpRequest &request) {
-	/*if(this->getConfig("cgi_pass") != NULL)
-	{
-		request->getConfig().put("cgi_pass", this->getConfig("cgi_pass"));
-	}
-	if(this->getConfig("root") != NULL)
-	{
-		request->getConfig().put("root", this->getConfig("root"));
-	}*/
-	for(std::vector<Handler *>::iterator it = this->childs.begin(); it != this->childs.end(); it++) {
+
+	std::cout << "Is in lochandler" << std::endl;
+
+	if(this->config->contains("root"))
+		request.getConfig()->put("root", this->config->get("root"));
+	if(this->config->contains("index"))
+		request.getConfig()->put("index", this->config->get("index"));
+	if(this->config->contains("autoindex"))
+		request.getConfig()->put("autoindex", this->config->get("autoindex"));
+	if(this->config->contains("allow_methods"))
+		request.getConfig()->put("allow_methods", this->config->get("allow_methods"));
+	/*for(std::vector<Handler *>::iterator it = this->childs.begin(); it != this->childs.end(); it++) {
 		Handler *handler = *it;
 		LocationHandler *locHandler = (LocationHandler *) handler;
+		std::cout << "Checking route " << request.getLocation() << std::endl;
 		if (request.getLocation().find(locHandler->getPath()) == 0) //Handler path found in request path at position 0
 			locHandler->run(request);
-	}
+	}*/
 }
 
 std::string LocationHandler::getPath() {

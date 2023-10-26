@@ -29,12 +29,14 @@ class Config
 		Config(void);
 		Config(Config const &copy);
 
-		Config const	&operator=(Config const &copy);
 		~Config();
+
+		Config const	&operator=(Config const &copy);
 
 		std::string get(const std::string &key);
 		void		put(std::string key, std::string value);
 
+		void 		remove(std::string key);
 		bool		contains(const std::string &key);
 
 		int			asInt(std::string key);

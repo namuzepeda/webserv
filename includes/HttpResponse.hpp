@@ -18,7 +18,7 @@
 class HttpResponse
 {
 	private:
-		HttpRequest							request;
+		
 		HttpStatusCode						statusCode;
 		std::string							statusLine;
 		std::map<std::string, std::string>	headers;

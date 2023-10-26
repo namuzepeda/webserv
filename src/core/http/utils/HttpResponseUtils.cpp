@@ -1,5 +1,96 @@
 #include "WebServ.hpp"
 
+bool containsChar(const std::string &str, char caracter) {
+    for (std::string::const_iterator it = str.begin(); it != str.end(); ++it) {
+        if (*it == caracter) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+std::string getMethod(RequestType type) {
+    switch(type) {
+        case GET:
+            return ("GET");
+        case POST:
+            return ("POST");
+        case DELETE:
+            return ("DELETE");
+        case NONE:
+            throw std::runtime_error("Unknow method type");
+    }
+}
+
+bool HttpResponseUtils::isMethodAllowed(const HttpRequest &request) {
+    std::string method = getMethod(request.getType());
+
+    if(!request.getConfig()->contains("allow_methods"))
+        return (true);
+
+    std::string methods = request.getConfig()->get("allow_methods");
+
+    
+
+    if(!containsChar(methods, ' ')) {
+        return (methods == method);
+    }
+
+    size_t pos = 0;
+    std::string delimiter = " ";
+    while ((pos = methods.find(delimiter)) != std::string::npos) {
+        std::string type = methods.substr(0, pos);
+        if(type == method)
+            return (true);
+        methods.erase(0, pos + delimiter.length());
+    }
+
+    return (methods == method);
+}
+
+std::string HttpResponseUtils::getIndex(const HttpRequest &request) {
+
+    std::string totalPath = request.getConfig()->get("root");
+
+    if(totalPath[totalPath.length() - 1] != '/')
+        totalPath += "/";
+
+    totalPath += request.getLocation();
+
+    if(request.getConfig()->contains("index") && request.getConfig()->get("index") != "index.html") {
+
+        std::string index = request.getConfig()->get("index");
+
+        std::cout << "Index " << index << std::endl;
+
+        if(!containsChar(index, ' ')) {
+            totalPath += index;
+            return (totalPath);
+        }
+
+        std::cout << "Index2 " << index << std::endl;
+
+        size_t pos = 0;
+        std::string file;
+        std::string delimiter = " ";
+        while ((pos = index.find(delimiter)) != std::string::npos) {
+            file = index.substr(0, pos);
+            if(FileUtils::fileExists(totalPath, file)) {
+                totalPath += file;
+                return (totalPath);
+            }
+            index.erase(0, pos + delimiter.length());
+        }
+        if(FileUtils::fileExists(totalPath, index)) {
+            totalPath += index;
+            return (totalPath);
+        }
+    }
+    totalPath += "index.html";
+    return (totalPath);
+}
+
 std::string HttpResponseUtils::testResponse(HttpStatusCode statusCode, std::string body) {
     std::stringstream responseStream;
     responseStream << "HTTP/1.1 " << statusCode << " " << getStatus(Ok) << "\r\n";
@@ -15,6 +106,7 @@ void    HttpResponseUtils::initStatusMap(void) {
         HttpResponseUtils::statusMap.insert(std::make_pair(Ok, "OK"));
         HttpResponseUtils::statusMap.insert(std::make_pair(Created, "Created"));
         HttpResponseUtils::statusMap.insert(std::make_pair(NotFound, "Not Found"));
+        HttpResponseUtils::statusMap.insert(std::make_pair(MovedPermanently, "Moved Permanently"));
         HttpResponseUtils::statusMap.insert(std::make_pair(BadRequest, "Bad Request"));
         HttpResponseUtils::statusMap.insert(std::make_pair(MethodNotAllowed, "Method Not Allowed"));
         HttpResponseUtils::statusMap.insert(std::make_pair(RequestEntityTooLarge, "Request Entity Too Large"));
@@ -70,5 +162,71 @@ std::string HttpResponseUtils::errorBody(HttpStatusCode responseCode) {
     response <<         "</div>";
     response <<     "</body>";
     response << "</html>";
+    return (response.str());
+}
+
+std::string HttpResponseUtils::getDirectoryResponse(const std::string &path) {
+    DIR *dir;
+    struct dirent *ent;
+    struct stat file_info;
+
+    dir = opendir(path.c_str());
+
+    if(dir == NULL)
+        throw std::runtime_error("Cannot open directory");
+
+    std::ostringstream response;
+    response << "<!DOCTYPE html>";
+    response << "<html>";
+    response <<     "<head>";
+    response <<         "<title>Docs of" << path << "</title>";
+    response <<         "<style>";
+    response <<             "td {";
+    response <<                 "text-align: center";
+    response <<             "}";
+    response <<         "</style>";
+    response <<     "</head>";
+    response <<     "<body>";
+    response <<         "<table style='width: 100%'>";
+    response <<             "<thead>";
+    response <<                 "<th>File Name</th>";
+    response <<                 "<th>Last Modification</th>";
+    response <<                 "<th>Size in bytes</th>";
+    response <<             "</thead>";
+    response <<             "<tbody>";
+    while ((ent = readdir(dir)) != NULL) {
+        std::string file_name = ent->d_name;
+        std::string full_path = path + "/" + file_name;
+        response <<                 "<tr>";
+        if (stat(full_path.c_str(), &file_info) == 0) {
+            if (S_ISREG(file_info.st_mode)) {
+            response <<                 "<td>";
+            response <<                     "<a href='" << file_name << "'>";
+            response <<                         file_name;
+            response <<                     "</a>";
+            response <<                 "</td>";
+            response <<                 "<td>" << std::ctime(&file_info.st_mtime)<< "</td>";
+            response <<                 "<td>" << file_info.st_size << "</td>";
+            } else if (S_ISDIR(file_info.st_mode)) {
+            response <<                 "<td>";
+            response <<                     "<a href='" << file_name << "'>";
+            response <<                         file_name;
+            response <<                     "</a>";
+            response <<                 "</td>";
+            response <<                 "<td>" << std::ctime(&file_info.st_mtime)<< "</td>";
+            }
+        } else {
+            closedir(dir);
+            throw std::runtime_error("Cannot read one index (Directory)");
+        }
+            
+        response <<                 "</tr>";
+    }
+    response <<             "</tbody>";
+    response <<         "</table>";
+    response <<     "</body>";
+    response << "</html>";
+    closedir(dir);
+
     return (response.str());
 }

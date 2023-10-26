@@ -121,11 +121,15 @@ std::vector<Handler *> ConfigParser::getHandlers(std::vector<Token *> &tokens) {
 				it++;
 				if((*it)->type != VALUE)
 					throw std::runtime_error((*it)->value);
-				std::string value = (*it)->value;
-				it++;
+				std::string value;
+				while((*it)->type == VALUE) {
+					value += (*it)->value;
+					value += " ";
+					it++;
+				}
 				if((*it)->type != SEMICOLON)
 					throw std::runtime_error((*it)->value);
-				handler->getConfig()->put(identifier, value);
+				handler->getConfig()->put(identifier, rightTrim(value));
 			} else {
 				throw std::runtime_error((*it)->value);
 			}

@@ -67,14 +67,15 @@ enum InitType {
 enum HttpStatusCode {
 	Ok = 200,
 	Created = 201,
+	MovedPermanently = 301,
 	BadRequest = 400,
 	Forbidden = 403,
 	NotFound = 404,
 	MethodNotAllowed = 405,
 	RequestEntityTooLarge = 413,
 	RequestUriTooLong = 414,
-	VersionNotSupported = 505,
-	InternalServerError = 500
+	InternalServerError = 500,
+	VersionNotSupported = 505
 };
 
 #include <signal.h>
@@ -94,13 +95,18 @@ enum HttpStatusCode {
 #include <cstring>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <stdexcept>
+#include <sys/stat.h>
+#include <ctime>
+#include <sys/types.h>
+#include <dirent.h>
 
 #include "Config.hpp"
 
+#include "FileUtils.hpp"
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
 #include "HttpResponseUtils.hpp"
-#include "FileUtils.hpp"
 #include "CGIHandler.hpp"
 
 #include "Handler.hpp"

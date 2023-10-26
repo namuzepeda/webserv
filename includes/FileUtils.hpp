@@ -20,8 +20,13 @@ class FileUtils {
 
 	public:
 
-		static bool	fileExists(const std::string &fileName);
-		static bool	canRead(const std::string &fileName);
+		static bool			fileExists(const std::string &fileName);
+		static bool			fileExists(const std::string &path, const std::string &fileName);
+		static bool			canRead(const std::string &fileName);
+		static bool			canRead(const std::string &path, const std::string &fileName);
+		static std::string	getFileData(const std::string &fileName);
+		static std::string	getFileData(const std::string &path, const std::string &fileName);
+		static bool  		isDirectory(const std::string &path);
 
 };
 

@@ -21,12 +21,20 @@ ServerHandler::~ServerHandler() {
 }
 
 void ServerHandler::run(const HttpRequest &request) {
-	Config *config = request.getConfig();
-	config->put("root", this->config->get("root"));
+	Config *rConfig = request.getConfig();
+	rConfig->put("root", this->config->get("root"));
+	if(this->config->contains("index"))
+		rConfig->put("index", this->config->get("index"));
+	if(this->config->contains("autoindex"))
+		rConfig->put("autoindex", this->config->get("autoindex"));
+	if(this->config->contains("allow_methods"))
+		rConfig->put("allow_methods", this->config->get("allow_methods"));
 	for(std::vector<Handler *>::iterator it = this->childs.begin(); it != this->childs.end(); it++) {
 		Handler *handler = *it;
 		LocationHandler *locHandler = (LocationHandler *) handler;
-		if (request.getLocation().find(locHandler->getPath()) == 0) //Handler path found in request path at position 0
-			locHandler->run(request); //solo request
+
+ 		if (request.getLocation().substr(0, locHandler->getPath().length()) == locHandler->getPath()) {
+			locHandler->run(request);
+		}
 	}
 }

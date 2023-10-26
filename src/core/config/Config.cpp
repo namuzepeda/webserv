@@ -17,7 +17,7 @@ Config::Config(void) {
 }
 
 Config::~Config(void) {
-	this->values.clear();
+	
 }
 
 int	Config::asInt(std::string key) {
@@ -40,7 +40,17 @@ bool Config::contains(const std::string &key) {
 	return true;
 }
 
+void Config::remove(std::string key) {
+	std::map<std::string, std::string>::iterator it = this->values.find(key);
+    if (it != this->values.end()) {
+        this->values.erase(it);
+    }
+}
+
 void Config::put(std::string key, std::string value) {
+	if(contains(key)) {
+		remove(key);
+	}
 	this->values.insert(std::make_pair(key, value));
 }
 

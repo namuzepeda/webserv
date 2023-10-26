@@ -49,14 +49,12 @@ Core::~Core() {
 }
 
 std::string Core::getResponse(const HttpRequest &request) {
-	std::cout << "0" << std::endl;
 	for(std::vector<Server *>::iterator it = this->servers.begin(); it != this->servers.end(); it++) {
 		Server *server = *it;
-		std::cout << "1" << std::endl;
 		if(ServerUtils::doesRequestApply(*server, request)) {
-			std::cout << "2" << std::endl;
 			server->getHandler()->run(request);
 			HttpResponse response(request);
+			//std::cout << response.toString() << std::endl;
 			return (response.toString());
 		}
 	}

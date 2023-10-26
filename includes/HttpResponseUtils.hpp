@@ -25,10 +25,16 @@ class HttpResponseUtils {
 	
 	public:
 
-		static void		initStatusMap(void);
+		static void			initStatusMap(void);
 		static std::string getStatus(HttpStatusCode code);
 		static std::string testResponse(HttpStatusCode statusCode, std::string body);
 		static std::string errorBody(HttpStatusCode responseCode);
+
+		static std::string getIndex(const HttpRequest &request);
+
+		static std::string getDirectoryResponse(const std::string &path);
+
+		static bool 		isMethodAllowed(const HttpRequest &request);
 
 };
 

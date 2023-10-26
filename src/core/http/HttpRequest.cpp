@@ -35,13 +35,13 @@ std::string replaceCarriageReturnAndNewline(const std::string &input) {
 }
 
 
-HttpRequest::HttpRequest(const char * buffer) : statusCode(Ok), config(0) {
+HttpRequest::HttpRequest(const char * buffer) : statusCode(Ok), config(new Config()) {
 	std::string	Request = buffer;
 	std::istringstream iss(Request);
 	std::string currLine;
 	
 	//FOR DEBBUG
-	std::cout << "\n-------------------\n\nbuffer: \n\n" << buffer << "--------------------" << std::endl;
+	//std::cout << "\n-------------------\n\nbuffer: \n\n" << buffer << "--------------------" << std::endl;
 	bool readingBody = false;
 	try {
 		std::getline(iss, currLine);
@@ -78,7 +78,7 @@ HttpRequest::HttpRequest(const char * buffer) : statusCode(Ok), config(0) {
 
 						//FOR DEBBUG
 						// std::map<std::string, std::string>::iterator it = headers.begin();
-						std::cout << "En headers: " << headerName << " | " << headerValue << std::endl;
+						//std::cout << "En headers: " << headerName << " | " << headerValue << std::endl;
 					}
 				}
 			}
@@ -96,12 +96,10 @@ HttpRequest::HttpRequest(const char * buffer) : statusCode(Ok), config(0) {
 		initVarErrorCase();
 		std::cerr << e.what() << std::endl;
 	}
-	this->config = new Config();
 }
 
 HttpRequest::~HttpRequest(void) {
-	if(!this->config)
-		delete this->config;
+	delete this->config;
 }
 
 HttpRequest::HttpRequest(HttpRequest const &src)

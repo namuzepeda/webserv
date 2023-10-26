@@ -1,46 +1,72 @@
 #include "WebServ.hpp"
 
-HttpResponse::HttpResponse(HttpRequest const &requ)
-: request(requ), statusCode(Ok)
+
+void replace(std::string& str, const std::string &find, const std::string &replace) {
+    size_t pos = 0;
+    while ((pos = str.find(find, pos)) != std::string::npos) {
+        str.replace(pos, find.length(), replace);
+        pos += replace.length();
+    }
+}
+
+
+HttpResponse::HttpResponse(const HttpRequest  &request): statusCode(Ok)
 {
-	std::string fileName = this->request.getConfig()->get("root");
-	std::string location = this->request.getLocation();
 
-	if(location != "/")
-		fileName += location;
-	else if(this->request.getConfig()->contains("index")) {
-		
-	} else {
-		fileName += "/index.html";
-	}
-		
-
-	std::cout << "File to read: " << fileName << std::endl;
-
-	if(!FileUtils::fileExists(fileName)) {
-		this->statusCode = NotFound;
-		return ;
-	}
-
-	if(!FileUtils::canRead(fileName)) {
-		this->statusCode = Forbidden;
-		return ;
-	}
-
-	std::ifstream file;
-	file.open(fileName.c_str());
-	if(!file.is_open()) {
+	if (!request.getConfig()->contains("root")) {
 		this->statusCode = InternalServerError;
 		return ;
 	}
 
-	std::string fileLine;
-	while (std::getline(file, fileLine)) {
-		this->body += fileLine + '\n';
+	if(!HttpResponseUtils::isMethodAllowed(request)) {
+		this->statusCode = MethodNotAllowed;
+		return ;
 	}
-    
-	std::cout << this->body << std::endl;
 
+	std::string file;
+
+	std::cout << "Location " << request.getLocation() << std::endl;
+
+	if(request.getLocation()[request.getLocation().length() - 1] == '/' && (!request.getConfig()->contains("autoindex") || request.getConfig()->get("autoindex") != "on"))
+		file = HttpResponseUtils::getIndex(request);
+	else {
+		file = request.getConfig()->get("root");
+		file += request.getLocation();
+	}
+
+	replace(file, "//", "/");
+
+	std::cout << "Asking file " << file << std::endl;
+		
+
+	if(!FileUtils::fileExists(file)) {
+		this->statusCode = NotFound;
+		return ;
+	}
+
+	if(!FileUtils::canRead(file)) {
+		this->statusCode = Forbidden;
+		return ;
+	}
+
+	if(FileUtils::isDirectory(file)) {
+		if(request.getLocation()[request.getLocation().length() - 1] != '/') {
+			this->statusCode = MovedPermanently;
+			std::string newLocation = request.getLocation();
+			newLocation += "/";
+			this->headers.insert(std::make_pair("Location", newLocation));
+			return ;
+		}
+		this->body = HttpResponseUtils::getDirectoryResponse(file);
+		return ;
+	}
+	
+	try {
+		this->body = FileUtils::getFileData(file);
+	} catch (std::runtime_error &e) {
+		this->statusCode = InternalServerError;
+		return ;
+	}
 }
 
 /*HttpResponse::HttpResponse(HttpResponse const &copy){
@@ -125,9 +151,13 @@ std::string HttpResponse::toString(void) {
 	std::stringstream responseStream;
     responseStream << "HTTP/1.1 " << statusCode << " " << HttpResponseUtils::getStatus(this->statusCode) << "\r\n";
     responseStream << "Content-Type: text/html\r\n";
+
+	for (std::map<std::string, std::string>::iterator it = this->headers.begin(); it != this->headers.end(); ++it) {
+		responseStream << it->first << ": " << it->second << "\r\n";
+    }
     responseStream << "\r\n"; // Fin de las cabeceras, línea en blanco
 
-	if(this->statusCode == 200)
+	if(this->statusCode == 200 || this->statusCode == 301)
 		responseStream << this->body;
 	else
 		responseStream << HttpResponseUtils::errorBody(this->statusCode);
