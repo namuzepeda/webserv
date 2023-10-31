@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 17:35:06 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/10/18 23:48:43 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/10/31 00:26:45 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 #include <iostream>
 #include <string>
 
-#define limitRequestBody	7340032 //7 megabytes
+// #define limitRequestBody	7340032 //7 megabytes
+#define limitRequestBody	100 // to test
 #define limitUriSize		4096 //characters
 #define limitHeaderSize		5000 // 5 kilobytes
 //longitud maxima de encabezados en bytes

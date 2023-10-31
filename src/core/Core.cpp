@@ -148,7 +148,15 @@ void	Core::run(void) {
 						
 						//std::cerr << "Returning response " << std::endl << responseString << std::endl;
 						//std::cout << "returning response " << std::endl << responseString.c_str() << std::endl;
-						send(pollEvents[i].fd, response.c_str(), response.length(), 0);
+						
+						//CORRECTIONS: send should be protected
+						int bytesSend = send(pollEvents[i].fd, response.c_str(), response.length(), 0);
+						if (bytesSend <= 0) {
+							clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
+							close(pollEvents[i].fd);
+						}
+
+
 						/*HttpResponse *response = getResponse(request);
 						if(response) {
 							std::string responseString = response->toString();
