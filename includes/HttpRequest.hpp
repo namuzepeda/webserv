@@ -30,6 +30,7 @@ class HttpRequest
 		std::string							port;
 		std::string							body;
 		Config								*config;
+		std::map<int, std::string>          errorPages;
 	
 
 	void		setLineParts(std::string& line, RequestType& type);
@@ -60,12 +61,13 @@ class HttpRequest
 		std::string	const &getVersion() const;
 		std::string	const &getBody() const;
 		HttpStatusCode		getStatusCode();
-		std::map<std::string, std::string> const &getHeaders() const;
+		std::map<std::string, std::string>	const &getHeaders() const;
 		bool		headContains(const std::string& key);
 		std::string	getHeadValue(const std::string& key);
 		std::string	const &getHost() const;
 		std::string const &getPort() const;
 		Config		*getConfig(void) const;
+		std::map<int, std::string> 	 &getErrorPages();
 
 };
 

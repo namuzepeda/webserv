@@ -129,7 +129,10 @@ std::vector<Handler *> ConfigParser::getHandlers(std::vector<Token *> &tokens) {
 				}
 				if((*it)->type != SEMICOLON)
 					throw std::runtime_error((*it)->value);
-				handler->getConfig()->put(identifier, rightTrim(value));
+				if(identifier == "error_page")
+					handler->getConfig()->add(identifier, rightTrim(value));
+				else
+					handler->getConfig()->put(identifier, rightTrim(value));
 			} else {
 				throw std::runtime_error((*it)->value);
 			}

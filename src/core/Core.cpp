@@ -2,8 +2,6 @@
 
 /************** STATIC ******************/
 
-
-
 /*void			Core::deleteInstance(void)	{
 	delete instance;
 	instance = 0;
@@ -48,14 +46,14 @@ Core::~Core() {
 	this->servers.clear();
 }
 
-std::string Core::getResponse(const HttpRequest &request) {
+std::string Core::getResponse(HttpRequest &request) {
 	for(std::vector<Server *>::iterator it = this->servers.begin(); it != this->servers.end(); it++) {
 		Server *server = *it;
 		if(ServerUtils::doesRequestApply(*server, request)) {
 			server->getHandler()->run(request);
 			HttpResponse response(request);
 			//std::cout << response.toString() << std::endl;
-			return (response.toString());
+			return (response.toString(request));
 		}
 	}
 	//response = HttpRequest();

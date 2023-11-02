@@ -24,6 +24,7 @@ class HttpResponse
 		std::map<std::string, std::string>	headers;
 		std::string							body;
 		std::string							finalResponse;
+        std::map<int, std::string>          errorPages;
 		
 		HttpStatusCode	CheckRequestLine(const std::string& requestLine);
 		// HttpStatusCode	IsUriValid(const std::string& uri);
@@ -39,7 +40,7 @@ class HttpResponse
 		~HttpResponse();
 
 
-        std::string		toString(void);
+        std::string toString(HttpRequest &request);
 		//get final response
 	
 };

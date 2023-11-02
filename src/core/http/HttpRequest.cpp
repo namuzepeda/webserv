@@ -416,6 +416,10 @@ Config *HttpRequest::getConfig(void) const {
 	return (this->config);
 }
 
+std::map<int, std::string> &HttpRequest::getErrorPages() {
+	return (this->errorPages);
+}
+
 std::ostream &operator<<(std::ostream &o, HttpRequest const &i)
 {
 	std::map<std::string, std::string>	currHeaders = i.getHeaders();

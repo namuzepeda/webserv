@@ -146,7 +146,7 @@ HttpResponse::~HttpResponse() {
 // 	return OK; // La URI es válida
 // }
 
-std::string HttpResponse::toString(void) {
+std::string HttpResponse::toString(HttpRequest &request) {
 
 	std::stringstream responseStream;
     responseStream << "HTTP/1.1 " << statusCode << " " << HttpResponseUtils::getStatus(this->statusCode) << "\r\n";
@@ -159,8 +159,16 @@ std::string HttpResponse::toString(void) {
 
 	if(this->statusCode == 200 || this->statusCode == 301)
 		responseStream << this->body;
-	else
-		responseStream << HttpResponseUtils::errorBody(this->statusCode);
+	else {
+		std::map<int, std::string >::iterator it = request.getErrorPages().find(this->statusCode);
+		if(it != request.getErrorPages().end() 
+			&& FileUtils::fileExists(request.getConfig()->get("froot"), it->second)
+			&& FileUtils::canRead(request.getConfig()->get("froot"), it->second)) {
+			responseStream << FileUtils::getFileData(request.getConfig()->get("froot"), it->second);
+		} else
+			responseStream << HttpResponseUtils::errorBody(this->statusCode);
+	}
+		
 /*
     std::map<std::string, std::string>::iterator it;
 

@@ -6,7 +6,7 @@ bool    FileUtils::fileExists(const std::string &fileName) {
 }
 
 bool FileUtils::fileExists(const std::string &path, const std::string &fileName) {
-    std::string totalPath = path + fileName;
+    std::string totalPath = path + (path[path.length() - 1] != '/' && fileName[0] != '/' ? "/" : "") + fileName;
     return (FileUtils::fileExists(totalPath));
 }
 
@@ -15,7 +15,7 @@ bool    FileUtils::canRead(const std::string &fileName) {
 }
 
 bool FileUtils::canRead(const std::string &path, const std::string &fileName) {
-    std::string totalPath = path + fileName;
+    std::string totalPath = path + (path[path.length() - 1] != '/' && fileName[0] != '/' ? "/" : "") + fileName;
     return (FileUtils::canRead(totalPath));
 }
 
@@ -34,7 +34,7 @@ std::string FileUtils::getFileData(const std::string &fileName) {
 }
 
 std::string FileUtils::getFileData(const std::string &path, const std::string &fileName) {
-    std::string totalPath = path + fileName;
+    std::string totalPath = path + (path[path.length() - 1] != '/' && fileName[0] != '/' ? "/" : "") + fileName;
     return (FileUtils::getFileData(totalPath));
 }
 

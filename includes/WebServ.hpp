@@ -113,9 +113,6 @@ enum HttpStatusCode {
 #include "ConfigParser.hpp"
 #include "ConfigParserUtils.hpp"
 
-#include "ServerHolder.hpp"
-#include "LocationHolder.hpp"
-
 
 #include "ServerHandler.hpp"
 #include "LocationHandler.hpp"

@@ -25,23 +25,32 @@ int	Config::asInt(std::string key) {
 }
 
 std::string Config::get(const std::string &key) {
-	std::map<std::string, std::string>::iterator it = this->values.find(key);
+	std::map<std::string, std::vector<std::string> >::iterator it = this->values.find(key);
 	if(it != this->values.end())
-		return (it->second);
+		return (it->second[it->second.size() - 1]);
 	return (0);
 }
 
+std::vector<std::string> Config::gets(const std::string &key) {
+	std::map<std::string, std::vector<std::string> >::iterator it = this->values.find(key);
+	if(it != this->values.end())
+		return (it->second);
+	std::vector<std::string> data;
+	this->values.insert(std::make_pair(key, data));
+	return (Config::gets(key));
+}
+
 bool Config::contains(const std::string &key) {
-	std::map<std::string, std::string>::const_iterator it = this->values.find(key);
+	std::map<std::string, std::vector<std::string> >::const_iterator it = this->values.find(key);
 
 	if (it == this->values.end()) {
 		return false;
 	}
-	return true;
+	return (it->second.size());
 }
 
-void Config::remove(std::string key) {
-	std::map<std::string, std::string>::iterator it = this->values.find(key);
+void Config::remove(const std::string &key) {
+	std::map<std::string, std::vector<std::string> >::iterator it = this->values.find(key);
     if (it != this->values.end()) {
         this->values.erase(it);
     }
@@ -51,9 +60,14 @@ void Config::put(std::string key, std::string value) {
 	if(contains(key)) {
 		remove(key);
 	}
-	this->values.insert(std::make_pair(key, value));
+	std::vector<std::string> data;
+	data.push_back(value);
+	this->values.insert(std::make_pair(key, data));
 }
 
-int	Config::getMaxBodySize(void) {
-	return (contains("client_max_body_size") ? asInt("client_max_body_size") : Config::DEFAULT_BUFFER_SIZE);
+void Config::add(std::string key, std::string value) {
+	if(!contains(key))
+		Config::put(key, value);
+	else
+		gets(key).push_back(value);
 }

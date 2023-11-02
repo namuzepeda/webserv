@@ -15,15 +15,12 @@
         "cstdio": "cpp",
         "cstdlib": "cpp",
         "cstring": "cpp",
-     
         "cwchar": "cpp",
         "cwctype": "cpp",
         "deque": "cpp",
         "map": "cpp",
         "set": "cpp",
-
         "string": "cpp",
-
         "unordered_map": "cpp",
         "vector": "cpp",
         "exception": "cpp",
@@ -33,11 +30,7 @@
         "memory": "cpp",
         "memory_resource": "cpp",
         "numeric": "cpp",
-
         "optional": "cpp",
-        "random": "cpp",
-        "string": "cpp",
-
         "random": "cpp",
         "string_view": "cpp",
         "system_error": "cpp",
@@ -53,13 +46,36 @@
         "new": "cpp",
         "numbers": "cpp",
         "ostream": "cpp",
-
         "ranges": "cpp",
         "span": "cpp",
-
         "sstream": "cpp",
         "stdexcept": "cpp",
         "streambuf": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "__bit_reference": "cpp",
+        "__config": "cpp",
+        "__debug": "cpp",
+        "__errc": "cpp",
+        "__hash_table": "cpp",
+        "__locale": "cpp",
+        "__mutex_base": "cpp",
+        "__node_handle": "cpp",
+        "__split_buffer": "cpp",
+        "__threading_support": "cpp",
+        "__tree": "cpp",
+        "__verbose_abort": "cpp",
+        "bitset": "cpp",
+        "charconv": "cpp",
+        "complex": "cpp",
+        "ctime": "cpp",
+        "iomanip": "cpp",
+        "ios": "cpp",
+        "locale": "cpp",
+        "mutex": "cpp",
+        "ratio": "cpp",
+        "variant": "cpp",
+        "__nullptr": "cpp",
+        "__tuple": "cpp",
+        "cinttypes": "cpp"
     }
 }

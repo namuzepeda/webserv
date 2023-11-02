@@ -20,7 +20,7 @@ class Config
 
 	protected:
 
-		std::map<std::string, std::string>	values;
+		std::map<std::string, std::vector<std::string> >	values;
 
 	public:
 
@@ -33,16 +33,15 @@ class Config
 
 		Config const	&operator=(Config const &copy);
 
-		std::string get(const std::string &key);
-		void		put(std::string key, std::string value);
+		std::string 				get(const std::string &key);
+		std::vector<std::string>	gets(const std::string &key);
+		void						put(std::string key, std::string value);
+		void						add(std::string key, std::string value);
 
-		void 		remove(std::string key);
-		bool		contains(const std::string &key);
+		void 						remove(const std::string &key);
+		bool						contains(const std::string &key);
 
-		int			asInt(std::string key);
-
-		bool		hasMaxBodySize();
-		int			getMaxBodySize();
+		int							asInt(std::string key);
 
 
 };

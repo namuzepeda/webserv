@@ -23,7 +23,7 @@ class ServerHandler : public Handler
 
 		virtual					~ServerHandler();
 
-		virtual void			run(const HttpRequest &request);
+		virtual void			run(HttpRequest &request);
 };
 
 #endif
