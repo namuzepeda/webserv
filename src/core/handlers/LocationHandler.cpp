@@ -44,7 +44,7 @@ void LocationHandler::run(HttpRequest &request) {
 			if (iss >> errorCode) {
 				std::getline(iss, errorFile);
 				errorFile = errorFile.substr(errorFile.find_first_not_of(" "), errorFile.find_last_not_of(" ") + 1);
-				std::map<int, std::string>::const_iterator errorIt = request.getErrorPages().find(errorCode);
+				std::map<int, std::string>::iterator errorIt = request.getErrorPages().find(errorCode);
 				if (errorIt != request.getErrorPages().end()) {
 					request.getErrorPages().erase(errorIt);
 				}

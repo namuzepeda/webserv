@@ -18,8 +18,8 @@ std::string getMethod(RequestType type) {
             return ("POST");
         case DELETE:
             return ("DELETE");
-        case NONE:
-            throw std::runtime_error("Unknow method type");
+        default:
+            throw std::runtime_error("Method not supported");
     }
 }
 
@@ -30,8 +30,6 @@ bool HttpResponseUtils::isMethodAllowed(const HttpRequest &request) {
         return (true);
 
     std::string methods = request.getConfig()->get("allow_methods");
-
-    
 
     if(!containsChar(methods, ' ')) {
         return (methods == method);

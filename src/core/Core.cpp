@@ -109,7 +109,7 @@ void	Core::run(void) {
 					if (clientSocket == -1) {
 						//std::cerr << "Error al aceptar la conexión." << std::endl;
 					} else {
-						//std::cout << "Conexión establecida con un cliente." << std::endl;
+						std::cout << "Conexión establecida con un cliente." << std::endl;
 
 						int flags = fcntl(clientSocket, F_GETFL, 0);
 						fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
@@ -132,7 +132,7 @@ void	Core::run(void) {
 						// El cliente ha cerrado la conexión o ha ocurrido un error
 						clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
 						close(pollEvents[i].fd);
-						//std::cout << "Conexión cerrada con un cliente." << std::endl;
+						std::cout << "Conexión cerrada con un cliente." << std::endl;
 
 						// Eliminar el socket del cliente del vector de clientes
 						
@@ -151,10 +151,11 @@ void	Core::run(void) {
 						if(response) {
 							std::string responseString = response->toString();
 							send(pollEvents[i].fd, responseString.c_str(), responseString.length(), 0);
-						}
-						if(!request.headContains("Keep-alive")) {
-							clientSockets.erase(clientSockets.begin() + i - 1);
 						}*/
+						if(!request.headContains("Keep-alive")) {
+							clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
+							close(pollEvents[i].fd);
+						}
 					}
 					//std::cerr << "4" << std::endl;
 				}
