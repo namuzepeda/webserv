@@ -59,11 +59,12 @@ CGIHandler &				CGIHandler::operator=( CGIHandler const & rhs )
 /*
 ** --------------------------------- METHODS ----------------------------------
 */
-std::string		CGIHandler::executeScript()
+std::string		CGIHandler::getResponse(HttpRequest &request)
 {
 	int pipe_fd[2];
     if (pipe(pipe_fd) == -1) {
-        return "Error 500 (bad pipe)";
+        request.setStatusCode(InternalServerError);
+        return ;
     }
 
     pid_t pid = fork();

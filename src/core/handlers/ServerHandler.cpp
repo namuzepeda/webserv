@@ -38,6 +38,8 @@ void ServerHandler::run(HttpRequest &request) {
 		rConfig->put("autoindex", this->config->get("autoindex"));
 	if(this->config->contains("allow_methods"))
 		rConfig->put("allow_methods", this->config->get("allow_methods"));
+	if(this->config->contains("cgi_pass"))
+		rConfig->put("cgi_pass", this->config->get("cgi_pass"));
 	if(this->config->contains("error_page")) {
 		std::vector<std::string> errorPages = this->config->gets("error_page");
 		for(std::vector<std::string>::iterator it = errorPages.begin(); it != errorPages.end(); it++) {

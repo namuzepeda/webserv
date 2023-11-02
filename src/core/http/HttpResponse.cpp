@@ -10,8 +10,14 @@ void replace(std::string& str, const std::string &find, const std::string &repla
 }
 
 
-HttpResponse::HttpResponse(const HttpRequest  &request): statusCode(Ok)
+HttpResponse::HttpResponse(HttpRequest  &request): statusCode(Ok)
 {
+
+	if(request.getStatusCode() != Ok) {
+		this->statusCode = request.getStatusCode();
+		return ;
+	}
+		
 
 	if (!request.getConfig()->contains("root")) {
 		this->statusCode = InternalServerError;

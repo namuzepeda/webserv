@@ -32,6 +32,8 @@ void LocationHandler::run(HttpRequest &request) {
 		request.getConfig()->put("autoindex", this->config->get("autoindex"));
 	if(this->config->contains("allow_methods"))
 		request.getConfig()->put("allow_methods", this->config->get("allow_methods"));
+	if(this->config->contains("cgi_pass"))
+		request.getConfig()->put("cgi_pass", this->config->get("cgi_pass"));
 	if(this->config->contains("error_page")) {
 		std::vector<std::string> errorPages = this->config->gets("error_page");
 		for(std::vector<std::string>::iterator it = errorPages.begin(); it != errorPages.end(); it++) {

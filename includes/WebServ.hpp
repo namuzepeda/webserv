@@ -18,7 +18,7 @@
 #include <iostream>
 #include <string>
 
-#define limitRequestBody	7340032 //7 megabytes
+#define limitRequestBody	1 //7 megabytes
 #define limitUriSize		4096 //characters
 #define limitHeaderSize		5000 // 5 kilobytes
 //longitud maxima de encabezados en bytes

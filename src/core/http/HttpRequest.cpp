@@ -94,7 +94,6 @@ HttpRequest::HttpRequest(const char * buffer) : statusCode(Ok), config(new Confi
 	}
 	catch (const std::exception &e) {
 		initVarErrorCase();
-		std::cerr << e.what() << std::endl;
 	}
 }
 

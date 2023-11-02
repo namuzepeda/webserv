@@ -33,7 +33,7 @@ class HttpResponse
 
 	public:
 
-		HttpResponse(HttpRequest const &requ);
+		HttpResponse(HttpRequest &requ);
 		HttpResponse(HttpResponse const &copy);
 
 		HttpResponse 	&operator=(HttpResponse const &copy);

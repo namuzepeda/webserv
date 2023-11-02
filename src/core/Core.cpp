@@ -47,10 +47,14 @@ Core::~Core() {
 }
 
 std::string Core::getResponse(HttpRequest &request) {
+
 	for(std::vector<Server *>::iterator it = this->servers.begin(); it != this->servers.end(); it++) {
 		Server *server = *it;
 		if(ServerUtils::doesRequestApply(*server, request)) {
 			server->getHandler()->run(request);
+
+			
+
 			HttpResponse response(request);
 			//std::cout << response.toString() << std::endl;
 			return (response.toString(request));
@@ -144,8 +148,8 @@ void	Core::run(void) {
 
 						std::string response = getResponse(request);
 						
-						//std::cerr << "Returning response " << std::endl << responseString << std::endl;
-						//std::cout << "returning response " << std::endl << responseString.c_str() << std::endl;
+						//std::cerr << "Returning response" << std::endl << responseString << std::endl;
+						//std::cout << "returning response" << std::endl << responseString.c_str() << std::endl;
 						send(pollEvents[i].fd, response.c_str(), response.length(), 0);
 						/*HttpResponse *response = getResponse(request);
 						if(response) {

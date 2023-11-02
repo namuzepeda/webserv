@@ -38,7 +38,7 @@ HTTP						=	HttpRequest.cpp \
 								HttpResponse.cpp
 
 CGI_HANDLER_DIR				=	core/http/CGIHandler/
-CGI_HANDLER					=	CGIHandler.cpp
+CGI_HANDLER					=	
 
 HTTP_UTILS_DIR				=	core/http/utils/
 HTTP_UTILS					=	HttpResponseUtils.cpp \
