@@ -11,7 +11,7 @@ std::string ConfigParserUtils::IDENTIFIERS[] = {
 		"autoindex",
 		"index",
 		"return",
-		"cgi_path",
+		"cgi_pass",
 		"cgi_ext",
 		""
 };

@@ -69,6 +69,8 @@ class HttpRequest
 		Config		*getConfig(void) const;
 		std::map<int, std::string> 	 &getErrorPages();
 
+		void				setStatusCode(HttpStatusCode code);
+
 };
 
 std::ostream &operator<<(std::ostream &o, HttpRequest const &i);

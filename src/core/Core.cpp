@@ -52,17 +52,20 @@ std::string Core::getResponse(HttpRequest &request) {
 		Server *server = *it;
 		if(ServerUtils::doesRequestApply(*server, request)) {
 			server->getHandler()->run(request);
-
-			
-
-			HttpResponse response(request);
-			//std::cout << response.toString() << std::endl;
-			return (response.toString(request));
+			if(!request.getConfig()->contains("cgi_pass")) {
+				HttpResponse response(request, false);
+				//std::cout << response.toString() << std::endl;
+				return (response.toString(request));
+			} else {
+				HttpResponse response(request, true);
+				response.setBody(CGIHandler::getResponse(request));
+				std::cout << "ES CGI " << request.getConfig()->get("cgi_pass") << std::endl;
+				//if(response != "ERROR")
+				return (response.toString(request));
+				//return (HttpResponseUtils::testResponse(InternalServerError, HttpResponseUtils::errorBody(InternalServerError)));
+			}		
 		}
 	}
-	//response = HttpRequest();
-	//response.statusCode = 400; //Bad request
-	//return (response.toString());
 	return (HttpResponseUtils::testResponse(InternalServerError, HttpResponseUtils::errorBody(InternalServerError)));
 }
 
@@ -126,7 +129,7 @@ void	Core::run(void) {
 							HttpRequest request(ClientConnection::getBuffer(pollEvents[i].fd).c_str());
 							std::string response = getResponse(request);
 							send(pollEvents[i].fd, response.c_str(), response.length(), 0);
-							close(pollEvents[i].fd);
+							//close(pollEvents[i].fd);
 							//if(!request.headContains("Keep-alive")) {
 							//	clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
 							//	close(pollEvents[i].fd);

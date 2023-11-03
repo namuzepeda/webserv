@@ -19,22 +19,7 @@ class CGIHandler
 {
 
 	public:
-		/*
-		After check the extension of the request searching for CGI scripts
-		exemple:
-			resource = "/my_script.cgi";
-			parameters = "param1=value1&param2=value2"
-		*/
-		CGIHandler(const std::string &resource, const std::string &parameters);
-		CGIHandler( CGIHandler const & src );
-		~CGIHandler();
-
-		CGIHandler &		operator=( CGIHandler const & rhs );
-		std::string			executeScript();
-
-	private:
-		std::string _resource;
-		std::string _parameters;
+		static std::string getResponse(HttpRequest &request);
 };
 
 // std::ostream &			operator<<( std::ostream & o, CGIHandler const & i );

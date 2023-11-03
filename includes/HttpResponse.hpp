@@ -25,6 +25,7 @@ class HttpResponse
 		std::string							body;
 		std::string							finalResponse;
         std::map<int, std::string>          errorPages;
+        bool                                isCgi;
 		
 		HttpStatusCode	CheckRequestLine(const std::string& requestLine);
 		// HttpStatusCode	IsUriValid(const std::string& uri);
@@ -33,12 +34,13 @@ class HttpResponse
 
 	public:
 
-		HttpResponse(HttpRequest &requ);
+		HttpResponse(HttpRequest &request, bool isCgi);
 		HttpResponse(HttpResponse const &copy);
 
 		HttpResponse 	&operator=(HttpResponse const &copy);
 		~HttpResponse();
 
+        void        setBody(std::string body);
 
         std::string toString(HttpRequest &request);
 		//get final response

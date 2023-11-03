@@ -10,7 +10,7 @@ void replace(std::string& str, const std::string &find, const std::string &repla
 }
 
 
-HttpResponse::HttpResponse(HttpRequest  &request): statusCode(Ok)
+HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), isCgi(isCgi)
 {
 
 	if(request.getStatusCode() != Ok) {
@@ -67,12 +67,18 @@ HttpResponse::HttpResponse(HttpRequest  &request): statusCode(Ok)
 		return ;
 	}
 	
-	try {
+	if(!this->isCgi) {
+		try {
 		this->body = FileUtils::getFileData(file);
-	} catch (std::runtime_error &e) {
-		this->statusCode = InternalServerError;
-		return ;
+		} catch (std::runtime_error &e) {
+			this->statusCode = InternalServerError;
+			return ;
+		}
 	}
+}
+
+void        HttpResponse::setBody(std::string body) {
+	this->body = body;
 }
 
 /*HttpResponse::HttpResponse(HttpResponse const &copy){
@@ -156,8 +162,13 @@ std::string HttpResponse::toString(HttpRequest &request) {
 
 	std::stringstream responseStream;
     responseStream << "HTTP/1.1 " << statusCode << " " << HttpResponseUtils::getStatus(this->statusCode) << "\r\n";
-    responseStream << "Content-Type: text/html\r\n";
 
+	if(this->isCgi) {
+		responseStream << this->body;
+		return (responseStream.str());
+	}
+
+    responseStream << "Content-Type: text/html\r\n";
 	for (std::map<std::string, std::string>::iterator it = this->headers.begin(); it != this->headers.end(); ++it) {
 		responseStream << it->first << ": " << it->second << "\r\n";
     }

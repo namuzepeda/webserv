@@ -419,6 +419,10 @@ std::map<int, std::string> &HttpRequest::getErrorPages() {
 	return (this->errorPages);
 }
 
+void HttpRequest::setStatusCode(HttpStatusCode code) {
+	this->statusCode = code;
+}
+
 std::ostream &operator<<(std::ostream &o, HttpRequest const &i)
 {
 	std::map<std::string, std::string>	currHeaders = i.getHeaders();
