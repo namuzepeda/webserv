@@ -52,18 +52,8 @@ std::string Core::getResponse(HttpRequest &request) {
 		Server *server = *it;
 		if(ServerUtils::doesRequestApply(*server, request)) {
 			server->getHandler()->run(request);
-			if(!request.getConfig()->contains("cgi_pass")) {
-				HttpResponse response(request, false);
-				//std::cout << response.toString() << std::endl;
-				return (response.toString(request));
-			} else {
-				HttpResponse response(request, true);
-				response.setBody(CGIHandler::getResponse(request));
-				std::cout << "ES CGI " << request.getConfig()->get("cgi_pass") << std::endl;
-				//if(response != "ERROR")
-				return (response.toString(request));
-				//return (HttpResponseUtils::testResponse(InternalServerError, HttpResponseUtils::errorBody(InternalServerError)));
-			}		
+			HttpResponse response(request, request.getConfig()->contains("cgi_pass"));
+			return (response.toString(request));
 		}
 	}
 	return (HttpResponseUtils::testResponse(InternalServerError, HttpResponseUtils::errorBody(InternalServerError)));
@@ -115,11 +105,14 @@ void	Core::run(void) {
 			}
 			for (size_t i = sockets.size(); i < pollEvents.size(); ++i) {
 				if ((pollEvents[i].revents & POLLIN) || (pollEvents[i].revents & POLLOUT)) {
-					char buffer[Config::DEFAULT_BUFFER_SIZE] = {0};
-					int bytesRead = recv(pollEvents[i].fd, buffer, sizeof(buffer) + 1, 0);
+					char buffer[4096] = {0};
+					int bytesRead = recv(pollEvents[i].fd, buffer, 4096 + 1, 0);
 					if (bytesRead <= 0) {
 						clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
 						close(pollEvents[i].fd);
+						std::cout << "FInal length " << ClientConnection::requests[pollEvents[i].fd].length() << std::endl;
+						//std::cout << ClientConnection::requests[pollEvents[i].fd] << std::endl;
+						ClientConnection::deleteBuffer(pollEvents[i].fd);
 						std::cout << "Conexión cerrada con un cliente." << std::endl;
 					} else {
 						buffer[bytesRead] = '\0';
@@ -129,13 +122,15 @@ void	Core::run(void) {
 							HttpRequest request(ClientConnection::getBuffer(pollEvents[i].fd).c_str());
 							std::string response = getResponse(request);
 							send(pollEvents[i].fd, response.c_str(), response.length(), 0);
+							ClientConnection::deleteBuffer(pollEvents[i].fd);
 							//close(pollEvents[i].fd);
+							//clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
 							//if(!request.headContains("Keep-alive")) {
 							//	clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
 							//	close(pollEvents[i].fd);
 							//}
 						} else {
-							std::cout << "Request NOT completed" << std::endl;
+							//std::cout << "Request NOT completed" << std::endl;
 						}
 					}
 				}

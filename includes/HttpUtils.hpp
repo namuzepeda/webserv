@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ClientConnection.hpp                               :+:      :+:    :+:   */
+/*   HttpUtils.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,24 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CLIENT_CONNECTION_H
-#define CLIENT_CONNECTION_H
+#ifndef HTTP_UTILS_H
+#define HTTP_UTILS_H
 
 #include "WebServ.hpp"
 
 
-class ClientConnection {
+class HttpUtils {
 	
 	public:
 
-		static std::map<int, std::string> requests;
-
-		static bool			isChunkedRequest(int socket);
-		static bool			isRequestCompleted(int socket);
-		static std::string	getBuffer(int socket);
-		static void    		deleteBuffer(int socket);
-
-		
+		static std::string	getMethod(RequestType type);
+		static long			getContentLength(const std::string &buffer);
+		static long			getBodyLength(const std::string& httpRequest);
 
 };
 

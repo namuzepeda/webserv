@@ -10,21 +10,8 @@ bool containsChar(const std::string &str, char caracter) {
 }
 
 
-std::string getMethod(RequestType type) {
-    switch(type) {
-        case GET:
-            return ("GET");
-        case POST:
-            return ("POST");
-        case DELETE:
-            return ("DELETE");
-        default:
-            throw std::runtime_error("Method not supported");
-    }
-}
-
 bool HttpResponseUtils::isMethodAllowed(const HttpRequest &request) {
-    std::string method = getMethod(request.getType());
+    std::string method = HttpUtils::getMethod(request.getType());
 
     if(!request.getConfig()->contains("allow_methods"))
         return (true);

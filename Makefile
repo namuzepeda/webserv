@@ -44,7 +44,8 @@ CGI_HANDLER_DIR				=	core/http/CGIHandler/
 CGI_HANDLER					=	CGIHandler.cpp
 
 HTTP_UTILS_DIR				=	core/http/utils/
-HTTP_UTILS					=	HttpResponseUtils.cpp \
+HTTP_UTILS					=	HttpUtils.cpp \
+								HttpResponseUtils.cpp \
 								FileUtils.cpp
 
 PARSER_CONFIG_DIR			=	core/parser/config/

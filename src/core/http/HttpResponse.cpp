@@ -31,7 +31,7 @@ HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), i
 
 	std::string file;
 
-	std::cout << "Location " << request.getLocation() << std::endl;
+	std::cout << "Location Response" << request.getLocation() << std::endl;
 
 	if(request.getLocation()[request.getLocation().length() - 1] == '/' && (!request.getConfig()->contains("autoindex") || request.getConfig()->get("autoindex") != "on"))
 		file = HttpResponseUtils::getIndex(request);
@@ -66,10 +66,12 @@ HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), i
 		this->body = HttpResponseUtils::getDirectoryResponse(file);
 		return ;
 	}
-	
-	if(!this->isCgi) {
+
+	if(this->isCgi)
+		this->body = CGIHandler::getResponse(request);
+	else {
 		try {
-		this->body = FileUtils::getFileData(file);
+			this->body = FileUtils::getFileData(file);
 		} catch (std::runtime_error &e) {
 			this->statusCode = InternalServerError;
 			return ;
@@ -163,7 +165,7 @@ std::string HttpResponse::toString(HttpRequest &request) {
 	std::stringstream responseStream;
     responseStream << "HTTP/1.1 " << statusCode << " " << HttpResponseUtils::getStatus(this->statusCode) << "\r\n";
 
-	if(this->isCgi) {
+	if(this->isCgi && this->statusCode == Ok) {
 		responseStream << this->body;
 		return (responseStream.str());
 	}

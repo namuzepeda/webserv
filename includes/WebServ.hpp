@@ -107,6 +107,7 @@ enum HttpStatusCode {
 #include "FileUtils.hpp"
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"
+#include "HttpUtils.hpp"
 #include "HttpResponseUtils.hpp"
 #include "CGIHandler.hpp"
 

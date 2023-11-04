@@ -278,6 +278,7 @@ void HttpRequest::IsUriValid(const std::string& uri) {
 
 	if (queryStart == std::string::npos) {
 		this->location = uri;
+		std::cout << "Setting location to " << uri << std::endl;
 		this->query = "";
 	}
 	else {
@@ -421,6 +422,21 @@ std::map<int, std::string> &HttpRequest::getErrorPages() {
 
 void HttpRequest::setStatusCode(HttpStatusCode code) {
 	this->statusCode = code;
+}
+
+std::string HttpRequest::getFullPath() {
+	std::string file;
+
+	std::cout << "Location Request" << this->getLocation() << std::endl;
+
+	if(this->getLocation()[this->getLocation().length() - 1] == '/' && (!this->getConfig()->contains("autoindex") || this->getConfig()->get("autoindex") != "on"))
+		file = HttpResponseUtils::getIndex(*this);
+	else {
+		file = this->getConfig()->get("root");
+		file += this->getLocation();
+	}
+
+	return (file);
 }
 
 std::ostream &operator<<(std::ostream &o, HttpRequest const &i)

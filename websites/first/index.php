@@ -1,5 +1,5 @@
 <?php
 
-echo "FUNCIONA LAPUTAMADREE";
+die(json_encode($_GET));
 
 ?>

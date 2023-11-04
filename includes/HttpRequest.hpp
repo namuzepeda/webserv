@@ -68,6 +68,8 @@ class HttpRequest
 		std::string const &getPort() const;
 		Config		*getConfig(void) const;
 		std::map<int, std::string> 	 &getErrorPages();
+		
+		std::string getFullPath();
 
 		void				setStatusCode(HttpStatusCode code);
 
