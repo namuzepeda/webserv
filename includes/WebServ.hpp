@@ -55,6 +55,11 @@ struct Token {
     Token(TokenType type, std::string value) : type(type), value(value) {}
 };
 
+struct pollconn {
+	long long	lastInteraction;
+	bool		differentRead;
+};
+
 /******* INIT ERROR HANDLING **********/
 
 enum InitType {
@@ -72,6 +77,7 @@ enum HttpStatusCode {
 	Forbidden = 403,
 	NotFound = 404,
 	MethodNotAllowed = 405,
+	RequestTimeout = 408,
 	RequestEntityTooLarge = 413,
 	RequestUriTooLong = 414,
 	InternalServerError = 500,
@@ -93,6 +99,7 @@ enum HttpStatusCode {
 #include <fstream>
 #include <cstdlib>
 #include <cstring>
+#include <sys/time.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <stdexcept>

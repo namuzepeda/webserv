@@ -94,6 +94,7 @@ void    HttpResponseUtils::initStatusMap(void) {
         HttpResponseUtils::statusMap.insert(std::make_pair(MovedPermanently, "Moved Permanently"));
         HttpResponseUtils::statusMap.insert(std::make_pair(BadRequest, "Bad Request"));
         HttpResponseUtils::statusMap.insert(std::make_pair(MethodNotAllowed, "Method Not Allowed"));
+        HttpResponseUtils::statusMap.insert(std::make_pair(RequestTimeout, "Request Timeout"));
         HttpResponseUtils::statusMap.insert(std::make_pair(RequestEntityTooLarge, "Request Entity Too Large"));
         HttpResponseUtils::statusMap.insert(std::make_pair(RequestUriTooLong, "Request-URI Too Long"));
         HttpResponseUtils::statusMap.insert(std::make_pair(VersionNotSupported, "Version Not Supported"));

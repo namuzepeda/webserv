@@ -9,14 +9,16 @@ bool ClientConnection::isChunkedRequest(int socket) {
 }
 
 bool ClientConnection::isRequestCompleted(int socket) {
+    //std::cout << "Checking request " << std::endl;
     if(!isChunkedRequest(socket)) {
         int contentLength = HttpUtils::getContentLength(ClientConnection::requests[socket]);
-        if(contentLength == -1)
-            return (false);
+        //std::cout << "COntent length " << contentLength << std::endl;
+        if(contentLength == 0)
+            return (true);
         int bodyLength = HttpUtils::getBodyLength(ClientConnection::requests[socket]);
-        if(contentLength == -1)
+        if(bodyLength == -1)
             return (false);
-        //std::cout << "COntent length " << contentLength << " bodyLength " << bodyLength;
+        //std::cout << "COntent length " << contentLength << " bodyLength " << bodyLength << std::endl;
         return (contentLength == bodyLength);
     }
         
@@ -30,6 +32,10 @@ void    ClientConnection::deleteBuffer(int socket) {
     if (it != ClientConnection::requests.end()) {
         ClientConnection::requests.erase(it);
     }
+}
+
+bool ClientConnection::hasBuffer(int socket) {
+    return ClientConnection::requests.find(socket) != ClientConnection::requests.end();
 }
 
 std::string ClientConnection::getBuffer(int socket) {

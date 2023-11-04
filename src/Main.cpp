@@ -14,6 +14,7 @@ void	sighandler(int signum)
 int main(int argc, char **argv) {
 
 	signal(SIGINT, sighandler);
+	signal(SIGPIPE, SIG_IGN);
 
 	if(argc != 2) {
 		std::cout << "Invalid args" << std::endl;

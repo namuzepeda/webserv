@@ -21,7 +21,7 @@ long HttpUtils::getContentLength(const std::string &buffer) {
     std::string sub = buffer.substr(0, pos);
     pos = sub.find("Content-Length: ");
     if (pos == std::string::npos) {
-        return -1;
+        return 0;
     }
     sub = sub.substr(pos + 16);
     pos = sub.find("\r\n");
@@ -31,6 +31,10 @@ long HttpUtils::getContentLength(const std::string &buffer) {
 }
 
 long HttpUtils::getBodyLength(const std::string& buffer) {
-    //std::cout << "SizeE! " << buffer.length() << std::endl;
-    return (buffer.size());
+    std::size_t headersEndPos = buffer.find("\r\n\r\n");
+    if (headersEndPos == std::string::npos) {
+        return -1;
+    }
+
+    return (buffer.length() - (headersEndPos + 4));
 }

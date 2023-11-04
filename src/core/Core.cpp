@@ -63,6 +63,7 @@ void	Core::run(void) {
 
 	std::vector<int> sockets;
 	std::vector<pollfd> pollEvents;
+	std::map<int, pollconn> pollConnections;
 
 	for(std::vector<Server *>::iterator it = this->servers.begin(); it != this->servers.end(); it++)
 	{
@@ -86,7 +87,9 @@ void	Core::run(void) {
 			clientEvent.events = POLLIN | POLLOUT;
 			pollEvents.push_back(clientEvent);
 		}
+		//std::cout << "Before poll" << std::endl;
 		int ready = poll(&pollEvents[0], pollEvents.size(), -1);
+		//std::cout << "After poll" << std::endl;
 		if (ready != -1) {
 			for (size_t i = 0; i < sockets.size(); ++i) {
 				if (pollEvents[i].revents & POLLIN) {
@@ -104,33 +107,37 @@ void	Core::run(void) {
 				}
 			}
 			for (size_t i = sockets.size(); i < pollEvents.size(); ++i) {
-				if ((pollEvents[i].revents & POLLIN) || (pollEvents[i].revents & POLLOUT)) {
+				if ((pollEvents[i].revents & POLLIN)) {
 					char buffer[4096] = {0};
-					int bytesRead = recv(pollEvents[i].fd, buffer, 4096 + 1, 0);
-					if (bytesRead <= 0) {
+					int bytesRead = recv(pollEvents[i].fd, buffer, 4096, 0);
+					struct timeval currentTime;
+					gettimeofday(&currentTime, NULL);
+					long long time = currentTime.tv_sec * 1000LL + currentTime.tv_usec;
+					pollConnections[pollEvents[i].fd].lastInteraction = time;
+					pollConnections[pollEvents[i].fd].differentRead = bytesRead != 4096;
+					if(bytesRead != 4096)
+						std::cout << "DIFFERENT BYTES" << std::endl;
+					if (bytesRead == -1 || bytesRead == 0) {
 						clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
 						close(pollEvents[i].fd);
-						std::cout << "FInal length " << ClientConnection::requests[pollEvents[i].fd].length() << std::endl;
-						//std::cout << ClientConnection::requests[pollEvents[i].fd] << std::endl;
 						ClientConnection::deleteBuffer(pollEvents[i].fd);
 						std::cout << "Conexión cerrada con un cliente." << std::endl;
 					} else {
-						buffer[bytesRead] = '\0';
-						ClientConnection::requests[pollEvents[i].fd] += buffer;
-						if(ClientConnection::isRequestCompleted(pollEvents[i].fd)) {
-							std::cout << "Request completed" << std::endl;
+						std::string sBuffer(buffer, bytesRead);
+						ClientConnection::requests[pollEvents[i].fd] += sBuffer;
+					}
+				} else {
+					std::map<int, pollconn>::iterator it = pollConnections.find(pollEvents[i].fd);
+					if(it != pollConnections.end()) {
+						if(pollConnections[pollEvents[i].fd].differentRead && ClientConnection::isRequestCompleted(pollEvents[i].fd)) {
 							HttpRequest request(ClientConnection::getBuffer(pollEvents[i].fd).c_str());
 							std::string response = getResponse(request);
 							send(pollEvents[i].fd, response.c_str(), response.length(), 0);
 							ClientConnection::deleteBuffer(pollEvents[i].fd);
-							//close(pollEvents[i].fd);
-							//clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
-							//if(!request.headContains("Keep-alive")) {
-							//	clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
-							//	close(pollEvents[i].fd);
-							//}
-						} else {
-							//std::cout << "Request NOT completed" << std::endl;
+							close(pollEvents[i].fd);
+							std::cout << "Conexión cerrada con un cliente. ELSE IF" << std::endl;
+							clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
+							pollConnections.erase(it);
 						}
 					}
 				}

@@ -24,8 +24,6 @@ class Config
 
 	public:
 
-		static const int	DEFAULT_BUFFER_SIZE = 9999999;
-
 		Config(void);
 		Config(Config const &copy);
 

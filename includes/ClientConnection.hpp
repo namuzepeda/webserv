@@ -26,6 +26,7 @@ class ClientConnection {
 		static bool			isRequestCompleted(int socket);
 		static std::string	getBuffer(int socket);
 		static void    		deleteBuffer(int socket);
+		static bool			hasBuffer(int socket);
 
 		
 
