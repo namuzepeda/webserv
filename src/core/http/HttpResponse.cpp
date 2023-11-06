@@ -67,9 +67,11 @@ HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), i
 		return ;
 	}
 
-	if(this->isCgi)
+	if(this->isCgi) {
 		this->body = CGIHandler::getResponse(request);
-	else {
+		if(this->body == "ERROR")
+			this->statusCode = InternalServerError;
+	} else {
 		try {
 			this->body = FileUtils::getFileData(file);
 		} catch (std::runtime_error &e) {

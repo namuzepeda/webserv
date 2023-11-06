@@ -61,7 +61,7 @@ std::string Core::getResponse(HttpRequest &request) {
 
 void	Core::run(void) {
 
-	std::vector<int> sockets;
+	std::vector<int> sockets; //#to use siege indefinitely without having to restart the s;
 	std::vector<pollfd> pollEvents;
 	std::map<int, pollconn> pollConnections;
 
@@ -126,13 +126,18 @@ void	Core::run(void) {
 						std::string sBuffer(buffer, bytesRead);
 						ClientConnection::requests[pollEvents[i].fd] += sBuffer;
 					}
-				} else {
+				} else if(pollEvents[i].revents & POLLOUT) {
 					std::map<int, pollconn>::iterator it = pollConnections.find(pollEvents[i].fd);
 					if(it != pollConnections.end()) {
-						if(pollConnections[pollEvents[i].fd].differentRead && ClientConnection::isRequestCompleted(pollEvents[i].fd)) {
+						struct timeval currentTime;
+						gettimeofday(&currentTime, NULL);
+						long long time = currentTime.tv_sec * 1000LL + currentTime.tv_usec;
+						if((pollConnections[pollEvents[i].fd].differentRead || time - pollConnections[pollEvents[i].fd].lastInteraction >= 50) && ClientConnection::isRequestCompleted(pollEvents[i].fd)) {
 							HttpRequest request(ClientConnection::getBuffer(pollEvents[i].fd).c_str());
 							std::string response = getResponse(request);
-							send(pollEvents[i].fd, response.c_str(), response.length(), 0);
+							if(send(pollEvents[i].fd, response.c_str(), response.length(), 0) <= 0) {
+								std::cout << "[WebServ] Error sending response to client" << std::endl;
+							}
 							ClientConnection::deleteBuffer(pollEvents[i].fd);
 							close(pollEvents[i].fd);
 							std::cout << "Conexión cerrada con un cliente. ELSE IF" << std::endl;
