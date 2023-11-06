@@ -27,6 +27,8 @@ class Handler
 		Handler(Config *config);
 		virtual							~Handler();
 
+		void							handleHttp(HttpRequest &request);
+
 		bool 							hasChilds(void);
 		std::vector<Handler *> 	const	&getChilds(void) const;
 		void							addChild(Handler *handler);

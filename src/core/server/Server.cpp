@@ -25,7 +25,7 @@ Server::~Server(void) {
 	delete this->handler;
 }
 
-int Server::getPort(void) {
+int Server::getPort(void) const {
 	return (this->port);
 }
 

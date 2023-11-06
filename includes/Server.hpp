@@ -40,7 +40,7 @@ class Server
 
 		ServerHandler				*getHandler(void);
 		std::string			const	&getHost(void) const;
-		int							getPort(void);
+		int							getPort(void) const;
 		std::string			const	&getRoot() const;
 		int							getSocket();
 

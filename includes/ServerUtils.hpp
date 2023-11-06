@@ -19,8 +19,7 @@ class ServerUtils {
 
 	public:
 
-		static bool doesRequestApply(const Server &server, const HttpRequest &request);
-		static bool containsPort(const Server &server, int port);
+		static bool doesRequestApply(const Server *server, const HttpRequest &request);
 
 };
 

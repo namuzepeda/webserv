@@ -91,8 +91,6 @@ std::string		CGIHandler::getResponse(HttpRequest &request)
         }
 
         cgi_output = cgi_output.substr(cgi_output.find("\n") + 1);
-
-        std::cout << "$$" << cgi_output << "$$" << std::endl;
         
         close(out_pipe[0]);
 
@@ -103,8 +101,6 @@ std::string		CGIHandler::getResponse(HttpRequest &request)
             request.setStatusCode(InternalServerError);
             return ("ERROR");
         }
-
-        std::cout << "Status  " << status << std::endl;
 
         return (cgi_output);
     } else

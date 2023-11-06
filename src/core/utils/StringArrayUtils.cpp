@@ -7,3 +7,10 @@ bool StringArrayUtils::includes(std::string values[], const std::string &value) 
 	}
 	return false;
 }
+
+int StringArrayUtils::size(std::string *strs) {
+	int i = 0;
+	for(; !strs[i].empty(); i++)
+		;
+	return (i);
+}

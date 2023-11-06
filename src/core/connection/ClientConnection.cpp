@@ -9,16 +9,13 @@ bool ClientConnection::isChunkedRequest(int socket) {
 }
 
 bool ClientConnection::isRequestCompleted(int socket) {
-    //std::cout << "Checking request " << std::endl;
     if(!isChunkedRequest(socket)) {
         int contentLength = HttpUtils::getContentLength(ClientConnection::requests[socket]);
-        //std::cout << "COntent length " << contentLength << std::endl;
         if(contentLength == 0)
             return (true);
         int bodyLength = HttpUtils::getBodyLength(ClientConnection::requests[socket]);
         if(bodyLength == -1)
             return (false);
-        //std::cout << "COntent length " << contentLength << " bodyLength " << bodyLength << std::endl;
         return (contentLength == bodyLength);
     }
         

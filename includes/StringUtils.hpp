@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   StringArrayUtils.hpp                               :+:      :+:    :+:   */
+/*   StringUtils.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,18 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRING_ARRAY_UTILS_H
-#define STRING_ARRAY_UTILS_H
+#ifndef STRING_UTILS_H
+#define STRING_UTILS_H
 
 #include "WebServ.hpp"
 
 
-class StringArrayUtils {
+class StringUtils {
 
 	public:
 
-		static bool includes(std::string values[], const std::string &value);
-		static int size(std::string *strs);
+		
+		static bool endsWith(const std::string& fullString, const std::string& ending);
 
 };
 

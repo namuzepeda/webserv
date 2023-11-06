@@ -45,8 +45,7 @@ CGI_HANDLER					=	CGIHandler.cpp
 
 HTTP_UTILS_DIR				=	core/http/utils/
 HTTP_UTILS					=	HttpUtils.cpp \
-								HttpResponseUtils.cpp \
-								FileUtils.cpp
+								HttpResponseUtils.cpp 
 
 PARSER_CONFIG_DIR			=	core/parser/config/
 PARSER_CONFIG				=	ConfigParser.cpp
@@ -61,7 +60,7 @@ SERVER_UTILS_DIR			=	core/server/utils/
 SERVER_UTILS				=	ServerUtils.cpp
 
 UTILS_DIR					=	core/utils/
-UTILS						=	FileUtils.cpp StringArrayUtils.cpp
+UTILS						=	FileUtils.cpp StringArrayUtils.cpp StringUtils.cpp
 
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(HTTP_DIR))
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(HTTP_UTILS_DIR))

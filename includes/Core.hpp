@@ -22,7 +22,7 @@ class Core
 
 		std::vector<Server *> const &getServers(void) const;
 
-		std::string					getResponse(HttpRequest &request);
+		std::string					getResponse(int socket);
 		void						run(void);
 
 };

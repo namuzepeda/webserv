@@ -17,9 +17,18 @@ HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), i
 		this->statusCode = request.getStatusCode();
 		return ;
 	}
-		
+	
+	if(isCgi)
+	std::cout << "IS CGI" << std::endl;
 
-	if (!request.getConfig()->contains("root")) {
+	if(request.getConfig()->contains("return")) {
+		std::cout << "Cotains" << std::endl;
+		this->statusCode = MovedPermanently;
+		this->headers["Location"] = request.getConfig()->get("return");
+		return ;
+	}
+
+	if (!request.getConfig()->contains("root") && !request.getConfig()->contains("alias")) {
 		this->statusCode = InternalServerError;
 		return ;
 	}
@@ -29,23 +38,23 @@ HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), i
 		return ;
 	}
 
-	std::string file;
+	std::string file = "";
 
-	std::cout << "Location Response" << request.getLocation() << std::endl;
-
-	if(request.getLocation()[request.getLocation().length() - 1] == '/' && (!request.getConfig()->contains("autoindex") || request.getConfig()->get("autoindex") != "on"))
-		file = HttpResponseUtils::getIndex(request);
-	else {
-		file = request.getConfig()->get("root");
-		file += request.getLocation();
+	if(request.getConfig()->contains("alias")) {
+		file = request.getConfig()->get("alias");
+		std::size_t pos = request.getLocation().find("/");
+		file += request.getLocation().substr(pos != std::string::npos ? pos : 0);
+	} else {
+		file = request.getConfig()->get("root") + request.getLocation();
 	}
 
 	replace(file, "//", "/");
 
-	std::cout << "Asking file " << file << std::endl;
+	std::cout << "File to return " << file << std::endl;
 		
 
 	if(!FileUtils::fileExists(file)) {
+		std::cout << "File doesnt exists" << std::endl;
 		this->statusCode = NotFound;
 		return ;
 	}
@@ -58,9 +67,7 @@ HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), i
 	if(FileUtils::isDirectory(file)) {
 		if(request.getLocation()[request.getLocation().length() - 1] != '/') {
 			this->statusCode = MovedPermanently;
-			std::string newLocation = request.getLocation();
-			newLocation += "/";
-			this->headers.insert(std::make_pair("Location", newLocation));
+			this->headers["Location"] = request.getLocation()[0] == '/' ? request.getLocation() : "/" + request.getLocation() + "/";
 			return ;
 		}
 		this->body = HttpResponseUtils::getDirectoryResponse(file);
@@ -178,11 +185,11 @@ std::string HttpResponse::toString(HttpRequest &request) {
     }
     responseStream << "\r\n"; // Fin de las cabeceras, línea en blanco
 
-	if(this->statusCode == 200 || this->statusCode == 301)
+	if(this->statusCode == Ok)
 		responseStream << this->body;
-	else {
+	else if(this->statusCode != MovedPermanently) {
 		std::map<int, std::string >::iterator it = request.getErrorPages().find(this->statusCode);
-		if(it != request.getErrorPages().end() 
+		if(it != request.getErrorPages().end()
 			&& FileUtils::fileExists(request.getConfig()->get("froot"), it->second)
 			&& FileUtils::canRead(request.getConfig()->get("froot"), it->second)) {
 			responseStream << FileUtils::getFileData(request.getConfig()->get("froot"), it->second);

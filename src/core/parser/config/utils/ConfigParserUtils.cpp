@@ -13,6 +13,7 @@ std::string ConfigParserUtils::IDENTIFIERS[] = {
 		"return",
 		"cgi_pass",
 		"cgi_ext",
+		"alias",
 		""
 };
 

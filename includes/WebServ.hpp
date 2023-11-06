@@ -111,6 +111,7 @@ enum HttpStatusCode {
 #include "ClientConnection.hpp"
 #include "Config.hpp"
 
+#include "StringUtils.hpp"
 #include "FileUtils.hpp"
 #include "HttpRequest.hpp"
 #include "HttpResponse.hpp"

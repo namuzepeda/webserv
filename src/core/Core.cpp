@@ -46,17 +46,44 @@ Core::~Core() {
 	this->servers.clear();
 }
 
-std::string Core::getResponse(HttpRequest &request) {
+void  handleRequest(HttpRequest &request, Server *server) {
+	server->getHandler()->run(request);
 
+	if(request.getLocation()[request.getLocation().length() - 1] == '/' 
+		&& (!request.getConfig()->contains("autoindex") || request.getConfig()->get("autoindex") != "on")) {
+		
+		std::string location = request.getLocation();
+		location += HttpResponseUtils::getIndex(request);
+		request.setLocation(location);
+		std::cout << "Setting location" << std::endl;
+		std::cout << "Location " << request.getLocation() << std::endl;
+		handleRequest(request, server);
+	} else
+		if(request.getLocation()[0] == '/')
+			request.setLocation(request.getLocation().substr(1));
+}
+
+std::string Core::getResponse(int socket) {
+	HttpRequest request(ClientConnection::getBuffer(socket).c_str());
+
+	Server *server = 0;
+	std::cout << "Host " << request.getHost() << " Port " << request.getPort() << std::endl;
 	for(std::vector<Server *>::iterator it = this->servers.begin(); it != this->servers.end(); it++) {
-		Server *server = *it;
-		if(ServerUtils::doesRequestApply(*server, request)) {
-			server->getHandler()->run(request);
-			HttpResponse response(request, request.getConfig()->contains("cgi_pass"));
-			return (response.toString(request));
-		}
+		server = *it;
+		if(ServerUtils::doesRequestApply((const Server *) server, request))
+			break;
+		else
+			server = 0;
 	}
-	return (HttpResponseUtils::testResponse(InternalServerError, HttpResponseUtils::errorBody(InternalServerError)));
+	std::cout << "1" << std::endl;
+	if(!server)
+		return (HttpResponseUtils::testResponse(InternalServerError, HttpResponseUtils::errorBody(InternalServerError)));
+	std::cout << "2" << std::endl;
+	handleRequest(request, server);
+
+	HttpResponse response(request, request.getConfig()->contains("cgi_pass"));
+
+	return (response.toString(request));
 }
 
 void	Core::run(void) {
@@ -115,8 +142,6 @@ void	Core::run(void) {
 					long long time = currentTime.tv_sec * 1000LL + currentTime.tv_usec;
 					pollConnections[pollEvents[i].fd].lastInteraction = time;
 					pollConnections[pollEvents[i].fd].differentRead = bytesRead != 4096;
-					if(bytesRead != 4096)
-						std::cout << "DIFFERENT BYTES" << std::endl;
 					if (bytesRead == -1 || bytesRead == 0) {
 						clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
 						close(pollEvents[i].fd);
@@ -133,8 +158,7 @@ void	Core::run(void) {
 						gettimeofday(&currentTime, NULL);
 						long long time = currentTime.tv_sec * 1000LL + currentTime.tv_usec;
 						if((pollConnections[pollEvents[i].fd].differentRead || time - pollConnections[pollEvents[i].fd].lastInteraction >= 50) && ClientConnection::isRequestCompleted(pollEvents[i].fd)) {
-							HttpRequest request(ClientConnection::getBuffer(pollEvents[i].fd).c_str());
-							std::string response = getResponse(request);
+							std::string response = getResponse(pollEvents[i].fd);
 							if(send(pollEvents[i].fd, response.c_str(), response.length(), 0) <= 0) {
 								std::cout << "[WebServ] Error sending response to client" << std::endl;
 							}

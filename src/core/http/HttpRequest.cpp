@@ -46,16 +46,12 @@ HttpRequest::HttpRequest(const char * buffer) : statusCode(Ok), config(new Confi
 	try {
 		std::getline(iss, currLine);
 
-		//set request line
 		setLineParts(currLine, type);
 
 		std::stringstream requestBodyStream;
 
-		//set headers
 		while (std::getline(iss, currLine) && !currLine.empty()) {
 
-			//FOR DEBBUG
-			// std::cout << "header currline: " << currLine << std::endl;
 			if(currLine == "\r" && !readingBody)
 				readingBody = true;
 			if(readingBody) {
@@ -72,13 +68,8 @@ HttpRequest::HttpRequest(const char * buffer) : statusCode(Ok), config(new Confi
 					std::string currValue = currLine.substr(separatorPos + 2);
 					cleanSpaces(currValue);
 					std::string headerValue = currValue;
-					// std::cout << "headervalue: " << headerValue << std::endl;
 					if (noRepOfHeader(headers, headerName)) {
 						headers[headerName] = headerValue;
-
-						//FOR DEBBUG
-						// std::map<std::string, std::string>::iterator it = headers.begin();
-						//std::cout << "En headers: " << headerName << " | " << headerValue << std::endl;
 					}
 				}
 			}
@@ -178,7 +169,7 @@ void	HttpRequest::initVarErrorCase(void) {
 	this->query = "error";
 	this->version = "error";
 	this->host = "error";
-	this->port = "error";
+	this->port = -1;
 	this->body = "error";
 	this->type = NONE;
 }
@@ -278,7 +269,6 @@ void HttpRequest::IsUriValid(const std::string& uri) {
 
 	if (queryStart == std::string::npos) {
 		this->location = uri;
-		std::cout << "Setting location to " << uri << std::endl;
 		this->query = "";
 	}
 	else {
@@ -348,11 +338,11 @@ void HttpRequest::setHostAndPort(std::map<std::string, std::string>& headers){
 
 	if (pos == std::string::npos){
 		this->host = contentHostLine;
-		this->port = "8080";
+		this->port = 80;
 	}
 	else{
 		this->host = contentHostLine.substr(0, pos);
-		this->port = contentHostLine.substr(pos + 1);
+		this->port = std::atoi(contentHostLine.substr(pos + 1).c_str());
 	}
 }
 
@@ -384,7 +374,7 @@ std::string	const &HttpRequest::getHost() const{
 	return (this->host);
 }
 
-std::string const &HttpRequest::getPort() const{
+int			HttpRequest::getPort() const{
 	return (this->port);	
 }
 
@@ -425,9 +415,8 @@ void HttpRequest::setStatusCode(HttpStatusCode code) {
 }
 
 std::string HttpRequest::getFullPath() {
-	std::string file;
 
-	std::cout << "Location Request" << this->getLocation() << std::endl;
+	std::string file;
 
 	if(this->getLocation()[this->getLocation().length() - 1] == '/' && (!this->getConfig()->contains("autoindex") || this->getConfig()->get("autoindex") != "on"))
 		file = HttpResponseUtils::getIndex(*this);
@@ -437,6 +426,10 @@ std::string HttpRequest::getFullPath() {
 	}
 
 	return (file);
+}
+
+void	HttpRequest::setLocation(std::string location) {
+	this->location = location;
 }
 
 std::ostream &operator<<(std::ostream &o, HttpRequest const &i)

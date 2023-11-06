@@ -27,7 +27,7 @@ class HttpRequest
 		std::string							version;
 		std::map<std::string, std::string>	headers;
 		std::string							host;
-		std::string							port;
+		int									port;
 		std::string							body;
 		Config								*config;
 		std::map<int, std::string>          errorPages;
@@ -65,13 +65,15 @@ class HttpRequest
 		bool		headContains(const std::string& key);
 		std::string	getHeadValue(const std::string& key);
 		std::string	const &getHost() const;
-		std::string const &getPort() const;
+		int			getPort() const;
 		Config		*getConfig(void) const;
 		std::map<int, std::string> 	 &getErrorPages();
 		
 		std::string getFullPath();
 
-		void				setStatusCode(HttpStatusCode code);
+		void		setLocation(std::string location);
+
+		void		setStatusCode(HttpStatusCode code);
 
 };
 

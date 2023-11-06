@@ -9,7 +9,6 @@ bool containsChar(const std::string &str, char caracter) {
     return false;
 }
 
-
 bool HttpResponseUtils::isMethodAllowed(const HttpRequest &request) {
     std::string method = HttpUtils::getMethod(request.getType());
 
@@ -47,14 +46,9 @@ std::string HttpResponseUtils::getIndex(const HttpRequest &request) {
 
         std::string index = request.getConfig()->get("index");
 
-        std::cout << "Index " << index << std::endl;
-
         if(!containsChar(index, ' ')) {
-            totalPath += index;
-            return (totalPath);
+            return (index);
         }
-
-        std::cout << "Index2 " << index << std::endl;
 
         size_t pos = 0;
         std::string file;
@@ -62,18 +56,15 @@ std::string HttpResponseUtils::getIndex(const HttpRequest &request) {
         while ((pos = index.find(delimiter)) != std::string::npos) {
             file = index.substr(0, pos);
             if(FileUtils::fileExists(totalPath, file)) {
-                totalPath += file;
-                return (totalPath);
+                return (file);
             }
             index.erase(0, pos + delimiter.length());
         }
         if(FileUtils::fileExists(totalPath, index)) {
-            totalPath += index;
-            return (totalPath);
+            return (index);
         }
     }
-    totalPath += "index.html";
-    return (totalPath);
+    return ("index.html");
 }
 
 std::string HttpResponseUtils::testResponse(HttpStatusCode statusCode, std::string body) {
