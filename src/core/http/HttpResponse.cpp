@@ -10,16 +10,18 @@ void replace(std::string& str, const std::string &find, const std::string &repla
 }
 
 
-HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), isCgi(isCgi)
+HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), isCgi(isCgi), isDownload(false)
 {
 
 	if(request.getStatusCode() != Ok) {
 		this->statusCode = request.getStatusCode();
 		return ;
 	}
-	
-	if(isCgi)
-	std::cout << "IS CGI" << std::endl;
+
+	if (request.getBody().length() > (unsigned long) (request.getConfig()->contains("client_max_body_size") ? request.getConfig()->asInt("client_max_body_size") : 8120000)) {
+		this->statusCode = RequestEntityTooLarge;
+		return ;
+	}
 
 	if(request.getConfig()->contains("return")) {
 		std::cout << "Cotains" << std::endl;
@@ -50,6 +52,21 @@ HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), i
 
 	replace(file, "//", "/");
 
+	if(!this->isCgi) {
+		if(request.getType() == DELETE) {
+			if(FileUtils::fileExists(request.getFullPath()) && !FileUtils::isDirectory(request.getFullPath())) {
+				if (remove(request.getFullPath().c_str()) == 0) {
+					this->statusCode = NoContent;
+				} else {
+					this->statusCode = Forbidden;
+				}
+			} else {
+				this->statusCode = MethodNotAllowed;
+			}
+			return ;
+		}
+	}
+
 	std::cout << "File to return " << file << std::endl;
 		
 
@@ -76,6 +93,7 @@ HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), i
 
 	if(this->isCgi) {
 		this->body = CGIHandler::getResponse(request);
+		return ;
 		if(this->body == "ERROR")
 			this->statusCode = InternalServerError;
 	} else {
@@ -86,6 +104,13 @@ HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), i
 			return ;
 		}
 	}
+	size_t pos = request.getLocation().find_last_of(".");
+	if(pos != std::string::npos) {
+		std::string type = request.getLocation().substr(pos, request.getLocation().length());
+		if(type != ".html")
+			this->isDownload = true;
+	}
+	 
 }
 
 void        HttpResponse::setBody(std::string body) {
@@ -125,6 +150,8 @@ HttpResponse::~HttpResponse() {
 // 	if (method != this->request.getType() || version != this->request.getVersion()) {
 // 		return InternalServerError;
 // 	}
+
+		
 // 	return OK;
 // }
 
@@ -172,14 +199,33 @@ HttpResponse::~HttpResponse() {
 std::string HttpResponse::toString(HttpRequest &request) {
 
 	std::stringstream responseStream;
-    responseStream << "HTTP/1.1 " << statusCode << " " << HttpResponseUtils::getStatus(this->statusCode) << "\r\n";
+    responseStream << "HTTP/1.1 ";
+
+	size_t pos = this->body.find_first_of("\r\n");
+	std::cout << "pos " << pos << std::endl;
+
+	if (this->isCgi && this->statusCode != RequestEntityTooLarge) {
+		if(this->body.substr(0, 7) == "Status:")
+			responseStream << this->body.substr(8, pos - 8);
+		else
+			responseStream << "200 Ok";
+	} else {
+		responseStream << statusCode << " " << HttpResponseUtils::getStatus(this->statusCode) ;
+	}
+	responseStream << "\r\n";
+
+	if(this->isDownload) {
+		responseStream << "Content-Type: application/octet-stream\r\n";
+		responseStream << "Content-Disposition: attachment; filename=" << request.getLocation().substr(request.getLocation().find_last_of("/") + 1, request.getLocation().length()) << "\r\n";
+	}
+	
 
 	if(this->isCgi && this->statusCode == Ok) {
 		responseStream << this->body;
 		return (responseStream.str());
 	}
-
-    responseStream << "Content-Type: text/html\r\n";
+	else
+		responseStream << "Content-Type: text/html\r\n";
 	for (std::map<std::string, std::string>::iterator it = this->headers.begin(); it != this->headers.end(); ++it) {
 		responseStream << it->first << ": " << it->second << "\r\n";
     }
@@ -187,7 +233,7 @@ std::string HttpResponse::toString(HttpRequest &request) {
 
 	if(this->statusCode == Ok)
 		responseStream << this->body;
-	else if(this->statusCode != MovedPermanently) {
+	else if(this->statusCode != MovedPermanently && this->statusCode != NoContent) {
 		std::map<int, std::string >::iterator it = request.getErrorPages().find(this->statusCode);
 		if(it != request.getErrorPages().end()
 			&& FileUtils::fileExists(request.getConfig()->get("froot"), it->second)

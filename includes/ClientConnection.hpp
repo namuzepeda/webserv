@@ -21,6 +21,7 @@ class ClientConnection {
 	public:
 
 		static std::map<int, std::string> requests;
+		static std::map<int, int> 		  clientServer;
 
 		static bool			isChunkedRequest(int socket);
 		static bool			isRequestCompleted(int socket);

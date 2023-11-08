@@ -13,7 +13,9 @@ std::string ConfigParserUtils::IDENTIFIERS[] = {
 		"return",
 		"cgi_pass",
 		"cgi_ext",
+		"upload_store",
 		"alias",
+		"client_max_body_size",
 		""
 };
 

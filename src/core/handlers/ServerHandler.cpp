@@ -32,7 +32,7 @@ void ServerHandler::run(HttpRequest &request) {
 
 		//std::cout << "Location " << request.getLocation() << std::endl;
 
-		std::cout << "REquest location $$" << request.getLocation().substr(0, locHandler->getPath().length()) << "$$ handler location $$" << locHandler->getPath() << "$$" << std::endl;
+		//std::cout << "REquest location $$" << request.getLocation().substr(0, locHandler->getPath().length()) << "$$ handler location $$" << locHandler->getPath() << "$$" << std::endl;
 
  		if (request.getLocation().substr(0, locHandler->getPath().length()) == locHandler->getPath()
 				|| (locHandler->getPath()[0] == '*' && StringUtils::endsWith(request.getLocation(), locHandler->getPath().substr(1))) ) {

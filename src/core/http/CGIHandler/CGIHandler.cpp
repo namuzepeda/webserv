@@ -22,8 +22,19 @@ char **getEnvs(HttpRequest &request) {
     envs.push_back("HTTP_HOST=" + request.getLocation());
     envs.push_back("REQUEST_METHOD=" + HttpUtils::getMethod(request.getType()));
     envs.push_back("SCRIPT_FILENAME=" + request.getFullPath());
+    //envs.push_back("PATH_INFO=" + request.getFullPath());
+    
+    if(request.getConfig()->contains("upload_store"))
+        envs.push_back("UPLOAD_STORE=" + request.getConfig()->get("upload_store"));
     envs.push_back("SCRIPT_NAME=" + request.getLocation());
-    envs.push_back("CONTENT_LENGTH=0");
+    std::stringstream ss;
+    
+    // Insert the integer into the stringstream
+    ss << request.getBody().length();
+
+    envs.push_back("CONTENT_LENGTH=" + ss.str());
+    if(request.headContains("Content-Type"))
+        envs.push_back("CONTENT_TYPE=" + request.getHeadValue("Content-Type"));
 
     char **_ev = static_cast<char**>(malloc(sizeof(char *) * (envs.size() + 1)));
     for (size_t j = 0; j < envs.size(); j++)
@@ -51,17 +62,37 @@ void replaceNewlineAndCarriageReturn(std::string& input) {
 std::string		CGIHandler::getResponse(HttpRequest &request)
 {
 	int out_pipe[2];
-    //int in_pipe[2];
+    int in_pipe[2];
     
     if (pipe(out_pipe) == -1) {
         request.setStatusCode(InternalServerError);
         return "ERROR";
     }
 
+    if (request.getType() == POST && pipe(in_pipe) == -1) {
+        close(out_pipe[0]);
+        close(out_pipe[1]);
+        std::cerr << "ERROR IN PIPE" << std::endl;
+    }
+    
+    std::cout << "BODY  Length " << request.getBody().length() << std::endl;
+    
+   
+    std::cout << "Bytes Body " << request.getBody().length() << std::endl;
+    std::cout << "1" << std::endl;
+
+    std::cout << "2" << std::endl;
+
     pid_t pid = fork();
 
     if (pid == 0) {
+
         
+        if (request.getType() == POST) {
+            close(in_pipe[1]);
+            dup2(in_pipe[0], 0);
+            close(in_pipe[0]);
+        }
 
         close(out_pipe[0]);
         dup2(out_pipe[1], STDOUT_FILENO);
@@ -80,7 +111,29 @@ std::string		CGIHandler::getResponse(HttpRequest &request)
 
         exit(1);
     } else if (pid > 0) {
+
         close(out_pipe[1]);
+
+        if (request.getType() == POST)
+            close(in_pipe[0]);
+
+        const int chunkSize = 512;
+        const int bufferLength = request.getBody().length();
+        int total = 0;
+        for (int i = 0; i < bufferLength; i += chunkSize) {
+            std::string chunk = request.getBody().substr(i, chunkSize);
+            total += chunk.length();
+            //std::cout << "Here chunk size " << chunk.length() << "\n" << chunk << std::endl;
+            int wroten = write(in_pipe[1], chunk.c_str(), chunk.length());
+            if(wroten == -1) {
+                std::cout << "ERRNO " << errno << std::endl;
+            }
+            std::cout << "Bytes wroten " << wroten << std::endl;
+            std::cout << "Total wroten " << total << std::endl;
+        }
+
+        if (request.getType() == POST)
+            close(in_pipe[1]);
 
         std::string cgi_output;
         char buffer[4096];
@@ -101,7 +154,7 @@ std::string		CGIHandler::getResponse(HttpRequest &request)
             request.setStatusCode(InternalServerError);
             return ("ERROR");
         }
-
+        std::cout << "cgi_output \n" << cgi_output << std::endl;
         return (cgi_output);
     } else
         request.setStatusCode(InternalServerError);

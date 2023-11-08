@@ -64,21 +64,14 @@ void  handleRequest(HttpRequest &request, Server *server) {
 }
 
 std::string Core::getResponse(int socket) {
-	HttpRequest request(ClientConnection::getBuffer(socket).c_str());
+	std::string buffer = ClientConnection::getBuffer(socket);
+	HttpRequest request(buffer, ClientConnection::clientServer[socket]);
 
-	Server *server = 0;
-	std::cout << "Host " << request.getHost() << " Port " << request.getPort() << std::endl;
-	for(std::vector<Server *>::iterator it = this->servers.begin(); it != this->servers.end(); it++) {
-		server = *it;
-		if(ServerUtils::doesRequestApply((const Server *) server, request))
-			break;
-		else
-			server = 0;
-	}
-	std::cout << "1" << std::endl;
+	std::cout << "COntent length " << request.getHeadValue("Content-Length") << std::endl;
+
+	Server *server = ServerUtils::getServer(this->servers, request);
 	if(!server)
-		return (HttpResponseUtils::testResponse(InternalServerError, HttpResponseUtils::errorBody(InternalServerError)));
-	std::cout << "2" << std::endl;
+		return "";
 	handleRequest(request, server);
 
 	HttpResponse response(request, request.getConfig()->contains("cgi_pass"));
@@ -126,6 +119,7 @@ void	Core::run(void) {
 					if (clientSocket == -1) {
 						std::cerr << "Error al aceptar la conexión." << std::endl;
 					} else {
+						ClientConnection::clientServer[clientSocket] = sockets[i];
 						std::cout << "Conexión establecida con un cliente." << std::endl;
 						int flags = fcntl(clientSocket, F_GETFL, 0);
 						fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
@@ -135,13 +129,13 @@ void	Core::run(void) {
 			}
 			for (size_t i = sockets.size(); i < pollEvents.size(); ++i) {
 				if ((pollEvents[i].revents & POLLIN)) {
-					char buffer[4096] = {0};
-					int bytesRead = recv(pollEvents[i].fd, buffer, 4096, 0);
+					char buffer[32768] = {0};
+					int bytesRead = recv(pollEvents[i].fd, buffer, 32768, 0);
 					struct timeval currentTime;
 					gettimeofday(&currentTime, NULL);
 					long long time = currentTime.tv_sec * 1000LL + currentTime.tv_usec;
 					pollConnections[pollEvents[i].fd].lastInteraction = time;
-					pollConnections[pollEvents[i].fd].differentRead = bytesRead != 4096;
+					pollConnections[pollEvents[i].fd].differentRead = bytesRead != 32768;
 					if (bytesRead == -1 || bytesRead == 0) {
 						clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
 						close(pollEvents[i].fd);
@@ -158,7 +152,19 @@ void	Core::run(void) {
 						gettimeofday(&currentTime, NULL);
 						long long time = currentTime.tv_sec * 1000LL + currentTime.tv_usec;
 						if((pollConnections[pollEvents[i].fd].differentRead || time - pollConnections[pollEvents[i].fd].lastInteraction >= 50) && ClientConnection::isRequestCompleted(pollEvents[i].fd)) {
+							std::cout << "Joining to give response " << std::endl;
 							std::string response = getResponse(pollEvents[i].fd);
+							std::cout << "Got response \n" << response << std::endl;
+							if(!response.empty() && send(pollEvents[i].fd, response.c_str(), response.length(), 0) <= 0) {
+								std::cout << "[WebServ] Error sending response to client" << std::endl;
+							}
+							ClientConnection::deleteBuffer(pollEvents[i].fd);
+							close(pollEvents[i].fd);
+							std::cout << "Conexión cerrada con un cliente. ELSE IF" << std::endl;
+							clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
+							pollConnections.erase(it);
+						} else if(false && time - pollConnections[pollEvents[i].fd].lastInteraction >= 5000) {
+							std::string response = HttpResponseUtils::testResponse(GatewayTimeout, HttpResponseUtils::errorBody(GatewayTimeout));
 							if(send(pollEvents[i].fd, response.c_str(), response.length(), 0) <= 0) {
 								std::cout << "[WebServ] Error sending response to client" << std::endl;
 							}

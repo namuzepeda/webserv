@@ -35,55 +35,56 @@ std::string replaceCarriageReturnAndNewline(const std::string &input) {
 }
 
 
-HttpRequest::HttpRequest(const char * buffer) : statusCode(Ok), config(new Config()) {
-	std::string	Request = buffer;
-	std::istringstream iss(Request);
-	std::string currLine;
+HttpRequest::HttpRequest(std::string &request, int serverSocket) : statusCode(Ok), config(new Config()), serverSocket(serverSocket) {
+	std::cout << "Request length " << request.length() << std::endl;
+	
+	
 	
 	//FOR DEBBUG
 	//std::cout << "\n-------------------\n\nbuffer: \n\n" << buffer << "--------------------" << std::endl;
-	bool readingBody = false;
 	try {
-		std::getline(iss, currLine);
+		std::string statusLine = request.substr(0, request.find("\n"));
+		setLineParts(statusLine, type);
 
-		setLineParts(currLine, type);
+		std::string headerString;
 
-		std::stringstream requestBodyStream;
+		std::size_t pos = request.find("\r\n\r\n");
 
-		while (std::getline(iss, currLine) && !currLine.empty()) {
+		if (pos != std::string::npos) {
+			headerString = request.substr(0, pos);
+		}
 
-			if(currLine == "\r" && !readingBody)
-				readingBody = true;
-			if(readingBody) {
-				requestBodyStream << currLine << '\n';
-			} else {
-				if (currLine.size() >= limitHeaderSize || InvalidHeaderChar(currLine)) {
-					this->statusCode = BadRequest;
-					throw std::runtime_error("Something wrong in request headers");
-				}
-				std::string::size_type separatorPos = currLine.find(": ");
-				if (separatorPos != std::string::npos) {
-					std::string headerName = currLine.substr(0, separatorPos);
-					// std::cout << "headername: " << headerName << std::endl;
-					std::string currValue = currLine.substr(separatorPos + 2);
-					cleanSpaces(currValue);
-					std::string headerValue = currValue;
-					if (noRepOfHeader(headers, headerName)) {
-						headers[headerName] = headerValue;
-					}
+		if(headerString.length() > limitHeaderSize || InvalidHeaderChar(headerString)) {
+			this->statusCode = BadRequest;
+			throw std::runtime_error("Something wrong in request headers");
+		}
+
+		std::istringstream iss(headerString);
+		std::string currLine;
+
+		while (std::getline(iss, currLine)) {
+
+			size_t separatorPos = currLine.find(": ");
+			if(separatorPos != std::string::npos) {
+				std::string headerName = currLine.substr(0, separatorPos);
+				std::cout << "headername: " << headerName << std::endl;
+				std::string currValue = currLine.substr(separatorPos + 2);
+				cleanSpaces(currValue);
+				std::string headerValue = currValue;
+				if (noRepOfHeader(this->headers, headerName)) {
+					this->headers[headerName] = headerValue;
 				}
 			}
 		}
 
-		setHostAndPort(headers);
-		
-		body = requestBodyStream.str();
-		if (body.size() > limitRequestBody) {
-			this->statusCode = RequestEntityTooLarge;
-			throw std::runtime_error("Something wrong in request body");
+		setHostAndPort(this->headers);
+
+		if (request.length() > pos + 4) {
+			this->body = request.substr(pos + 4);
 		}
 	}
 	catch (const std::exception &e) {
+		std::cerr << "ERROR\n" << e.what() << std::endl;
 		initVarErrorCase();
 	}
 }
@@ -400,6 +401,10 @@ std::string	HttpRequest::getHeadValue(const std::string& key){
 	if (it != headers.end())
 		ret = it->second;
 	return (ret);
+}
+
+int 	HttpRequest::getServerSocket() const{
+	return (this->serverSocket);
 }
 
 Config *HttpRequest::getConfig(void) const {

@@ -19,7 +19,7 @@ class ServerUtils {
 
 	public:
 
-		static bool doesRequestApply(const Server *server, const HttpRequest &request);
+		static Server *getServer(const std::vector<Server *> &servers, const HttpRequest &request);
 
 };
 

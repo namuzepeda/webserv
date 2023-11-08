@@ -9,6 +9,10 @@ bool FileUtils::fileExists(const std::string &path, const std::string &fileName)
     return (FileUtils::fileExists(totalPath));
 }
 
+bool    FileUtils::canWrite(const std::string &fileName) {
+    return (access(fileName.c_str(), W_OK) == 0);
+}
+
 bool    FileUtils::canRead(const std::string &fileName) {
     return (access(fileName.c_str(), R_OK) == 0);
 }

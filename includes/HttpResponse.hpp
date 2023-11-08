@@ -26,6 +26,7 @@ class HttpResponse
 		std::string							finalResponse;
         std::map<int, std::string>          errorPages;
         bool                                isCgi;
+        bool                                isDownload;
 		
 		HttpStatusCode	CheckRequestLine(const std::string& requestLine);
 		// HttpStatusCode	IsUriValid(const std::string& uri);

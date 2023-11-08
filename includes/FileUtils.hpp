@@ -27,6 +27,7 @@ class FileUtils {
 		static std::string	getFileData(const std::string &fileName);
 		static std::string	getFileData(const std::string &path, const std::string &fileName);
 		static bool  		isDirectory(const std::string &path);
+		static bool 		canWrite(const std::string &fileName);
 
 };
 

@@ -18,9 +18,8 @@
 #include <iostream>
 #include <string>
 
-#define limitRequestBody	177340032 //7 megabytes
 #define limitUriSize		4096 //characters
-#define limitHeaderSize		5000 // 5 kilobytes
+#define limitHeaderSize		8192 // 5 kilobytes
 //longitud maxima de encabezados en bytes
 //longitud maxima de campos en formularios en caracteres
 //tamano maximo de carga util megabites
@@ -72,6 +71,7 @@ enum InitType {
 enum HttpStatusCode {
 	Ok = 200,
 	Created = 201,
+	NoContent = 204,
 	MovedPermanently = 301,
 	BadRequest = 400,
 	Forbidden = 403,
@@ -81,6 +81,7 @@ enum HttpStatusCode {
 	RequestEntityTooLarge = 413,
 	RequestUriTooLong = 414,
 	InternalServerError = 500,
+	GatewayTimeout = 504,
 	VersionNotSupported = 505
 };
 

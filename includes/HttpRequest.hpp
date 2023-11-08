@@ -31,6 +31,7 @@ class HttpRequest
 		std::string							body;
 		Config								*config;
 		std::map<int, std::string>          errorPages;
+		int									serverSocket;
 	
 
 	void		setLineParts(std::string& line, RequestType& type);
@@ -49,7 +50,7 @@ class HttpRequest
 
 	public:
 
-		HttpRequest(const char *buffer);
+		HttpRequest(std::string &request, int serverSocket);
 		HttpRequest(HttpRequest const &src);
 		~HttpRequest();
 		HttpRequest &operator=(HttpRequest const &rhs);
@@ -72,6 +73,7 @@ class HttpRequest
 		std::string getFullPath();
 
 		void		setLocation(std::string location);
+		int			getServerSocket() const;
 
 		void		setStatusCode(HttpStatusCode code);
 

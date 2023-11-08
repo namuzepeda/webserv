@@ -14,10 +14,13 @@
 
 short	Server::counter = 0;
 
-Server::Server(ServerHandler *handler): handler(handler), serverSocket(0) {
+Server::Server(ServerHandler *handler): handler(handler), serverName(""), serverSocket(0) {
 	this->id = Server::counter++;
 	this->host = this->handler->getConfig()->get("host");
 	this->port = this->handler->getConfig()->asInt("listen");
+	if(this->handler->getConfig()->contains("server_name"))
+		this->serverName = this->handler->getConfig()->get("server_name");
+	
 }
 
 Server::~Server(void) {
@@ -31,6 +34,10 @@ int Server::getPort(void) const {
 
 std::string	const &Server::getHost(void) const{
 	return (this->host);
+}
+
+std::string	const &Server::getServerName(void) const{
+	return (this->serverName);
 }
 
 int	Server::getSocket(void) {
@@ -75,6 +82,7 @@ InitType Server::init(const std::vector<Server *> &servers, int tryTimes) {
 			continue ;
 		}
 		if (bind(serverSocket, (struct sockaddr *) &socketAddr, sizeof(socketAddr)) == -1) {
+			std::cerr << errno << std::endl;
 			type = BIND_ERROR;
 			close(serverSocket);
 			continue ;

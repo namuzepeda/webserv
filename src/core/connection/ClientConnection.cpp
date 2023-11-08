@@ -1,6 +1,7 @@
 #include "WebServ.hpp"
 
 std::map<int, std::string> ClientConnection::requests;
+std::map<int, int> ClientConnection::clientServer;
 
 bool ClientConnection::isChunkedRequest(int socket) {
     std::string buffer = ClientConnection::requests[socket];
@@ -44,11 +45,29 @@ std::string ClientConnection::getBuffer(int socket) {
         throw std::runtime_error("Buffer is not completed");
     std::string	headers = buffer.substr(0, buffer.find("\r\n\r\n"));
     std::string	rest    = buffer.substr(buffer.find("\r\n\r\n") + 4, buffer.size() - 1);
+
+
+    //std::istringstream iss(rest);
+
+    //std::string currLine;
+
+    //int length = -1;
+
+    // while(getline(iss, currLine) && length) {
+    //     if(length == -1)
+    //         length = strtol(currLine.c_str(), NULL, 16);
+    //     else {
+    //         body += currLine;
+    //         length = -1;
+    //     }
+        
+    // }
+
     std::string	subchunk = rest.substr(0, 100);
 	std::string	body = "";
 	int			chunksize = strtol(subchunk.c_str(), NULL, 16);
 	size_t		i = 0;
-
+    std::cout << "LLEGA ACA!!!!!" << std::endl;
 	while (chunksize)
 	{
 		i = rest.find("\r\n", i) + 2;
@@ -57,5 +76,6 @@ std::string ClientConnection::getBuffer(int socket) {
 		subchunk = rest.substr(i, 100);
 		chunksize = strtol(subchunk.c_str(), NULL, 16);
 	}
+    //std::cout << headers << "\r\n\r\n" << body << "\r\n\r\n";
     return (headers + "\r\n\r\n" + body + "\r\n\r\n");
 }

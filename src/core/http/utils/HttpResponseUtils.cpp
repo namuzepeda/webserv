@@ -9,6 +9,7 @@ bool containsChar(const std::string &str, char caracter) {
     return false;
 }
 
+
 bool HttpResponseUtils::isMethodAllowed(const HttpRequest &request) {
     std::string method = HttpUtils::getMethod(request.getType());
 
@@ -81,6 +82,7 @@ void    HttpResponseUtils::initStatusMap(void) {
     if(HttpResponseUtils::statusMap.empty()) {
         HttpResponseUtils::statusMap.insert(std::make_pair(Ok, "OK"));
         HttpResponseUtils::statusMap.insert(std::make_pair(Created, "Created"));
+        HttpResponseUtils::statusMap.insert(std::make_pair(NoContent, "No Content"));
         HttpResponseUtils::statusMap.insert(std::make_pair(NotFound, "Not Found"));
         HttpResponseUtils::statusMap.insert(std::make_pair(MovedPermanently, "Moved Permanently"));
         HttpResponseUtils::statusMap.insert(std::make_pair(BadRequest, "Bad Request"));
@@ -89,6 +91,7 @@ void    HttpResponseUtils::initStatusMap(void) {
         HttpResponseUtils::statusMap.insert(std::make_pair(RequestEntityTooLarge, "Request Entity Too Large"));
         HttpResponseUtils::statusMap.insert(std::make_pair(RequestUriTooLong, "Request-URI Too Long"));
         HttpResponseUtils::statusMap.insert(std::make_pair(VersionNotSupported, "Version Not Supported"));
+        HttpResponseUtils::statusMap.insert(std::make_pair(GatewayTimeout, "Gateway Timeout"));
         HttpResponseUtils::statusMap.insert(std::make_pair(InternalServerError, "Internal Server Error"));
     }
 }

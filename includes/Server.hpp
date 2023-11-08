@@ -26,6 +26,7 @@ class Server
 		ServerHandler		*handler;
 
 		std::string			host;
+		std::string			serverName;
 		int					port;
 		std::string			rootFolder;
 
@@ -40,6 +41,7 @@ class Server
 
 		ServerHandler				*getHandler(void);
 		std::string			const	&getHost(void) const;
+		std::string			const	&getServerName(void) const;
 		int							getPort(void) const;
 		std::string			const	&getRoot() const;
 		int							getSocket();
