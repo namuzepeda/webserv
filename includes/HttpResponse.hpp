@@ -35,7 +35,7 @@ class HttpResponse
 
 	public:
 
-		HttpResponse(HttpRequest &request, bool isCgi);
+		HttpResponse(HttpRequest &request, bool isCgi, const Server *server);
 		HttpResponse(HttpResponse const &copy);
 
 		HttpResponse 	&operator=(HttpResponse const &copy);

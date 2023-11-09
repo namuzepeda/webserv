@@ -23,7 +23,7 @@ void    *run_http_request(void* arg) {
         
         if (res) {
             if (res->status == 200) {
-                //std::cout << res->body << std::endl;
+                
             } else {
                 std::cerr << "Error en la respuesta: " << res->status << std::endl;
             }

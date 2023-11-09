@@ -59,10 +59,11 @@ void replaceNewlineAndCarriageReturn(std::string& input) {
     }
 }
 
-std::string		CGIHandler::getResponse(HttpRequest &request)
+std::string		CGIHandler::getResponse(HttpRequest &request, const Server *server)
 {
 	int out_pipe[2];
     int in_pipe[2];
+    //int error_pipe[2];
     
     if (pipe(out_pipe) == -1) {
         request.setStatusCode(InternalServerError);
@@ -72,18 +73,14 @@ std::string		CGIHandler::getResponse(HttpRequest &request)
     if (request.getType() == POST && pipe(in_pipe) == -1) {
         close(out_pipe[0]);
         close(out_pipe[1]);
-        std::cerr << "ERROR IN PIPE" << std::endl;
+        request.setStatusCode(InternalServerError);
+        return ("ERROR");
     }
-    
-    std::cout << "BODY  Length " << request.getBody().length() << std::endl;
-    
-   
-    std::cout << "Bytes Body " << request.getBody().length() << std::endl;
-    std::cout << "1" << std::endl;
 
-    std::cout << "2" << std::endl;
+    int errorFd = server->errors()->getFd();
 
     pid_t pid = fork();
+    
 
     if (pid == 0) {
 
@@ -98,15 +95,13 @@ std::string		CGIHandler::getResponse(HttpRequest &request)
         dup2(out_pipe[1], STDOUT_FILENO);
         close(out_pipe[1]);
 
-        std::string script_path = request.getConfig()->get("cgi_pass");
+        if(errorFd != -1)
+            dup2(errorFd, STDERR_FILENO);
 
-        std::string filePath = "websites/first/index.php";
-
-        char* argv[] = {(char *) script_path.c_str(), (char *) filePath.c_str(), 0};
+        char* argv[] = {(char *) strdup(request.getConfig()->get("cgi_pass").c_str()), (char *) strdup(request.getFullPath().c_str()), 0, 0};
 
         char **envs = getEnvs(request);
 
-        std::cout << script_path << std::endl;
         execve(argv[0], argv, envs);
 
         exit(1);
@@ -123,13 +118,10 @@ std::string		CGIHandler::getResponse(HttpRequest &request)
         for (int i = 0; i < bufferLength; i += chunkSize) {
             std::string chunk = request.getBody().substr(i, chunkSize);
             total += chunk.length();
-            //std::cout << "Here chunk size " << chunk.length() << "\n" << chunk << std::endl;
             int wroten = write(in_pipe[1], chunk.c_str(), chunk.length());
             if(wroten == -1) {
-                std::cout << "ERRNO " << errno << std::endl;
+                
             }
-            std::cout << "Bytes wroten " << wroten << std::endl;
-            std::cout << "Total wroten " << total << std::endl;
         }
 
         if (request.getType() == POST)
@@ -150,11 +142,10 @@ std::string		CGIHandler::getResponse(HttpRequest &request)
         int status;
         waitpid(pid, &status, 0);
 
-        if(status == 1) {
+        if(status != 0) {
             request.setStatusCode(InternalServerError);
             return ("ERROR");
         }
-        std::cout << "cgi_output \n" << cgi_output << std::endl;
         return (cgi_output);
     } else
         request.setStatusCode(InternalServerError);

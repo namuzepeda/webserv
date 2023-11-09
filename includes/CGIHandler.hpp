@@ -19,7 +19,7 @@ class CGIHandler
 {
 
 	public:
-		static std::string getResponse(HttpRequest &request);
+		static std::string getResponse(HttpRequest &request, const Server *server);
 };
 
 // std::ostream &			operator<<( std::ostream & o, CGIHandler const & i );

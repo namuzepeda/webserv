@@ -67,7 +67,6 @@ std::string ClientConnection::getBuffer(int socket) {
 	std::string	body = "";
 	int			chunksize = strtol(subchunk.c_str(), NULL, 16);
 	size_t		i = 0;
-    std::cout << "LLEGA ACA!!!!!" << std::endl;
 	while (chunksize)
 	{
 		i = rest.find("\r\n", i) + 2;
@@ -76,6 +75,5 @@ std::string ClientConnection::getBuffer(int socket) {
 		subchunk = rest.substr(i, 100);
 		chunksize = strtol(subchunk.c_str(), NULL, 16);
 	}
-    //std::cout << headers << "\r\n\r\n" << body << "\r\n\r\n";
     return (headers + "\r\n\r\n" + body + "\r\n\r\n");
 }

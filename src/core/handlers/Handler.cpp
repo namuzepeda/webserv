@@ -51,7 +51,6 @@ void	Handler::handleHttp(HttpRequest &request) {
 						throw std::runtime_error("Exception trying to extract error number");
 				}
 			} else {
-				//std::cout << "Setting " << id << " = " << this->config->get(id) << std::endl;
 				request.getConfig()->put(id, this->config->get(id));
 			}
 		}

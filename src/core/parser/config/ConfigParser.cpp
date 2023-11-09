@@ -141,6 +141,9 @@ std::vector<Handler *> ConfigParser::getHandlers(std::vector<Token *> &tokens) {
 		for(std::vector<Handler *>::iterator it = tempHandlers.begin(); it != tempHandlers.end(); it++)
 			delete *it;
 		tempHandlers.clear();
+		for(std::vector<Handler *>::iterator it = handlers.begin(); it != handlers.end(); it++)
+			delete *it;
+		handlers.clear();
 		std::stringstream ss;
 		ss << "Unexpected \"" << error.what() << "\"";
 		throw std::runtime_error(ss.str());

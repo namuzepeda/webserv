@@ -20,12 +20,24 @@ Server::Server(ServerHandler *handler): handler(handler), serverName(""), server
 	this->port = this->handler->getConfig()->asInt("listen");
 	if(this->handler->getConfig()->contains("server_name"))
 		this->serverName = this->handler->getConfig()->get("server_name");
-	
+
+	std::string errorFile;
+
+	if (this->handler->getConfig()->contains("error_log")) {
+		errorFile = this->handler->getConfig()->get("error_log");
+		if(errorFile[0] != '/')
+			errorFile = this->handler->getConfig()->get("root") + errorFile;
+	}
+	else
+		errorFile = "/tmp/webserv_" + this->getName();
+	this->errorLog = new Logger(errorFile, RED);
+	if(this->errorLog->getFd() == -1)
+		Logger::info->log(StringUtils::parse("[Server] ID %d - Cannot create log file, please check that folder exists and you have permissions\n", this->id).c_str(), RED);
 }
 
 Server::~Server(void) {
-	std::cout << "Deleting serverhandler" << std::endl;
 	delete this->handler;
+	delete this->errorLog;
 }
 
 int Server::getPort(void) const {
@@ -44,6 +56,13 @@ int	Server::getSocket(void) {
 	return (this->serverSocket);
 }
 
+std::string Server::getName() {
+	std::string name = this->handler->getConfig()->get("host") + "_";
+	name += (this->handler->getConfig()->contains("server_name") ? this->handler->getConfig()->get("server_name") : "*");
+	name += ".log";
+	return (name);
+}
+
 InitType Server::init(const std::vector<Server *> &servers, int tryTimes) {
 
 	int use = 1;
@@ -56,15 +75,15 @@ InitType Server::init(const std::vector<Server *> &servers, int tryTimes) {
 		socketAddr.sin_addr.s_addr = INADDR_ANY;
 	
 	InitType type = BIND_ERROR;
-	std::cout << "HOST " << this->host << " PORT " << this->port << std::endl;
 	for(std::vector<Server *>::const_iterator it = servers.begin(); it != servers.end() && (*it)->id != this->id; it++) {
 		Server *server = *it;
 		if(this->host == server->host && this->port == server->port) {
 			this->serverSocket = server->serverSocket;
-			std::cout << "SAME PORT AND HOST" << std::endl;
 			return (SUCCESS);
 		}
 	}
+
+
 	while(tryTimes--)
 	{
 		this->serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -104,4 +123,10 @@ ServerHandler *Server::getHandler(void) {
 	return (this->handler);
 }
 
+Logger	*Server::errors(void) const {
+	return (this->errorLog);
+}
 
+int		Server::getId() const {
+	return (this->id);
+}

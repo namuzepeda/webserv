@@ -7,7 +7,7 @@ std::map<HttpStatusCode, std::string> HttpResponseUtils::statusMap;
 void	sighandler(int signum)
 {
 	(void) signum;
-	std::cout << "Stoping server" << std::endl;
+	Logger::info->log(StringUtils::parse("\n[WebServ] Closing WebServ\n").c_str());
 	Core::stopped = true;
 }
 
@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
 	signal(SIGPIPE, SIG_IGN);
 
 	if(argc != 2) {
-		std::cout << "Invalid args" << std::endl;
+		std::cout << "Invalid args: ./webserv {config}" << std::endl;
 		return (1);
 	}
 

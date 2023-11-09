@@ -12,7 +12,7 @@
 
 ### COMPILATION ###
 NAME		=	webserv
-CC			=	c++
+CC			=	g++
 FLAGS		=	-Wall -Wextra -Werror -g3 -std=c++98 
 INCLUDES	=	-I $(HEADER)
 
@@ -60,7 +60,7 @@ SERVER_UTILS_DIR			=	core/server/utils/
 SERVER_UTILS				=	ServerUtils.cpp
 
 UTILS_DIR					=	core/utils/
-UTILS						=	FileUtils.cpp StringArrayUtils.cpp StringUtils.cpp
+UTILS						=	FileUtils.cpp StringArrayUtils.cpp StringUtils.cpp Logger.cpp
 
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(HTTP_DIR))
 OBJ_DIRS	+=	$(addprefix	$(OBJ_PATH),$(HTTP_UTILS_DIR))

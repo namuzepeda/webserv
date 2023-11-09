@@ -15,6 +15,8 @@
 
 #pragma once
 
+#define DEBUG 0
+
 #include <iostream>
 #include <string>
 
@@ -85,6 +87,10 @@ enum HttpStatusCode {
 	VersionNotSupported = 505
 };
 
+#define RED     "\033[31m"
+#define YELLOW  "\033[33m"
+#define GREEN	"\033[92m"
+
 #include <signal.h>
 #include <algorithm>
 #include <vector>
@@ -99,6 +105,7 @@ enum HttpStatusCode {
 #include <poll.h>
 #include <fstream>
 #include <cstdlib>
+#include <stdarg.h>
 #include <cstring>
 #include <sys/time.h>
 #include <unistd.h>
@@ -111,15 +118,12 @@ enum HttpStatusCode {
 
 #include "ClientConnection.hpp"
 #include "Config.hpp"
+#include "Logger.hpp"
 
 #include "StringUtils.hpp"
 #include "FileUtils.hpp"
-#include "HttpRequest.hpp"
-#include "HttpResponse.hpp"
 #include "HttpUtils.hpp"
-#include "HttpResponseUtils.hpp"
-#include "CGIHandler.hpp"
-
+#include "HttpRequest.hpp"
 #include "Handler.hpp"
 #include "ConfigParser.hpp"
 #include "ConfigParserUtils.hpp"
@@ -129,6 +133,9 @@ enum HttpStatusCode {
 #include "LocationHandler.hpp"
 
 #include "Server.hpp"
+#include "CGIHandler.hpp"
+#include "HttpResponse.hpp"
+#include "HttpResponseUtils.hpp"
 
 #include "StringArrayUtils.hpp"
 

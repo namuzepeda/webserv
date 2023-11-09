@@ -36,12 +36,6 @@ std::string replaceCarriageReturnAndNewline(const std::string &input) {
 
 
 HttpRequest::HttpRequest(std::string &request, int serverSocket) : statusCode(Ok), config(new Config()), serverSocket(serverSocket) {
-	std::cout << "Request length " << request.length() << std::endl;
-	
-	
-	
-	//FOR DEBBUG
-	//std::cout << "\n-------------------\n\nbuffer: \n\n" << buffer << "--------------------" << std::endl;
 	try {
 		std::string statusLine = request.substr(0, request.find("\n"));
 		setLineParts(statusLine, type);
@@ -67,7 +61,6 @@ HttpRequest::HttpRequest(std::string &request, int serverSocket) : statusCode(Ok
 			size_t separatorPos = currLine.find(": ");
 			if(separatorPos != std::string::npos) {
 				std::string headerName = currLine.substr(0, separatorPos);
-				std::cout << "headername: " << headerName << std::endl;
 				std::string currValue = currLine.substr(separatorPos + 2);
 				cleanSpaces(currValue);
 				std::string headerValue = currValue;

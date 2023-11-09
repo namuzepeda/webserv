@@ -33,6 +33,8 @@ class Server
 		int					serverSocket;
 		sockaddr_in 		socketAddr;
 
+		Logger				*errorLog;
+
 	public:
 
 		Server(ServerHandler *handler);
@@ -45,8 +47,14 @@ class Server
 		int							getPort(void) const;
 		std::string			const	&getRoot() const;
 		int							getSocket();
+		int							getId() const;
+
+
+		std::string					getName();
 
 		InitType 					init(const std::vector<Server *> &servers, int tryTimes);
+
+		Logger						*errors() const;
 };
 
 #endif

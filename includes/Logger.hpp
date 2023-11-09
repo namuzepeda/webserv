@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   StringUtils.hpp                               :+:      :+:    :+:   */
+/*   Logger.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,23 +10,33 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRING_UTILS_H
-#define STRING_UTILS_H
+#ifndef LOGGER_H
+#define LOGGER_H
 
 #include "WebServ.hpp"
 
+class Logger {
 
-class StringUtils {
+	private:
+		int	fd;
+		char *color;
 
 	public:
 
-		
-		static bool endsWith(const std::string& fullString, const std::string& ending);
+		static Logger *info;
 
+		Logger(std::string &filePath, const char *color);
+		Logger(int fd, const char *color);
+		~Logger();
+		Logger(Logger const &src);
+		Logger &operator=(Logger const &rhs);
 
-		static std::string parse(const char* format, ...);
+		int		getFd();
+
+		void	log(const char *msg, const char *color);
+		void	log(const char *msg);
 
 };
 
-
 #endif
+

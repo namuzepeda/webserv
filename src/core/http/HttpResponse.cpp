@@ -10,7 +10,7 @@ void replace(std::string& str, const std::string &find, const std::string &repla
 }
 
 
-HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), isCgi(isCgi), isDownload(false)
+HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi, const Server *server): statusCode(Ok), isCgi(isCgi), isDownload(false)
 {
 
 	if(request.getStatusCode() != Ok) {
@@ -24,7 +24,6 @@ HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), i
 	}
 
 	if(request.getConfig()->contains("return")) {
-		std::cout << "Cotains" << std::endl;
 		this->statusCode = MovedPermanently;
 		this->headers["Location"] = request.getConfig()->get("return");
 		return ;
@@ -67,11 +66,7 @@ HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), i
 		}
 	}
 
-	std::cout << "File to return " << file << std::endl;
-		
-
 	if(!FileUtils::fileExists(file)) {
-		std::cout << "File doesnt exists" << std::endl;
 		this->statusCode = NotFound;
 		return ;
 	}
@@ -92,10 +87,10 @@ HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi): statusCode(Ok), i
 	}
 
 	if(this->isCgi) {
-		this->body = CGIHandler::getResponse(request);
-		return ;
+		this->body = CGIHandler::getResponse(request, server);
 		if(this->body == "ERROR")
 			this->statusCode = InternalServerError;
+		return ;
 	} else {
 		try {
 			this->body = FileUtils::getFileData(file);
@@ -202,9 +197,8 @@ std::string HttpResponse::toString(HttpRequest &request) {
     responseStream << "HTTP/1.1 ";
 
 	size_t pos = this->body.find_first_of("\r\n");
-	std::cout << "pos " << pos << std::endl;
 
-	if (this->isCgi && this->statusCode != RequestEntityTooLarge) {
+	if (this->isCgi && this->statusCode == Ok) {
 		if(this->body.substr(0, 7) == "Status:")
 			responseStream << this->body.substr(8, pos - 8);
 		else

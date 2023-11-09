@@ -21,9 +21,7 @@ LocationHandler::~LocationHandler() {
 }
 
 void LocationHandler::run(HttpRequest &request) {
-
-	std::cout << "Is in lochandler" << std::endl;
-
+	
 	handleHttp(request);
 	
 	for(std::vector<Handler *>::iterator it = this->childs.begin(); it != this->childs.end(); it++) {
