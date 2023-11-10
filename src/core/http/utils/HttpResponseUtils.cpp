@@ -70,7 +70,7 @@ std::string HttpResponseUtils::getIndex(const HttpRequest &request) {
 
 std::string HttpResponseUtils::testResponse(HttpStatusCode statusCode, std::string body) {
     std::stringstream responseStream;
-    responseStream << "HTTP/1.1 " << statusCode << " " << getStatus(Ok) << "\r\n";
+    responseStream << "HTTP/1.1 " << statusCode << " " << getStatus(statusCode) << "\r\n";
     responseStream << "Content-Type: text/html\r\n";
     responseStream << "\r\n"; // Fin de las cabeceras, línea en blanco
     responseStream << body.c_str();

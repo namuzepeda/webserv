@@ -121,6 +121,7 @@ void	Core::run(void) {
 						int flags = fcntl(clientSocket, F_GETFL, 0);
 						fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
 						clientSockets.push_back(clientSocket);
+						pollConnections[clientSocket].lastInteraction = 0;
 					}
 				}
 			}
@@ -148,7 +149,7 @@ void	Core::run(void) {
 						struct timeval currentTime;
 						gettimeofday(&currentTime, NULL);
 						long long time = currentTime.tv_sec * 1000LL + currentTime.tv_usec;
-						if((pollConnections[pollEvents[i].fd].differentRead || time - pollConnections[pollEvents[i].fd].lastInteraction >= 50) && ClientConnection::isRequestCompleted(pollEvents[i].fd)) {
+						if((pollConnections[pollEvents[i].fd].differentRead || (pollConnections[pollEvents[i].fd].lastInteraction != 0 && time - pollConnections[pollEvents[i].fd].lastInteraction >= 50)) && ClientConnection::isRequestCompleted(pollEvents[i].fd)) {
 							std::string response = getResponse(pollEvents[i].fd);
 							if(!response.empty() && send(pollEvents[i].fd, response.c_str(), response.length(), 0) <= 0) {
 								Logger::info->log(StringUtils::parse("[Server] ID %d - Error sending response to client\n", ClientConnection::clientServer[pollEvents[i].fd]).c_str(), RED);
@@ -158,19 +159,26 @@ void	Core::run(void) {
 							Logger::info->log(StringUtils::parse("[Server] ID %d - Client connection closed\n", ClientConnection::clientServer[pollEvents[i].fd]).c_str(), YELLOW);
 							clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
 							pollConnections.erase(it);
-						} else if(false && time - pollConnections[pollEvents[i].fd].lastInteraction >= 5000) {
-							std::string response = HttpResponseUtils::testResponse(GatewayTimeout, HttpResponseUtils::errorBody(GatewayTimeout));
-							if(send(pollEvents[i].fd, response.c_str(), response.length(), 0) <= 0) {
-								Logger::info->log(StringUtils::parse("[Server] ID %d - Error sending response to client\n", ClientConnection::clientServer[pollEvents[i].fd]).c_str(), RED);
-							}
-							ClientConnection::deleteBuffer(pollEvents[i].fd);
-							close(pollEvents[i].fd);
-							Logger::info->log(StringUtils::parse("[Server] ID %d - Client connection closed\n", ClientConnection::clientServer[pollEvents[i].fd]).c_str(), YELLOW);
-							clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
-							pollConnections.erase(it);
+							continue ;
 						}
 					}
 				}
+				struct timeval currentTime;
+				gettimeofday(&currentTime, NULL);
+				long long time = currentTime.tv_sec * 1000LL + currentTime.tv_usec;
+				long long rest = abs(time - pollConnections[pollEvents[i].fd].lastInteraction);
+				if(pollConnections[pollEvents[i].fd].lastInteraction != 0 && rest >= timeOut) {
+					std::string response = HttpResponseUtils::testResponse(GatewayTimeout, HttpResponseUtils::errorBody(GatewayTimeout));
+					if(send(pollEvents[i].fd, response.c_str(), response.length(), 0) <= 0) {
+						Logger::info->log(StringUtils::parse("[Server] ID %d - Error sending response to client\n", ClientConnection::clientServer[pollEvents[i].fd]).c_str(), RED);
+					}
+					ClientConnection::deleteBuffer(pollEvents[i].fd);
+					close(pollEvents[i].fd);
+					Logger::info->log(StringUtils::parse("[Server] ID %d - Client connection closed\n", ClientConnection::clientServer[pollEvents[i].fd]).c_str(), YELLOW);
+					clientSockets.erase(std::remove(clientSockets.begin(), clientSockets.end(), pollEvents[i].fd), clientSockets.end());
+					pollConnections.erase(pollConnections.find(pollEvents[i].fd));
+				}
+				
 			}
 		} else {
 			if(!Core::stopped)

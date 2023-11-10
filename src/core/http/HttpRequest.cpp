@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 23:10:09 by gamoreno          #+#    #+#             */
-/*   Updated: 2023/10/23 13:08:55y gamoreno           ###   ########.fr       */
+/*   Updated: 2023/11/10 12:04:52 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ HttpRequest::HttpRequest(std::string &request, int serverSocket) : statusCode(Ok
 		}
 	}
 	catch (const std::exception &e) {
-		std::cerr << "ERROR\n" << e.what() << std::endl;
 		initVarErrorCase();
 	}
 }

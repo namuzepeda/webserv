@@ -14,9 +14,10 @@ void	sighandler(int signum)
 int main(int argc, char **argv) {
 
 	signal(SIGINT, sighandler);
-	signal(SIGPIPE, SIG_IGN);
+	//signal(SIGPIPE, SIG_IGN);
 
 	if(argc != 2) {
+		delete Logger::info;
 		std::cout << "Invalid args: ./webserv {config}" << std::endl;
 		return (1);
 	}

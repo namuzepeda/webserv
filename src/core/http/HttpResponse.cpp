@@ -104,7 +104,8 @@ HttpResponse::HttpResponse(HttpRequest  &request, bool isCgi, const Server *serv
 		std::string type = request.getLocation().substr(pos, request.getLocation().length());
 		if(type != ".html")
 			this->isDownload = true;
-	}
+	} else
+		this->isDownload = true;
 	 
 }
 
@@ -112,84 +113,17 @@ void        HttpResponse::setBody(std::string body) {
 	this->body = body;
 }
 
-/*HttpResponse::HttpResponse(HttpResponse const &copy){
-	//pendiente
-}
+// HttpResponse::HttpResponse(HttpResponse const &copy){
+// 	//pendiente
+// }
 
-HttpResponse 	&HttpResponse::operator=(HttpResponse const &copy) {
-	//pendiente
-}*/
+// HttpResponse 	&HttpResponse::operator=(HttpResponse const &copy) {
+// 	//pendiente
+// }
 
 HttpResponse::~HttpResponse() {
 	//pendiente
 }
-
-// HttpStatusCode	HttpResponse::CheckRequestLine(const std::string& requestLine) {
-// 	std::istringstream	stream(requestLine);
-// 	std::string			method, uri, version;
-// 	HttpStatusCode		aux;
-
-// 	if (!(stream >> method) || stream.get() != ' ' || !(stream >> uri) || stream.get() != ' ' || !(stream >> version)) {
-// 		return BadRequest; 
-// 	}
-// 	if ((method != "GET" && method != "POST" && method != "DELETE")) {
-// 		return MethodNotAllowed;
-// 	}
-// 	aux = HttpResponse::IsUriValid(uri);
-// 	if (aux != 200) {
-// 		return aux;
-// 	}
-// 	if (version != "HTTP/1.1") {
-// 		return VersionNotSupported;
-// 	}
-// 	if (method != this->request.getType() || version != this->request.getVersion()) {
-// 		return InternalServerError;
-// 	}
-
-		
-// 	return OK;
-// }
-
-// bool	HttpResponse::goodQueryArgs(const std::string& query) {
-// 	//Checkar que todos los valores tengan parametro 
-// 	return true;
-// }
-
-// HttpStatusCode HttpResponse::IsUriValid(const std::string& uri) {
-// 	std::string	location, query;
-// 	std::string::size_type queryStart = uri.find('?');
-
-// 	if (queryStart == std::string::npos) {
-// 		location = uri;
-// 		query = "";
-// 	}
-// 	else {
-// 		location = uri.substr(0, queryStart);
-// 		query = uri.substr(queryStart + 1);
-// 	}
-// 	if (uri.length() > limitUriSize) {
-// 		return RequestUriTooLong;
-// 	}
-// 	if (uri.find(' ') != std::string::npos) {
-// 		return BadRequest;
-// 	}
-// 	for (std::string::size_type i = 0; i < location.length(); i++) {
-// 		char c = location[i];
-// 		if (!(isalnum(c) || c == '/' || c == '-' || c == '_' || c == '.')) {
-// 			return BadRequest;
-// 		}
-// 	}
-// 	for (std::string::size_type i = 0; i < query.length(); i++) {
-// 		char c = query[i];
-// 		if (!(isalnum(c) || c == '/' || c == '-' || c == '_' || c == '.'
-// 		|| c == '?' || c == '&' || c == '=')) {
-// 			return BadRequest;
-// 		}
-// 	}
-// 	if (!HttpResponse::goodQueryArgs(query))
-// 		return BadRequest;
-// 	return OK; // La URI es válida
-// }
 
 std::string HttpResponse::toString(HttpRequest &request) {
 

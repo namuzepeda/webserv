@@ -6,7 +6,7 @@
 /*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/20 17:35:06 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/10/18 23:48:43 by gamoreno         ###   ########.fr       */
+/*   Updated: 2023/11/10 11:45:10 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 
 #define limitUriSize		4096 //characters
 #define limitHeaderSize		8192 // 5 kilobytes
+#define timeOut				500
 //longitud maxima de encabezados en bytes
 //longitud maxima de campos en formularios en caracteres
 //tamano maximo de carga util megabites

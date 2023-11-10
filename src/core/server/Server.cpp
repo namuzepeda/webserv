@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nmunoz   <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: gamoreno <gamoreno@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/18 20:57:06 by nmunoz            #+#    #+#             */
-/*   Updated: 2023/07/18 20:57:06 by nmunoz           ###   ########.fr       */
+/*   Updated: 2023/11/10 12:04:28 by gamoreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ InitType Server::init(const std::vector<Server *> &servers, int tryTimes) {
 			continue ;
 		}
 		if (bind(serverSocket, (struct sockaddr *) &socketAddr, sizeof(socketAddr)) == -1) {
-			std::cerr << errno << std::endl;
 			type = BIND_ERROR;
 			close(serverSocket);
 			continue ;
