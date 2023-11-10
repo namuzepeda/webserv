@@ -192,9 +192,10 @@ void	Core::run(void) {
 	}
 
 	// Cerrar los sockets del servidor
+	int i = 0;
 	for (std::vector<int>::iterator it = sockets.begin(); it != sockets.end(); it++) {
 		int serverSocket = *it;
-		Logger::info->log(StringUtils::parse("[Server] ID %d - Closing server socket\n", serverSocket).c_str(), YELLOW);
+		Logger::info->log(StringUtils::parse("[Server] ID %d - Closing server socket\n", i++).c_str(), YELLOW);
 		close(serverSocket);
 	}
 }
