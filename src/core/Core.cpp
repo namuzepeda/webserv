@@ -22,8 +22,8 @@ Core::Core(const std::ifstream &configFile) {
 				this->servers.push_back(server);
 				Logger::info->log(StringUtils::parse("[Server] ID %d - Correctly opened\n", server->getId()).c_str());
 			} else {
-				delete server;
 				Logger::info->log(StringUtils::parse("[Server] ID %d - Error at opening\n", server->getId()).c_str(), RED);
+				delete server;
 			}
 		}
 		handlers.clear();
